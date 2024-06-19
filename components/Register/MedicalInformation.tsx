@@ -133,12 +133,48 @@ const MedicalInformation = ({ form }: MedicalInformationTypes) => {
 
         <div>
           <form.Field
-            name="MedicalInformation.removal_uterus"
+            name="MedicalInformation.cancer_type"
             children={(field: any) => (
               <SelectInput
                 field={field}
                 selectOptions={[{ label: "Breast", value: "breast" }]}
                 label="What type of cancer were you first diagnosed with?"
+                isRequired
+              />
+            )}
+          />
+        </div>
+
+        <div>
+          <form.Field
+            name="MedicalInformation.type_of_breast_cancer"
+            children={(field: any) => (
+              <SelectInput
+                field={field}
+                selectOptions={[
+                  {
+                    label: "progesterone-receptor-positive",
+                    value: "Progesterone-receptor-positive",
+                  },
+                ]}
+                label="What specific type of breast cancer were you diagnosed with?"
+                isRequired
+              />
+            )}
+          />
+        </div>
+
+        <div>
+          <form.Field
+            name="MedicalInformation.other_cancers"
+            children={(field: any) => (
+              <SelectInput
+                field={field}
+                selectOptions={[
+                  { label: "Yes", value: "yes" },
+                  { label: "No", value: "no" },
+                ]}
+                label="Have you been diagnosed with any other cancer/s?"
                 isRequired
               />
             )}
