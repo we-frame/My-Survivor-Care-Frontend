@@ -2,11 +2,23 @@ import React from "react";
 import Button from "../Common/Button";
 import GoogleIcon from "../Icon/GoogleIcon";
 import AppleIcon from "../Icon/AppleIcon";
+import Title from "../Common/Title";
 
-const LoginCard = () => {
+interface LoginCardTypes {
+  textCenter?: boolean;
+}
+
+const LoginCard = ({ textCenter }: LoginCardTypes) => {
   return (
     <div className="flex flex-col items-start justify-start gap-5">
-      <h1 className="text-xl font-semibold">Login to MySurvivorCare</h1>
+      <Title
+        title="Login to MySurvivorCare"
+        className={
+          textCenter
+            ? "text-center text-xl font-semibold"
+            : "text-left text-xl font-semibold"
+        }
+      />
       <div className="bg-[#FFFFFF] flex flex-col items-center justify-center gap-3 shadow-xl px-5 py-7 rounded-xl">
         <Button
           text="Continue with Google"

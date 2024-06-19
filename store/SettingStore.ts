@@ -23,7 +23,7 @@ export const useSettingStore = create<SettingState>(
     (set) => ({
       // Define the initial state with default values
       backgroundColor: "#ffffff",
-      buttonBgColor: "#4338CA",
+      buttonBgColor: "#14b8a6",
       textColor: "#222222",
       ...savedState, // Merge any saved state from localStorage
 
