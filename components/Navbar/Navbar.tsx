@@ -15,6 +15,7 @@ const Navbar = () => {
         <Button
           text={"Log in"}
           className="text-[#C7D2FE] text-base font-normal"
+          link="/login"
         />
       </div>
     </nav>
