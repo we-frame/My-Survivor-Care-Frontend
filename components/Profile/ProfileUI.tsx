@@ -50,7 +50,7 @@ const ProfileUI = () => {
     },
   });
   return (
-    <div className="mt-10 flex flex-col gap-10">
+    <div className="mt-5 lg:mt-10 flex flex-col gap-10">
       <Title title="Hi Emily!" className="text-5xl font-bold" />
 
       <div className="flex flex-col gap-4 max-w-[830px]">
@@ -69,8 +69,8 @@ const ProfileUI = () => {
         </p>
       </div>
 
-      <div className="w-full flex items-start justify-start gap-10">
-        <div className="w-[75%]">
+      <div className="w-full flex flex-col lg:flex-row items-center justify-center lg:items-start lg:justify-start gap-5 lg:gap-10">
+        <div className="w-full lg:w-[75%]">
           <ProfileTabs
             form={form}
             editBackgroundInfo={editBackgroundInfo}
@@ -79,7 +79,7 @@ const ProfileUI = () => {
             setEditMedicalInformation={setEditMedicalInformation}
           />
         </div>
-        <div className="w-[25%] rounded-xl shadow-lg mt-7">
+        <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-7">
           <Image
             alt="/public/profile_right_card_img.jpeg"
             src={"/profile_right_card_img.jpeg"}

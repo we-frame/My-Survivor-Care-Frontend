@@ -39,8 +39,8 @@ const ReAssessmentUI = () => {
     },
   });
   return (
-    <div className="mt-10">
-      <div className="w-[50%] flex flex-col items-start justify-start gap-5">
+    <div className="mt-5 lg:mt-10">
+      <div className="w-full lg:w-[50%] flex flex-col items-start justify-start gap-5">
         <Title
           title="Symptom re-assessment"
           className="text-4xl font-semibold"
@@ -64,12 +64,12 @@ const ReAssessmentUI = () => {
         }}
         className="bg-[#ffffff] mt-10 p-6 rounded-lg shadow-lg flex flex-col gap-10"
       >
-        <div className="w-full flex items-start justify-start gap-32">
-          <div className="w-[20%] flex flex-col gap-3">
+        <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
+          <div className="w-full lg:w-[20%] flex flex-col gap-3">
             <Title title="Before you start" className="text-xl font-semibold" />
           </div>
 
-          <div className="max-w-[40%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-5">
+          <div className="max-w-full lg:max-w-[40%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-5">
             <div>
               <form.Field
                 name="follow_the_recommendation"

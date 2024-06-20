@@ -7,7 +7,7 @@ import Title from "../Common/Title";
 
 const LoginPageUI = () => {
   return (
-    <div className="mt-10 w-full flex flex-col items-center justify-center gap-10">
+    <div className="mt-5 lg:mt-10 w-full flex flex-col items-center justify-center gap-10">
       <LoginCard textCenter />
 
       <div className="flex flex-col items-center justify-center gap-5 max-w-[435px]">

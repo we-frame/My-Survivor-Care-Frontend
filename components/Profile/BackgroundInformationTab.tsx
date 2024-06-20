@@ -12,7 +12,7 @@ const BackgroundInformationTab = ({
   editBackgroundInfo,
 }: BackgroundInformationTabsTypes) => {
   return (
-    <div className="grid grid-cols-2 auto-rows-auto gap-x-0 gap-y-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 auto-rows-auto gap-x-0 gap-y-4">
       <div>
         <form.Field
           name="BackgroundInformation.name"

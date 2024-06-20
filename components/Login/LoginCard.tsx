@@ -10,13 +10,13 @@ interface LoginCardTypes {
 
 const LoginCard = ({ textCenter }: LoginCardTypes) => {
   return (
-    <div className="flex flex-col items-start justify-start gap-5">
+    <div className="flex flex-col items-center justify-center lg:items-start lg:justify-start gap-5">
       <Title
         title="Login to MySurvivorCare"
         className={
           textCenter
             ? "text-center text-xl font-semibold"
-            : "text-left text-xl font-semibold"
+            : "text-center lg:text-left text-xl font-semibold"
         }
       />
       <div className="bg-[#FFFFFF] flex flex-col items-center justify-center gap-3 shadow-xl px-5 py-7 rounded-xl">
