@@ -5,27 +5,33 @@ import SelectInput from "../FormInputs/SelectInput";
 
 interface BackgroundInformationTypes {
   form?: any;
+  showHeading?: boolean;
 }
 
-const BackgroundInformation = ({ form }: BackgroundInformationTypes) => {
+const BackgroundInformation = ({
+  form,
+  showHeading = true,
+}: BackgroundInformationTypes) => {
   return (
     <div className="w-full flex items-start justify-start gap-32">
-      <div className="w-[20%] flex flex-col gap-3">
-        <Title
-          title="Background Information"
-          className="text-xl font-semibold"
-        />
-        <p className="text-xs font-normal">
-          Menopausal symptoms in cancer survivors vary from person to person. To
-          figure out how your traits may affect your symptoms, we need some
-          information about you.
-        </p>
-        <p className="text-xs font-normal">
-          Sharing this information helps us give you the best care and support.
-          Some information will also help us customise this site for you.
-        </p>
-      </div>
-
+      {showHeading && (
+        <div className="w-[20%] flex flex-col gap-3">
+          <Title
+            title="Background Information"
+            className="text-xl font-semibold"
+          />
+          <p className="text-xs font-normal">
+            Menopausal symptoms in cancer survivors vary from person to person.
+            To figure out how your traits may affect your symptoms, we need some
+            information about you.
+          </p>
+          <p className="text-xs font-normal">
+            Sharing this information helps us give you the best care and
+            support. Some information will also help us customise this site for
+            you.
+          </p>
+        </div>
+      )}
       <div className="max-w-[80%] grid grid-cols-2 auto-rows-auto gap-x-10 gap-y-4">
         <div>
           <form.Field

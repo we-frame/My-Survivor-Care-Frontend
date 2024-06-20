@@ -56,7 +56,7 @@ const RegisterPageUI = () => {
   });
 
   return (
-    <div>
+    <div className="mt-10">
       <div className="flex flex-col justify-start items-start gap-3">
         <Title title="Register" className="text-4xl font-semibold" />
         <p className="text-base font-normal">
@@ -89,7 +89,7 @@ const RegisterPageUI = () => {
                   backgroundColor: buttonBgColor,
                 }}
                 className={cn(
-                  "border rounded-lg px-5 py-4 text-[#C7D2FE]",
+                  "border rounded-lg px-5 py-3 text-[#C7D2FE]",
                   !canSubmit &&
                     "bg-green-300 text-black disabled:cursor-not-allowed"
                 )}

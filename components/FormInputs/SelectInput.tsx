@@ -15,7 +15,7 @@ const SelectInput: React.FC<SelectInputTypes> = ({
 }) => {
   return (
     <div>
-      <label className="form-control w-full max-w-xs">
+      <label className="form-control w-full max-w-md">
         {label && (
           <div className="label">
             <span className="label-text font-normal">
@@ -26,7 +26,7 @@ const SelectInput: React.FC<SelectInputTypes> = ({
         )}
 
         <select
-          className={cn(`select select-bordered`, className)}
+          className={cn(`select select-bordered max-w-xs`, className)}
           name={field.name}
           required={isRequired}
           value={field.state.value}

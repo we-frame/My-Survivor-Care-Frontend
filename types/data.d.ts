@@ -40,3 +40,11 @@ export interface MenopauseAssessmentTypes {
   enjoyment_of_life: number;
   quality_of_life: number;
 }
+
+export interface ReAssessmentFormTypes {
+  follow_the_recommendation: string;
+  find_the_recommendation: string;
+  reassess_your_symptoms: string;
+  // Object containing Menopause Assessment information form values
+  MenopauseAssessment: MenopauseAssessmentTypes;
+}
