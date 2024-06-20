@@ -6,10 +6,13 @@ import Accordion from "../Common/Accordion";
 const RecommendationsTab = () => {
   return (
     <div className="flex flex-col">
-      <div className="w-full grid grid-cols-2 auto-rows-auto gap-10">
-        <div className="flex flex-col items-start justify-start  gap-4">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-2 auto-rows-auto gap-5 lg:gap-10">
+        <div className="flex flex-col items-start justify-start gap-4">
           <p className="text-sm font-normal">Symptom severity</p>
-          <Title title="Moderate symptoms" className="text-4xl font-semibold" />
+          <Title
+            title="Moderate symptoms"
+            className="text-3xl lg:text-4xl font-semibold"
+          />
           <Button
             text="Download my results"
             btnBg="#f3f4f6"
@@ -39,10 +42,10 @@ const RecommendationsTab = () => {
         </div>
       </div>
 
-      <div className="w-[90%] flex flex-col items-start justify-start gap-5 mt-20">
+      <div className="w-full lg:w-[90%] flex flex-col items-start justify-start gap-5 mt-10 lg:mt-20">
         <Title
           title="Clinical Practice Guidelines"
-          className="text-2xl font-semibold"
+          className="text-xl lg:text-2xl font-semibold"
         />
         <p className="text-base font-normal">
           Cancer patients dealing with menopausal symptoms often need a

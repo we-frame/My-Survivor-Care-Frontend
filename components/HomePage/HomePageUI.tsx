@@ -6,8 +6,8 @@ import LoginCard from "../Login/LoginCard";
 
 const HomePageUI = () => {
   return (
-    <div className="w-full flex items-start justify-start gap-20">
-      <div className="w-[60%] flex flex-col items-start justify-start gap-5">
+    <div className="w-full mt-5 lg:mt-10 flex flex-col lg:flex-row marker:items-center justify-center lg:items-start lg:justify-start gap-12 lg:gap-20">
+      <div className="w-full lg:w-[60%] flex flex-col items-start justify-start gap-5">
         <h1 className="text-4xl font-semibold">
           Welcome to the MySurvivorCare Platform.
         </h1>

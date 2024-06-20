@@ -13,9 +13,9 @@ const BackgroundInformation = ({
   showHeading = true,
 }: BackgroundInformationTypes) => {
   return (
-    <div className="w-full flex items-start justify-start gap-32">
+    <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
       {showHeading && (
-        <div className="w-[20%] flex flex-col gap-3">
+        <div className="w-full lg:w-[20%] flex flex-col gap-3">
           <Title
             title="Background Information"
             className="text-xl font-semibold"
@@ -32,7 +32,7 @@ const BackgroundInformation = ({
           </p>
         </div>
       )}
-      <div className="max-w-[80%] grid grid-cols-2 auto-rows-auto gap-x-10 gap-y-4">
+      <div className="max-w-full lg:max-w-[80%] grid grid-cols-1 lg:grid-cols-2 auto-rows-auto gap-x-10 gap-y-4">
         <div>
           <form.Field
             name="BackgroundInformation.name"

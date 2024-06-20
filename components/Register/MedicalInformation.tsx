@@ -9,15 +9,15 @@ interface MedicalInformationTypes {
 
 const MedicalInformation = ({ form }: MedicalInformationTypes) => {
   return (
-    <div className="w-full flex items-start justify-start gap-32">
-      <div className="w-[20%] flex flex-col gap-3">
+    <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
+      <div className="w-full lg:w-[20%] flex flex-col gap-3">
         <Title title="Medical Information" className="text-xl font-semibold" />
         <p className="text-xs font-normal">
           This is how you will log in to the MySurvivorCare platform.
         </p>
       </div>
 
-      <div className="max-w-[80%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-4">
+      <div className="max-w-full lg:max-w-[80%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-4">
         <div>
           <form.Field
             name="MedicalInformation.cancer_treatment"

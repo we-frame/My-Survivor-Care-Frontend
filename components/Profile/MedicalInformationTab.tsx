@@ -12,7 +12,7 @@ const MedicalInformationTab = ({
   editMedicalInformation,
 }: MedicalInformationTabTypes) => {
   return (
-    <div className="max-w-[80%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-4">
+    <div className="max-w-full lg:max-w-[80%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-4">
       <div>
         <form.Field
           name="MedicalInformation.cancer_treatment"

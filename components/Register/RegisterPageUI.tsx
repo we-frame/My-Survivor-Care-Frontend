@@ -56,7 +56,7 @@ const RegisterPageUI = () => {
   });
 
   return (
-    <div className="mt-10">
+    <div className="mt-5 lg:mt-10">
       <div className="flex flex-col justify-start items-start gap-3">
         <Title title="Register" className="text-4xl font-semibold" />
         <p className="text-base font-normal">
@@ -73,7 +73,7 @@ const RegisterPageUI = () => {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="bg-[#ffffff] mt-10 p-6 rounded-lg shadow-lg flex flex-col gap-10"
+        className="bg-[#ffffff] mt-10 p-4 lg:p-6 rounded-lg shadow-lg flex flex-col gap-10"
       >
         <YourAccount />
         <BackgroundInformation form={form} />

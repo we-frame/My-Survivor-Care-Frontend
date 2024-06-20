@@ -10,7 +10,7 @@ const ConsumerResourcesUI = () => {
     buttonBgColor: state.buttonBgColor,
   }));
   return (
-    <div className="mt-10 w-[60%] flex flex-col items-start justify-start gap-10">
+    <div className="mt-5 lg:mt-10 w-full lg:w-[60%] flex flex-col items-start justify-start gap-10">
       <Title
         title="Resources for Consumers"
         className="text-4xl font-semibold"

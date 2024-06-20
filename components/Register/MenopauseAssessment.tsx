@@ -8,8 +8,8 @@ interface MenopauseAssessmentTypes {
 
 const MenopauseAssessment = ({ form }: MenopauseAssessmentTypes) => {
   return (
-    <div className="w-full flex items-start justify-start gap-32">
-      <div className="w-[20%] flex flex-col gap-3">
+    <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
+      <div className="w-full lg:w-[20%] flex flex-col gap-3">
         <Title title="Menopause assessment" className="text-xl font-semibold" />
         <p className="text-xs font-normal">
           To help assess your symptoms and suggest a suitable level of care,
@@ -21,7 +21,7 @@ const MenopauseAssessment = ({ form }: MenopauseAssessmentTypes) => {
         </p>
       </div>
 
-      <div className="max-w-[40%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-10">
+      <div className="max-w-full lg:max-w-[40%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-10">
         <div className="flex flex-col gap-3">
           <Title
             title="Menopause After Cancer Self-Assessment Tool"
