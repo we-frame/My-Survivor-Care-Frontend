@@ -25,7 +25,7 @@ export const makeRequest = async (
   // if (localToken) {
     axiosOptions.headers = {
       // Authorization: `Bearer ${localToken}`, // Setting Authorization header
-      Authorization: `Bearer qvt97I85V4ZM-1LYIIRcDXFWF3sqq1HG`, // Setting Authorization header
+      // Authorization: `Bearer qvt97I85V4ZM-1LYIIRcDXFWF3sqq1HG`, // Setting Authorization header
       ...headers, // Spreading any additional headers
     };
   // }
