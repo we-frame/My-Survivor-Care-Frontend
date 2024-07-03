@@ -35,9 +35,9 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
 
   const logout = async () => {
     try {
-      await makeRequest("GET", "/users", null, {
-        credentials: "include",
-      });
+      // await makeRequest("GET", "/users", null, {
+      //   credentials: "include",
+      // });
       // await fetch("https://api.mysurviour.agpro.co.in/auth/logout", {
       //   method: "POST",
       //   credentials: "same-origin",// this is required in order to send the refresh/session token cookie
