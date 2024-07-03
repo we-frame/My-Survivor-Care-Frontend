@@ -19,7 +19,7 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
     setLoading(true);
 
     if (authProvider === "google") {
-      router.replace(
+      router.push(
         "https://api.mysurviour.agpro.co.in/auth/login/google?redirect=https://mysurvivorcare.netlify.app"
       );
     }
@@ -35,18 +35,27 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
 
   const logout = async () => {
     try {
-      // await makeRequest("POST", "/auth/logout", null, {
-      //   credentials: "include",
-      // });
-      await fetch("https://api.mysurviour.agpro.co.in/auth/refresh", {
-        method: "POST",
-        credentials: "include", // this is required in order to send the refresh/session token cookie
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ mode: "session" }), // using 'session' mode, but can also be 'cookie' or 'json'
+      await makeRequest("GET", "/users", null, {
+        credentials: "include",
       });
+      // await fetch("https://api.mysurviour.agpro.co.in/auth/logout", {
+      //   method: "POST",
+      //   credentials: "same-origin",// this is required in order to send the refresh/session token cookie
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "application/json",
+      //   },
+      //   // bo÷y: JSON.stringify({ mode: "session" }), // using 'session' mode, but can also be 'cookie' or 'json'
+      // });
+      // await fetch("https://api.mysurviour.agpro.co.in/auth/refresh", {
+      //   method: "POST",
+      //   credentials: "include", // this is required in order to send the refresh/session token cookie
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ mode: "session" }), // using 'session' mode, but can also be 'cookie' or 'json'
+      // });
     } catch (error) {
       console.log(error);
     }
