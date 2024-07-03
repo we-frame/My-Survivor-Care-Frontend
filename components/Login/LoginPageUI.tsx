@@ -1,14 +1,29 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import LoginCard from "./LoginCard";
 import Link from "next/link";
 import Title from "../Common/Title";
+import { makeRequest } from "@/lib/api";
 
 const LoginPageUI = () => {
+  const [authProviders, setAuthProviders] = useState();
+
+  const getAuthProviders = async () => {
+    try {
+      const loginData = await makeRequest("GET", "/auth");
+      setAuthProviders(loginData?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAuthProviders();
+  }, []);
   return (
     <div className="mt-5 lg:mt-10 w-full flex flex-col items-center justify-center gap-10">
-      <LoginCard textCenter />
+      <LoginCard data={authProviders} textCenter />
 
       <div className="flex flex-col items-center justify-center gap-5 max-w-[435px]">
         <div className="collapse collapse-plus bg-base-200">
