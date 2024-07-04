@@ -7,7 +7,7 @@ export const refresh = async () => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ mode: "json" }), // using 'session' mode, but can also be 'cookie' or 'json'
+        body: JSON.stringify({ mode: "session" }), // using 'session' mode, but can also be 'cookie' or 'json'
       });
     } catch (error) {
       console.log(error);
