@@ -15,12 +15,13 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  const Login = async (authProvider: string) => {
+  const Login = async (authProvider: string, redirect?: string) => {
     setLoading(true);
 
     if (authProvider === "google") {
       router.push(
-        "https://api.mysurviour.agpro.co.in/auth/login/google?redirect=https://mysurvivorcare.netlify.app"
+        // `https://api.mysurviour.agpro.co.in/auth/login/google?redirect=https://mysurvivorcare.netlify.app/${redirect ?? ""}`
+        `https://api.mysurviour.agpro.co.in/auth/login/google?redirect=http://localhost:3000/${redirect ?? ""}`
       );
     }
 
@@ -33,7 +34,7 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
     // }
   };
 
-  const logout = async () => {
+  const refresh = async () => {
     try {
       // await makeRequest("GET", "/users", null, {
       //   credentials: "include",
@@ -54,7 +55,7 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ mode: "session" }), // using 'session' mode, but can also be 'cookie' or 'json'
+        body: JSON.stringify({ mode: "json" }), // using 'session' mode, but can also be 'cookie' or 'json'
       });
     } catch (error) {
       console.log(error);
@@ -81,7 +82,7 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
                 className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base font-semibold btn-outline hover:text-black disabled:cursor-not-allowed"
                 btnBg="#f8fafc"
                 jsxIcon={<GoogleIcon width="20" height="20" />}
-                onClick={() => Login(item?.name)}
+                onClick={() => Login(item?.name, "login")}
                 disabled={loading}
               />
             );
@@ -102,7 +103,7 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
           }
         })}
 
-        <button onClick={logout}>Logout</button>
+        <button onClick={refresh}>Logout</button>
       </div>
     </div>
   );
