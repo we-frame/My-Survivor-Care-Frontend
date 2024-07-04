@@ -82,7 +82,7 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
                 className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base font-semibold btn-outline hover:text-black disabled:cursor-not-allowed"
                 btnBg="#f8fafc"
                 jsxIcon={<GoogleIcon width="20" height="20" />}
-                onClick={() => Login(item?.name, "login")}
+                onClick={() => Login(item?.name)}
                 disabled={loading}
               />
             );
