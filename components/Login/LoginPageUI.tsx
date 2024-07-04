@@ -5,10 +5,12 @@ import LoginCard from "./LoginCard";
 import Link from "next/link";
 import Title from "../Common/Title";
 import { makeRequest } from "@/lib/api";
+import { refresh } from "@/lib/refresh";
 
 const LoginPageUI = () => {
   const [authProviders, setAuthProviders] = useState();
 
+  // refresh()
   const getAuthProviders = async () => {
     try {
       const loginData = await makeRequest("GET", "/auth");
@@ -19,6 +21,7 @@ const LoginPageUI = () => {
   };
 
   useEffect(() => {
+    refresh();
     getAuthProviders();
   }, []);
   return (

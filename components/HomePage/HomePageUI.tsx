@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../Common/Button";
 import LoginCard from "../Login/LoginCard";
 import { makeRequest } from "@/lib/api";
+import { refresh } from "@/lib/refresh";
 
 const HomePageUI = () => {
   const [authProviders, setAuthProviders] = useState();
@@ -18,6 +19,7 @@ const HomePageUI = () => {
   };
 
   useEffect(() => {
+    refresh();
     getAuthProviders();
   }, []);
 
