@@ -20,8 +20,8 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
 
     if (authProvider === "google") {
       router.push(
-        // `https://api.mysurviour.agpro.co.in/auth/login/google?redirect=https://mysurvivorcare.netlify.app/${redirect ?? ""}`
-        `https://api.mysurviour.agpro.co.in/auth/login/google?redirect=http://localhost:3000/${redirect ?? ""}`
+        `https://api.mysurviour.agpro.co.in/auth/login/google?redirect=https://mysurvivorcare.netlify.app/${redirect ?? ""}`
+        // `https://api.mysurviour.agpro.co.in/auth/login/google?redirect=http://localhost:3000/${redirect ?? ""}`
       );
     }
 
