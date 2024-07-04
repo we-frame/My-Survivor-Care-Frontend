@@ -7,7 +7,6 @@ import { makeRequest } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
-
 interface LoginCardTypes {
   textCenter?: boolean;
   data?: any;
@@ -16,14 +15,18 @@ interface LoginCardTypes {
 const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+  const l = Cookies.get("directus_refresh_token");
+  console.log(l);
 
   const Login = async (authProvider: string, redirect?: string) => {
     setLoading(true);
 
     if (authProvider === "google") {
       router.push(
-        // `https://api.mysurviour.agpro.co.in/auth/login/google?redirect=https://mysurvivorcare.netlify.app/${redirect ?? ""}`
-        `https://api.mysurviour.agpro.co.in/auth/login/google?redirect=http://localhost:3000/${redirect ?? ""}`
+        `https://api.mysurviour.agpro.co.in/auth/login/google?redirect=https://mysurvivorcare.netlify.app/${redirect ?? ""}`
+        // `https://api.mysurviour.agpro.co.in/auth/login/google?redirect=http://localhost:3000/${
+        //   redirect ?? ""
+        // }`
       );
     }
 
@@ -50,20 +53,20 @@ const LoginCard = ({ textCenter, data }: LoginCardTypes) => {
       //   },
       //   // bo÷y: JSON.stringify({ mode: "session" }), // using 'session' mode, but can also be 'cookie' or 'json'
       // });
-       // const cookieStore = cookies()
-       const refreshToken = Cookies.get("directus_refresh_token")
-       console.log("refreshToken: ", refreshToken);
-       
-     await fetch("https://api.mysurviour.agpro.co.in/auth/refresh", {
-       method: "POST",
-       credentials: "include", // this is required in order to send the refresh/session token cookie
-       headers: {
-         Accept: "application/json",
-         "Content-Type": "application/json",
-       },
-       body: JSON.stringify({ mode: "json", refresh_token: refreshToken }), // using 'session' mode, but can also be 'cookie' or 'json'
-       // body: JSON.stringify({ mode: "session" }), // using 'session' mode, but can also be 'cookie' or 'json'
-     });
+      // const cookieStore = cookies()
+      const refreshToken = Cookies.get("directus_refresh_token");
+      console.log("refreshToken: ", refreshToken);
+
+      await fetch("https://api.mysurviour.agpro.co.in/auth/refresh", {
+        method: "POST",
+        credentials: "include", // this is required in order to send the refresh/session token cookie
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify({ mode: "cookie" }), // using 'session' mode, but can also be 'cookie' or 'json'
+        body: JSON.stringify({ mode: "session" }), // using 'session' mode, but can also be 'cookie' or 'json'
+      });
     } catch (error) {
       console.log(error);
     }
