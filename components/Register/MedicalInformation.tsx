@@ -2,75 +2,100 @@ import React from "react";
 import Title from "../Common/Title";
 import SelectInput from "../FormInputs/SelectInput";
 import MultipleCheckboxInput from "../FormInputs/MultipleCheckboxInput";
+import TextInput from "../FormInputs/TextInput";
 
 interface MedicalInformationTypes {
   form?: any;
+  formData?: any;
 }
 
-const MedicalInformation = ({ form }: MedicalInformationTypes) => {
+const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
+  console.log(formData);
   return (
     <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
       <div className="w-full lg:w-[20%] flex flex-col gap-3">
-        <Title title="Medical Information" className="text-xl font-semibold" />
-        <p className="text-xs font-normal">
-          This is how you will log in to the MySurvivorCare platform.
-        </p>
+        <Title title={formData?.title} className="text-xl font-semibold" />
+        <p className="text-xs font-normal">{formData?.description}</p>
       </div>
 
       <div className="max-w-full lg:max-w-[80%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-4">
-        <div>
-          <form.Field
-            name="MedicalInformation.cancer_treatment"
-            children={(field: any) => (
-              <SelectInput
-                field={field}
-                selectOptions={[
-                  { label: "Yes", value: "yes" },
-                  { label: "No", value: "no" },
-                ]}
-                label="Have you had treatment for cancer, either currently or in the past?"
-                isRequired
-                className="w-full"
-              />
-            )}
-          />
-        </div>
+        {formData?.form_components?.map((component: any) => {
+          const { question_id } = component;
+          if (question_id?.type === "multiple_response") {
+            form?.MedicalInformation?.setValue(question_id?.id, []);
+          }
+          switch (question_id?.question_type) {
+            case "input":
+              return (
+                <div key={question_id?.id}>
+                  <form.Field
+                    name={`MedicalInformation.${question_id?.id}`}
+                    children={(field: any) => (
+                      <TextInput
+                        field={field}
+                        label={question_id?.question}
+                        isRequired={question_id?.required}
+                        placeholder={question_id?.question}
+                        type={question_id?.input_datatype}
+                        bottomText={question_id?.description}
+                      />
+                    )}
+                  />
+                </div>
+              );
+            case "select":
+              return (
+                <div key={question_id?.id}>
+                  <form.Field
+                    name={`MedicalInformation.${question_id?.id}`}
+                    children={(field: any) => (
+                      <SelectInput
+                        field={field}
+                        selectOptions={question_id?.options?.map(
+                          (option: any) => ({
+                            label: option?.option_id?.title,
+                            value: option?.option_id?.id,
+                          })
+                        )}
+                        placeholder={question_id?.question}
+                        label={question_id?.question}
+                        isRequired={question_id?.required}
+                        bottomText={question_id?.description}
+                      />
+                    )}
+                  />
+                </div>
+              );
+            case "multiple_checkbox":
+              return (
+                <div key={question_id?.id}>
+                  <form.Field
+                    name={`MedicalInformation.${question_id?.id}`}
+                    children={(field: any) => (
+                      <MultipleCheckboxInput
+                        containerClassName="grid grid-cols-2 auto-rows-auto gap-x-10 gap-y-4"
+                        field={field}
+                        label={question_id?.question}
+                        options={
+                          question_id?.options?.map(
+                            (option: any) => ({
+                              label: option?.option_id?.title,
+                              value: option?.option_id?.id,
+                            })
+                          )
+                        }
+                        isRequired={true}
+                      />
+                    )}
+                  />
+                </div>
+              );
+            default:
+              return null;
+          }
+        })}
 
-        <div>
-          <form.Field
-            name="MedicalInformation.removal_ovaries"
-            children={(field: any) => (
-              <SelectInput
-                field={field}
-                selectOptions={[
-                  { label: "Yes", value: "yes" },
-                  { label: "No", value: "no" },
-                ]}
-                label="Did the treatment involve the removal of your ovaries?"
-                isRequired
-              />
-            )}
-          />
-        </div>
-
-        <div>
-          <form.Field
-            name="MedicalInformation.removal_uterus"
-            children={(field: any) => (
-              <SelectInput
-                field={field}
-                selectOptions={[
-                  { label: "Yes", value: "yes" },
-                  { label: "No", value: "no" },
-                ]}
-                label="Did the treatment involve the removal of your uterus or womb?"
-                isRequired
-              />
-            )}
-          />
-        </div>
-
-        <div>
+        {/* <div>
           <form.Field
             name="MedicalInformation.treatment_types"
             children={(field: any) => (
@@ -129,57 +154,7 @@ const MedicalInformation = ({ form }: MedicalInformationTypes) => {
               />
             )}
           />
-        </div>
-
-        <div>
-          <form.Field
-            name="MedicalInformation.cancer_type"
-            children={(field: any) => (
-              <SelectInput
-                field={field}
-                selectOptions={[{ label: "Breast", value: "breast" }]}
-                label="What type of cancer were you first diagnosed with?"
-                isRequired
-              />
-            )}
-          />
-        </div>
-
-        <div>
-          <form.Field
-            name="MedicalInformation.type_of_breast_cancer"
-            children={(field: any) => (
-              <SelectInput
-                field={field}
-                selectOptions={[
-                  {
-                    label: "progesterone-receptor-positive",
-                    value: "Progesterone-receptor-positive",
-                  },
-                ]}
-                label="What specific type of breast cancer were you diagnosed with?"
-                isRequired
-              />
-            )}
-          />
-        </div>
-
-        <div>
-          <form.Field
-            name="MedicalInformation.other_cancers"
-            children={(field: any) => (
-              <SelectInput
-                field={field}
-                selectOptions={[
-                  { label: "Yes", value: "yes" },
-                  { label: "No", value: "no" },
-                ]}
-                label="Have you been diagnosed with any other cancer/s?"
-                isRequired
-              />
-            )}
-          />
-        </div>
+        </div> */}
       </div>
     </div>
   );

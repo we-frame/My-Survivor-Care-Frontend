@@ -21,14 +21,14 @@ export const makeRequest = async (
   };
 
   // Retrieving the access token from cookies
-  // const localToken = Cookies.get("access-token");
-  // if (localToken) {
+  const localToken = Cookies.get("access-token");
+  if (localToken) {
     axiosOptions.headers = {
-      // Authorization: `Bearer ${localToken}`, // Setting Authorization header
+      Authorization: `Bearer ${localToken}`, // Setting Authorization header
       // Authorization: `Bearer qvt97I85V4ZM-1LYIIRcDXFWF3sqq1HG`, // Setting Authorization header
       ...headers, // Spreading any additional headers
     };
-  // }
+  }
 
   // Making the request with configured options
   const res = await axios.request({

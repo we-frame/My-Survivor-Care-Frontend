@@ -3,6 +3,7 @@
 import Navbar from "@/components/Navbar/Navbar";
 import useSettingStore from "@/store/SettingStore";
 import React, { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
 
 interface MainLayoutTypes {
   children: React.ReactNode;
@@ -31,6 +32,22 @@ const MainLayout = ({ children }: MainLayoutTypes) => {
   }
   return (
     <>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          // Define default options
+          className: "",
+          duration: 2000,
+          style: {
+            color: "black",
+            background: "#f9f5ed",
+          },
+        }}
+      />
       <Navbar />
       <main>{children}</main>
     </>

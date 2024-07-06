@@ -1,9 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "../Common/Button";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { makeRequest } from "@/lib/api";
+import Cookie from "js-cookie";
+import toast from "react-hot-toast";
+import useLoadingStore from "@/store/loadingStore";
 
 interface NavItem {
   href: string;
@@ -14,14 +18,37 @@ const navItems: NavItem[] = [
   { href: "/consumer-resources", label: "Consumer Resources" },
   { href: "/practitioner-resources", label: "Practitioner Resources" },
   { href: "/healthcare-professional", label: "Find a Healthcare Professional" },
+  { href: "/profile", label: "Profile" },
 ];
 
 const Navbar: React.FC = () => {
+  const { refresh, setRefresh } = useLoadingStore();
   // Function to close the drawer menu
   const closeDrawer = () => {
     (document.getElementById("my-drawer-3") as HTMLInputElement).checked =
       false;
   };
+
+  const logout = async () => {
+    const refreshToken = Cookie.get("refresh-token");
+    try {
+      if (refreshToken) {
+        await makeRequest("POST", "/auth/logout", {
+          refresh_token: refreshToken,
+        });
+      }
+      Cookie.remove("access-token");
+      Cookie.remove("refresh-token");
+
+      setRefresh(!refresh);
+
+      toast.success("Logged out!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {}, [refresh]);
 
   return (
     <nav>
@@ -51,18 +78,29 @@ const Navbar: React.FC = () => {
             <div className="flex-none hidden lg:block">
               <div className="flex items-center gap-8">
                 <button className="text-base font-normal">About</button>
-                {navItems.map((item) => (
-                  <Link key={item.href} href={item.href}>
-                    <button className="text-base font-normal">
-                      {item.label}
-                    </button>
-                  </Link>
-                ))}
-                <Button
-                  text="Log in"
-                  className="text-[#C7D2FE] text-base font-normal"
-                  link="/login"
-                />
+                {Cookie.get("access-token") &&
+                  navItems.map((item) => (
+                    <Link key={item.href} href={item.href}>
+                      <button className="text-base font-normal">
+                        {item.label}
+                      </button>
+                    </Link>
+                  ))}
+
+                {Cookie.get("access-token") ? (
+                  <Button
+                    text="Log out"
+                    className="text-black bg-[#f3f4f6] text-base font-medium"
+                    btnBg="#f3f4f6"
+                    onClick={logout}
+                  />
+                ) : (
+                  <Button
+                    text="Log in"
+                    className="text-[#C7D2FE] text-base font-normal"
+                    link="/login"
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -87,16 +125,23 @@ const Navbar: React.FC = () => {
             {/* Sidebar navigation links */}
             <div className="menu flex flex-col items-start justify-start gap-8 mt-10">
               <button className="text-base font-normal">About</button>
-              {navItems?.map((item: NavItem) => (
-                <Link onClick={closeDrawer} key={item?.href} href={item?.href}>
-                  <button
+
+              {Cookie.get("access-token") &&
+                navItems?.map((item: NavItem) => (
+                  <Link
                     onClick={closeDrawer}
-                    className="text-base font-normal"
+                    key={item?.href}
+                    href={item?.href}
                   >
-                    {item?.label}
-                  </button>
-                </Link>
-              ))}
+                    <button
+                      onClick={closeDrawer}
+                      className="text-base font-normal"
+                    >
+                      {item?.label}
+                    </button>
+                  </Link>
+                ))}
+              {/* {} */}
               <Button
                 onClick={closeDrawer}
                 text="Log in"
