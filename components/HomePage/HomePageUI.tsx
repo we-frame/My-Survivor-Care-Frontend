@@ -1,28 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { checkLogin } from "@/lib/checkLogin";
 import Button from "../Common/Button";
 import LoginCard from "../Login/LoginCard";
-import { makeRequest } from "@/lib/api";
-import { refresh } from "@/lib/refresh";
+import useLoadingStore from "@/store/loadingStore";
+import { useEffect, useState } from "react";
+import Cookie from "js-cookie";
 
 const HomePageUI = () => {
-  const [authProviders, setAuthProviders] = useState();
+  const { refresh } = useLoadingStore();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  const getAuthProviders = async () => {
-    try {
-      const loginData = await makeRequest("GET", "/auth");
-      setAuthProviders(loginData?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    refresh();
-    getAuthProviders();
-  }, []);
-
+  useEffect(() => {}, [refresh]);
   return (
     <div className="w-full mt-5 lg:mt-10 flex flex-col lg:flex-row marker:items-center justify-center lg:items-start lg:justify-start gap-12 lg:gap-20">
       <div className="w-full lg:w-[60%] flex flex-col items-start justify-start gap-5">
@@ -72,7 +61,7 @@ const HomePageUI = () => {
         </div>
       </div>
 
-      <LoginCard data={authProviders} />
+      {!Cookie.get("access-token") && <LoginCard />}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import Title from "../Common/Title";
 import Link from "next/link";
 import YourAccount from "./YourAccount";
@@ -11,42 +11,21 @@ import { cn } from "@/lib/utils";
 import MedicalInformation from "./MedicalInformation";
 import MenopauseAssessment from "./MenopauseAssessment";
 import useSettingStore from "@/store/SettingStore";
+import { makeRequest } from "@/lib/api";
 
 const RegisterPageUI = () => {
   const { buttonBgColor } = useSettingStore((state) => ({
     buttonBgColor: state.buttonBgColor,
   }));
+  const [backgroundInformation, setBackgroundInformation] = useState<any>();
+  const [medicalInformation, setMedicalInformation] = useState<any>();
+  const [menopauseAssessment, setMenopauseAssessment] = useState<any>();
   // Initializing form with default values and submission handler
-  const form = useForm<RegisterFormValuesTypes>({
+  const form = useForm<any>({
     defaultValues: {
-      BackgroundInformation: {
-        name: "",
-        dob: "",
-        preferred_pronoun: "",
-        ethnic_group: "unsure",
-        postcode: 12345,
-      },
-      MedicalInformation: {
-        cancer_treatment: "yes",
-        removal_ovaries: "no",
-        removal_uterus: "yes",
-        treatment_types: ["chemotherapy", "brachytherapy"],
-        cancer_type: "",
-        type_of_breast_cancer: "",
-        other_cancers: "",
-      },
-      MenopauseAssessment: {
-        work: 50,
-        social_activities: 50,
-        leisure_activities: 0,
-        sleep: 100,
-        mood: 50,
-        concentration: 0,
-        relations_with_others: 0,
-        sexuality: 0,
-        enjoyment_of_life: 50,
-        quality_of_life: 50,
-      },
+      BackgroundInformation: {},
+      MedicalInformation: {},
+      MenopauseAssessment: {},
     },
 
     // Form submission handler
@@ -54,6 +33,55 @@ const RegisterPageUI = () => {
       console.log("Register form values ::", value);
     },
   });
+
+  const getBackgroundInformationData = async () => {
+    try {
+      const data = await makeRequest(
+        "GET",
+        `/items/form?filter={"key": {"_eq": "RBI"}}&fields=*,form_components.*,form_components.question_id.*,form_components.question_id.options.*,form_components.question_id.options.option_id.*`
+      );
+      setBackgroundInformation(data?.data[0]);
+
+      if (data?.data[0]) {
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getMedicalInformationData = async () => {
+    try {
+      const data = await makeRequest(
+        "GET",
+        `/items/form?filter={"key": {"_eq": "MI"}}&fields=*,form_components.*,form_components.question_id.*,form_components.question_id.options.*,form_components.question_id.options.option_id.*`
+      );
+      setMedicalInformation(data?.data[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getMenopauseAssessmentData = async () => {
+    try {
+      const data = await makeRequest(
+        "GET",
+        `/items/form?filter={"key": {"_eq": "MA"}}&fields=*,form_components.*,form_components.question_id.*,form_components.question_id.options.*,form_components.question_id.options.option_id.*`
+      );
+      setMenopauseAssessment(data?.data[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getBackgroundInformationData();
+    getMedicalInformationData();
+    getMenopauseAssessmentData();
+  }, []);
+
+  console.log(backgroundInformation);
+  console.log(medicalInformation);
+  console.log(menopauseAssessment);
 
   return (
     <div className="mt-5 lg:mt-10">
@@ -76,9 +104,9 @@ const RegisterPageUI = () => {
         className="bg-[#ffffff] mt-10 p-4 lg:p-6 rounded-lg shadow-lg flex flex-col gap-10"
       >
         <YourAccount />
-        <BackgroundInformation form={form} />
-        <MedicalInformation form={form} />
-        <MenopauseAssessment form={form} />
+        <BackgroundInformation form={form} formData={backgroundInformation} />
+        <MedicalInformation form={form} formData={medicalInformation} />
+        <MenopauseAssessment form={form} />        
 
         <div className="w-full flex items-center justify-center">
           <form.Subscribe

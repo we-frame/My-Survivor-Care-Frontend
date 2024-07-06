@@ -30,14 +30,24 @@ const MultipleCheckboxInput: React.FC<MultipleCheckboxInputTypes> = ({
               type="checkbox"
               className={`checkbox checkbox-sm ${option?.className}`}
               value={option?.value}
-              checked={field.state.value.includes(option?.value)}
+              checked={field?.state?.value?.includes(option?.value)}
+              // onChange={(e) => {
+              //   if (isDisabled) return;
+              //   const value = e.target.value;
+              //   const isChecked = e.target.checked;
+              //   const newValue = isChecked
+              //     ? [...field?.state?.value, value]
+              //     : field?.state?.value?.filter((v: string) => v !== value);
+              //   field.handleChange(newValue);
+              // }}
               onChange={(e) => {
                 if (isDisabled) return;
                 const value = e.target.value;
                 const isChecked = e.target.checked;
+                const currentValues = field?.state?.value || []; // Ensure it's always an array
                 const newValue = isChecked
-                  ? [...field.state.value, value]
-                  : field.state.value.filter((v: string) => v !== value);
+                  ? [...currentValues, value]
+                  : currentValues.filter((v: string) => v !== value);
                 field.handleChange(newValue);
               }}
               disabled={isDisabled}

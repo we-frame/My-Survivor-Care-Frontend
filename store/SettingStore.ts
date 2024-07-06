@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { persistMiddleware } from "./SettingMiddleware";
+import { persistMiddleware } from "./persistMiddleware";
 
 interface SettingState {
   backgroundColor: string;

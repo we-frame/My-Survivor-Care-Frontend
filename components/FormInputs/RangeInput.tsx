@@ -34,9 +34,9 @@ const RangeInput = ({
       <div className="w-full">
         <input
           type="range"
-          name={field.name}
+          name={field?.name}
           required={isRequired}
-          value={field.state.value}
+          value={field?.state?.value}
           onBlur={field.handleBlur}
           onChange={(e) => field.handleChange(e.target.value)}
           disabled={isDisabled}
