@@ -49,15 +49,13 @@ const MedicalInformationTab = ({
                       field={field}
                       selectOptions={question?.options?.map((option: any) => ({
                         label: option?.option_id?.title,
-                        value: JSON.stringify([option?.option_id?.id]),
+                        // value: JSON.stringify([option?.option_id?.id]),
+                        value: option?.option_id?.id,
                       }))}
                       placeholder={question?.question}
                       label={question?.question}
                       isRequired={question?.required}
                       bottomText={question?.description}
-                      defaultValue={
-                        component?.answered_options[0]?.option_id?.id
-                      }
                       isDisabled={!editMedicalInformation}
                     />
                   )}

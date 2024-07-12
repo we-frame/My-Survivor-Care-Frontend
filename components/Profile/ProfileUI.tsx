@@ -31,20 +31,19 @@ const ProfileUI = () => {
           const reqBody: any = {};
           if (Array.isArray(value[answerID])) {
             reqBody.answered_options = value[answerID].map((option: any) => {
-              return { option_id: option, answer_id: answerID };
+              return { option_id: option };
             });
           } else {
             try {
               const optionIDS = JSON.parse(value[answerID]);
               reqBody.answered_options = optionIDS.map((optionID: any) => {
-                return { option_id: optionID, answer_id: answerID };
+                return { option_id: optionID };
               });
             } catch (error) {
               reqBody.answer = value[answerID];
             }
           }
 
-          console.log(reqBody);
           await makeRequest(
             "PATCH",
             `/items/answers/${answerID}`,
@@ -74,20 +73,19 @@ const ProfileUI = () => {
           const reqBody: any = {};
           if (Array.isArray(value[answerID])) {
             reqBody.answered_options = value[answerID].map((option: any) => {
-              return { option_id: option, answer_id: answerID };
+              return { option_id: option };
             });
           } else {
             try {
               const optionIDS = JSON.parse(value[answerID]);
               reqBody.answered_options = optionIDS.map((optionID: any) => {
-                return { option_id: optionID, answer_id: answerID };
+                return { option_id: optionID };
               });
             } catch (error) {
               reqBody.answer = value[answerID];
             }
           }
 
-          console.log(reqBody);
           await makeRequest(
             "PATCH",
             `/items/answers/${answerID}`,
@@ -105,58 +103,58 @@ const ProfileUI = () => {
     },
   });
 
-  const fetchData = async (key: string, section: any) => {
+  // Function to handle fetching and setting form data based on a specific key and section
+  const fetchData = async (key: string, section: string, formSetter: any) => {
     try {
       const response = await makeRequest("GET", `/api/answerbyform/${key}`);
       const data = response?.data;
 
       if (data) {
-        data?.forEach((item: any) => {
-          if (section === "backgroundInformation") {
-            if (item?.question?.type === "multiple_response") {
-              // Map answered options to an array of option IDs
-              const optionIds = item?.answered_options?.map(
+        data.forEach((item: any) => {
+          // Check the type of question and set the value in the form
+          if (item?.question?.type === "multiple_response") {
+            const optionIds = item?.answered_options?.map(
+              (option: any) => option?.option_id?.id
+            );
+            formSetter(item?.id, optionIds);
+          } else {
+            // Handle single response by providing a default value if `answer` is undefined
+            // const singleResponse =
+            //   item?.answer || item?.answered_options[0]?.option_id?.id;
+            if (item?.answer) {
+              formSetter(item?.id, item?.answer);
+            } else if (item?.answered_options) {
+              const optionID = item?.answered_options?.map(
                 (option: any) => option?.option_id?.id
               );
-              backgroundInformationForm.setFieldValue(item?.id, optionIds);
-            } else {
-              // Handle other types like 'single_response'
-              backgroundInformationForm.setFieldValue(
-                item?.id,
-                item?.answer
-                  ? item?.answer
-                  : item?.answered_options[0]?.option_id?.id
-              );
-            }
-          } else if (section === "medicalInformation") {
-            if (item?.question?.type === "multiple_response") {
-              // Map answered options to an array of option IDs
-              const optionIds = item?.answered_options?.map(
-                (option: any) => option?.option_id?.id
-              );
-              medicalInformationForm.setFieldValue(item?.id, optionIds);
-            } else {
-              // Handle other types like 'single_response'
-              medicalInformationForm.setFieldValue(
-                item?.id,
-                item?.answer
-                  ? item?.answer
-                  : item?.answered_options[0]?.option_id?.id
-              );
+
+              formSetter(item?.id, optionID);
             }
           }
         });
       }
-      setFormData((prev: any) => ({ ...prev, [section]: response?.data }));
+
+      setFormData((prev: any) => ({ ...prev, [section]: data }));
     } catch (error) {
-      console.error(error);
+      console.error("Failed to fetch data:", error);
     }
   };
 
   useEffect(() => {
-    fetchData("BI", "backgroundInformation");
-    fetchData("MI", "medicalInformation");
+    fetchData(
+      "BI",
+      "backgroundInformation",
+      backgroundInformationForm.setFieldValue
+    );
+    fetchData("MI", "medicalInformation", medicalInformationForm.setFieldValue);
   }, []);
+
+  console.log(
+    backgroundInformationForm.getFieldValue(
+      "b882128d-02d5-4163-aeb8-8a788d431777"
+    )
+  );
+  console.log("data", formData.backgroundInformation);
   return (
     <div className="mt-5 lg:mt-10 flex flex-col gap-10">
       <Title
