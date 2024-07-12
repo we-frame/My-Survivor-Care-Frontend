@@ -14,7 +14,7 @@ const BackgroundInformation = ({
   showHeading = true,
   formData,
 }: BackgroundInformationTypes) => {
-  console.log(formData)
+  console.log(formData);
   return (
     <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
       {showHeading && (
@@ -26,6 +26,12 @@ const BackgroundInformation = ({
       <div className="max-w-full lg:max-w-[80%] grid grid-cols-1 lg:grid-cols-2 auto-rows-auto gap-x-10 gap-y-4">
         {formData?.form_components?.map((component: any) => {
           const { question_id } = component;
+          if (question_id?.type === "multiple_response") {
+            form?.MedicalInformation?.setValue(question_id?.id, []);
+          } else {
+            form?.MedicalInformation?.setValue(question_id?.id, "");
+          }
+
           switch (question_id?.question_type) {
             case "input":
               return (
@@ -56,7 +62,9 @@ const BackgroundInformation = ({
                         selectOptions={question_id?.options?.map(
                           (option: any) => ({
                             label: option?.option_id?.title,
-                            value: option?.option_id?.id,
+                            value: JSON.stringify([
+                              option?.option_id?.id,
+                            ]),
                           })
                         )}
                         placeholder={question_id?.question}

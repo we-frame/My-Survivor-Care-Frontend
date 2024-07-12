@@ -23,6 +23,8 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
           const { question_id } = component;
           if (question_id?.type === "multiple_response") {
             form?.MedicalInformation?.setValue(question_id?.id, []);
+          } else {
+            form?.MedicalInformation?.setValue(question_id?.id, "");
           }
           switch (question_id?.question_type) {
             case "input":
@@ -54,7 +56,9 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                         selectOptions={question_id?.options?.map(
                           (option: any) => ({
                             label: option?.option_id?.title,
-                            value: option?.option_id?.id,
+                            value: JSON.stringify([
+                              option?.option_id?.id,
+                            ]),
                           })
                         )}
                         placeholder={question_id?.question}
@@ -76,14 +80,10 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                         containerClassName="grid grid-cols-2 auto-rows-auto gap-x-10 gap-y-4"
                         field={field}
                         label={question_id?.question}
-                        options={
-                          question_id?.options?.map(
-                            (option: any) => ({
-                              label: option?.option_id?.title,
-                              value: option?.option_id?.id,
-                            })
-                          )
-                        }
+                        options={question_id?.options?.map((option: any) => ({
+                          label: option?.option_id?.title,
+                          value: option?.option_id?.id,
+                        }))}
                         isRequired={true}
                       />
                     )}

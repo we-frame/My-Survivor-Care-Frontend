@@ -7,10 +7,15 @@ interface UserState {
   clearUser: () => void;
 }
 
+const savedState =
+  typeof window !== "undefined" && localStorage.getItem("user-store")
+    ? JSON.parse(localStorage.getItem("user-store")!)
+    : {};
+
 export const useUserStore = create<UserState>(
   persistMiddleware(
     (set) => ({
-      userData: null,
+      userData: savedState ? savedState : null,
 
       setUser: (user) => set({ userData: user }),
       clearUser: () => set({ userData: null }),

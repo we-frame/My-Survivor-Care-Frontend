@@ -22,7 +22,6 @@ const LoginCard = ({ textCenter }: LoginCardTypes) => {
   const { setUser } = useUserStore(); // Get the setUser function from the store
   const router = useRouter();
   const { refresh, setRefresh } = useLoadingStore();
-  console.log(refresh);
 
   // Function to handle Google sign-in
   const handleGoogle = async () => {
@@ -71,14 +70,22 @@ const LoginCard = ({ textCenter }: LoginCardTypes) => {
       Cookie.set("access-token", response.data.access_token);
       Cookie.set("refresh-token", response.data.refresh_token);
 
-      // Notify user of successful login
-      toast.success("Login successful");
-
       // Save user data in Zustand store
       const getUserData = await makeRequest("GET", "/users/me");
       setUser(getUserData?.data);
+      if (!getUserData?.data?.is_registration_completed) {
+        toast.error("Please complete your registration!.");
 
-      router.push("/");
+        Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
+
+        router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
+      } else {
+        // Notify user of successful login
+        toast.success("Login successful");
+
+        router.push("/");
+      }
+
       setRefresh(!refresh);
     } catch (error: any) {
       // Handle login errors
@@ -125,14 +132,16 @@ const LoginCard = ({ textCenter }: LoginCardTypes) => {
       });
 
       // Set cookies for tokens
-      Cookie.set("access-token", userResponse.data.access_token);
-      Cookie.set("refresh-token", userResponse.data.refresh_token);
+      Cookie.set("access-token", userResponse?.data?.access_token);
+      Cookie.set("refresh-token", userResponse?.data?.refresh_token);
 
+      Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
+
+      router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
       // Save user data in Zustand store
       const getUserData = await makeRequest("GET", "/users/me");
       setUser(getUserData?.data);
 
-      router.push("/");
       setRefresh(!refresh);
     } catch (error: any) {
       // Logging the error for debugging purposes

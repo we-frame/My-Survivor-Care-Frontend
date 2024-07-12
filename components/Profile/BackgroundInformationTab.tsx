@@ -5,100 +5,73 @@ import SelectInput from "../FormInputs/SelectInput";
 interface BackgroundInformationTabsTypes {
   form?: any;
   editBackgroundInfo?: boolean;
+  formData?: any;
 }
 
 const BackgroundInformationTab = ({
   form,
   editBackgroundInfo,
+  formData,
 }: BackgroundInformationTabsTypes) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 auto-rows-auto gap-x-0 gap-y-4">
-      <div>
-        <form.Field
-          name="BackgroundInformation.name"
-          children={(field: any) => (
-            <TextInput
-              field={field}
-              label="Name"
-              isRequired
-              placeholder="Name"
-              type="text"
-              isDisabled={!editBackgroundInfo}
-            />
-          )}
-        />
-      </div>
+      {formData?.map((component: any) => {
+        const { question } = component;
+        // if (question?.type === "multiple_response") {
+        //   form?.MedicalInformation?.setValue(question?.id, []);
+        // } else {
+        //   form?.MedicalInformation?.setValue(question?.id, "");
+        // }
 
-      <div>
-        <form.Field
-          name="BackgroundInformation.dob"
-          children={(field: any) => (
-            <TextInput
-              field={field}
-              label="Date of birth"
-              isRequired
-              placeholder="Date of birth"
-              type="date"
-              isDisabled={!editBackgroundInfo}
-            />
-          )}
-        />
-      </div>
-
-      <div>
-        <form.Field
-          name="BackgroundInformation.preferred_pronoun"
-          children={(field: any) => (
-            <SelectInput
-              field={field}
-              selectOptions={[
-                { label: "She", value: "she" },
-                { label: "Her", value: "her" },
-                { label: "Hers", value: "hers" },
-              ]}
-              placeholder="She/Her/Hers"
-              label="Preferred Pronoun"
-              isRequired
-              isDisabled={!editBackgroundInfo}
-            />
-          )}
-        />
-      </div>
-
-      <div>
-        <form.Field
-          name="BackgroundInformation.ethnic_group"
-          children={(field: any) => (
-            <SelectInput
-              field={field}
-              selectOptions={[
-                { label: "Sure", value: "sure" },
-                { label: "Unsure", value: "unsure" },
-              ]}
-              defaultValue="unsure"
-              label="Ethnic group/ancestry"
-              isRequired
-              isDisabled={!editBackgroundInfo}
-            />
-          )}
-        />
-      </div>
-
-      <div>
-        <form.Field
-          name="BackgroundInformation.postcode"
-          children={(field: any) => (
-            <TextInput
-              field={field}
-              label="Postcode"
-              type="number"
-              placeholder="3000"
-              isRequired
-              isDisabled={!editBackgroundInfo}
-            />
-          )}
-        />
-      </div>
+        switch (question?.question_type) {
+          case "input":
+            return (
+              <div key={component?.id}>
+                <form.Field
+                  name={component?.id}
+                  children={(field: any) => (
+                    <TextInput
+                      field={field}
+                      label={question?.display_title}
+                      isRequired={question?.required}
+                      placeholder={question?.question}
+                      type={question?.input_datatype}
+                      // bottomText={question?.description}
+                      isDisabled={!editBackgroundInfo}
+                    />
+                  )}
+                />
+              </div>
+            );
+          case "select":
+            return (
+              <div key={component?.id}>
+                <form.Field
+                  name={component?.id}
+                  children={(field: any) => (
+                    <SelectInput
+                      field={field}
+                      selectOptions={question?.options?.map((option: any) => ({
+                        label: option?.option_id?.title,
+                        value: JSON.stringify([option?.option_id?.id]),
+                      }))}
+                      placeholder={question?.question}
+                      label={question?.question}
+                      isRequired={question?.required}
+                      bottomText={question?.description}
+                      defaultValue={
+                        component?.answered_options[0]?.option_id?.id
+                      }
+                      isDisabled={!editBackgroundInfo}
+                    />
+                  )}
+                />
+              </div>
+            );
+          default:
+            return null;
+        }
+      })}
     </div>
   );
 };

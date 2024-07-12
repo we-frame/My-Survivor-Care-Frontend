@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Title from "../Common/Title";
 import { cn } from "@/lib/utils";
 import { RangeInputTypes } from "@/types/formInput";
@@ -36,7 +36,7 @@ const RangeInput = ({
           type="range"
           name={field?.name}
           required={isRequired}
-          value={field?.state?.value}
+          value={field?.state?.value || 0}
           onBlur={field.handleBlur}
           onChange={(e) => field.handleChange(e.target.value)}
           disabled={isDisabled}

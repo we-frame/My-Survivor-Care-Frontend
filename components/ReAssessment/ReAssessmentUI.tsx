@@ -2,35 +2,22 @@
 
 import { ReAssessmentFormTypes } from "@/types/data";
 import { useForm } from "@tanstack/react-form";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 import MenopauseAssessment from "../Register/MenopauseAssessment";
 import Title from "../Common/Title";
 import SelectInput from "../FormInputs/SelectInput";
-import useSettingStore from "@/store/SettingStore";
 import { cn } from "@/lib/utils";
 
 const ReAssessmentUI = () => {
-  const { buttonBgColor } = useSettingStore((state) => ({
-    buttonBgColor: state.buttonBgColor,
-  }));
+  const [formData, setFormData] = useState<any>({
+    backgroundInformation: null,
+    medicalInformation: null,
+    menopauseAssessment: null,
+  });
   // Initializing form with default values and submission handler
-  const form = useForm<ReAssessmentFormTypes>({
+  const form = useForm<any>({
     defaultValues: {
-      follow_the_recommendation: "yes",
-      find_the_recommendation: "yes",
-      reassess_your_symptoms: "yes",
-      MenopauseAssessment: {
-        work: 50,
-        social_activities: 50,
-        leisure_activities: 0,
-        sleep: 100,
-        mood: 50,
-        concentration: 0,
-        relations_with_others: 0,
-        sexuality: 0,
-        enjoyment_of_life: 50,
-        quality_of_life: 50,
-      },
+      MenopauseAssessment: {},
     },
 
     // Form submission handler
@@ -128,7 +115,7 @@ const ReAssessmentUI = () => {
             children={([canSubmit, isSubmitting]) => (
               <button
                 style={{
-                  backgroundColor: buttonBgColor,
+                  backgroundColor: "#14b8a6",
                 }}
                 className={cn(
                   "border rounded-lg px-5 py-3 text-[#C7D2FE]",

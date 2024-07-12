@@ -3,12 +3,8 @@
 import React from "react";
 import Title from "../Common/Title";
 import Accordion from "../Common/Accordion";
-import useSettingStore from "@/store/SettingStore";
 
 const ConsumerResourcesUI = () => {
-  const { buttonBgColor } = useSettingStore((state) => ({
-    buttonBgColor: state.buttonBgColor,
-  }));
   return (
     <div className="mt-5 lg:mt-10 w-full lg:w-[60%] flex flex-col items-start justify-start gap-10">
       <Title
@@ -34,7 +30,7 @@ const ConsumerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Surgery
@@ -53,7 +49,7 @@ const ConsumerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Radiation therapy
@@ -70,7 +66,7 @@ const ConsumerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Chemotherapy
@@ -102,7 +98,7 @@ const ConsumerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Vasomotor symptoms
@@ -124,7 +120,7 @@ const ConsumerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Genitourinary syndrome of menopause (GSM)
@@ -145,7 +141,7 @@ const ConsumerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Other symptoms
@@ -176,7 +172,7 @@ const ConsumerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Menopausal Hormone Therapy or Hormone Replacement Therapy
@@ -201,7 +197,7 @@ const ConsumerResourcesUI = () => {
                 <a
                   href="https://www.askearlymenopause.org/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   www.askearlymenopause.org
@@ -211,7 +207,7 @@ const ConsumerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Non-hormonal medications
@@ -236,7 +232,7 @@ const ConsumerResourcesUI = () => {
                 <a
                   href="https://www.askearlymenopause.org/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   www.askearlymenopause.org
@@ -279,7 +275,7 @@ const ConsumerResourcesUI = () => {
                 <a
                   href="https://www.askearlymenopause.org/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   www.askearlymenopause.org
@@ -289,7 +285,7 @@ const ConsumerResourcesUI = () => {
                 <a
                   href="https://henpicked.net/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   https://henpicked.net

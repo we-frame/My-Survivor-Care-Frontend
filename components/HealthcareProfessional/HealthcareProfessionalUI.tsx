@@ -3,12 +3,8 @@
 import React from "react";
 import Title from "../Common/Title";
 import Accordion from "../Common/Accordion";
-import useSettingStore from "@/store/SettingStore";
 
 const HealthcareProfessionalUI = () => {
-  const { buttonBgColor } = useSettingStore((state) => ({
-    buttonBgColor: state.buttonBgColor,
-  }));
   return (
     <div className="mt-5 lg:mt-10 w-full lg:w-[60%] flex flex-col items-start justify-start gap-10">
       <Title
@@ -39,7 +35,7 @@ const HealthcareProfessionalUI = () => {
                 <a
                   href="https://www.menopause.org.au/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   www.menopause.org.au
@@ -68,7 +64,7 @@ const HealthcareProfessionalUI = () => {
                 <a
                   href="https://www.mcgrathfoundation.com.au/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   www.mcgrathfoundation.com.au
@@ -99,7 +95,7 @@ const HealthcareProfessionalUI = () => {
                 <a
                   href="https://www.ovariancancer.net.au/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   www.ovariancancer.net.au
@@ -128,7 +124,7 @@ const HealthcareProfessionalUI = () => {
                 <a
                   href="https://https://neuroendocrine.org.au/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   https://neuroendocrine.org.au
@@ -156,7 +152,7 @@ const HealthcareProfessionalUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Jean Hailes Foundation
@@ -170,7 +166,7 @@ const HealthcareProfessionalUI = () => {
                 <a
                   href=""
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   Visit website
@@ -180,7 +176,7 @@ const HealthcareProfessionalUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Australasian Menopause Society
@@ -193,7 +189,7 @@ const HealthcareProfessionalUI = () => {
                 <a
                   href=""
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   Visit website
@@ -203,7 +199,7 @@ const HealthcareProfessionalUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Ask Early Menopause
@@ -217,7 +213,7 @@ const HealthcareProfessionalUI = () => {
                 <a
                   href=""
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   Visit website
@@ -227,7 +223,7 @@ const HealthcareProfessionalUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Cancer Council
@@ -240,7 +236,7 @@ const HealthcareProfessionalUI = () => {
                 <a
                   href=""
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   Visit website
@@ -250,7 +246,7 @@ const HealthcareProfessionalUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Healthtalk Australia
@@ -264,7 +260,7 @@ const HealthcareProfessionalUI = () => {
                 <a
                   href=""
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   Visit website
