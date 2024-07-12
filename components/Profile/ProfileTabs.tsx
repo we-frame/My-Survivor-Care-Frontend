@@ -1,8 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import useSettingStore from "@/store/SettingStore";
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import BackgroundInformationTab from "./BackgroundInformationTab";
 import Button from "../Common/Button";
 import MedicalInformationTab from "./MedicalInformationTab";
@@ -10,25 +9,25 @@ import RecommendationsTab from "./RecommendationsTab";
 
 // Define the types for the ProfileTabs props
 interface ProfileTabsTypes {
-  form: any; // Form data
+  medicalInformationForm: any; // Form data for medical information
+  backgroundInformationForm: any; // Form data for background information
   editBackgroundInfo?: boolean;
   setEditBackgroundInfo?: any;
   editMedicalInformation?: boolean;
   setEditMedicalInformation?: any;
+  formData?: any;
 }
 
 const ProfileTabs = ({
-  form,
+  medicalInformationForm,
+  backgroundInformationForm,
   editBackgroundInfo,
   setEditBackgroundInfo,
   editMedicalInformation,
   setEditMedicalInformation,
+  formData,
 }: ProfileTabsTypes) => {
   const [activeTab, setActiveTab] = useState<number>(1); // State for active tab
-
-  const { buttonBgColor } = useSettingStore((state) => ({
-    buttonBgColor: state.buttonBgColor,
-  }));
 
   // Function to change the active tab
   const handleTabChange = (tabIndex: number) => {
@@ -67,8 +66,8 @@ const ProfileTabs = ({
           <button
             className={cn("border-b-2 px-4 py-2 tab-active")}
             style={{
-              borderColor: buttonBgColor,
-              color: buttonBgColor,
+              borderColor: "#14b8a6",
+              color: "#14b8a6",
             }}
             aria-selected={activeTab === activeTab}
           >
@@ -98,8 +97,8 @@ const ProfileTabs = ({
               activeTab === 1 && `tab-active`
             )}
             style={{
-              borderColor: activeTab === 1 ? buttonBgColor : "",
-              color: activeTab === 1 ? buttonBgColor : "",
+              borderColor: activeTab === 1 ? "#14b8a6" : "",
+              color: activeTab === 1 ? "#14b8a6" : "",
             }}
             aria-selected={activeTab === 1}
           >
@@ -112,8 +111,8 @@ const ProfileTabs = ({
               activeTab === 2 && `tab-active`
             )}
             style={{
-              borderColor: activeTab === 2 ? buttonBgColor : "",
-              color: activeTab === 2 ? buttonBgColor : "",
+              borderColor: activeTab === 2 ? "#14b8a6" : "",
+              color: activeTab === 2 ? "#14b8a6" : "",
             }}
             aria-selected={activeTab === 2}
           >
@@ -126,8 +125,8 @@ const ProfileTabs = ({
               activeTab === 3 && `tab-active`
             )}
             style={{
-              borderColor: activeTab === 3 ? buttonBgColor : "",
-              color: activeTab === 3 ? buttonBgColor : "",
+              borderColor: activeTab === 3 ? "#14b8a6" : "",
+              color: activeTab === 3 ? "#14b8a6" : "",
             }}
             aria-selected={activeTab === 3}
           >
@@ -144,30 +143,94 @@ const ProfileTabs = ({
         </div>
 
         {/* Background Information Tab */}
-        <div className={cn(activeTab === 2 ? "block" : "hidden")}>
+        <form
+          onSubmit={(e: FormEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            backgroundInformationForm.handleSubmit();
+          }}
+          className={cn(activeTab === 2 ? "block" : "hidden")}
+        >
           <BackgroundInformationTab
-            form={form}
+            form={backgroundInformationForm}
             editBackgroundInfo={editBackgroundInfo}
+            formData={formData?.backgroundInformation}
           />
-          <Button
-            text="Edit background information"
-            className="text-[#c7d2fe] text-sm font-normal mt-5"
-            onClick={() => setEditBackgroundInfo(true)}
-          />
-        </div>
+
+          {editBackgroundInfo ? (
+            <backgroundInformationForm.Subscribe
+              selector={(state: any) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]: any) => (
+                <button
+                  style={{
+                    backgroundColor: "#14b8a6",
+                  }}
+                  className={cn(
+                    "border rounded-lg px-5 py-3 text-[#C7D2FE]",
+                    !canSubmit &&
+                      "bg-green-300 text-black disabled:cursor-not-allowed"
+                  )}
+                  type="submit"
+                  disabled={!canSubmit}
+                >
+                  {isSubmitting
+                    ? "Loading..."
+                    : "Update background information"}
+                </button>
+              )}
+            />
+          ) : (
+            <Button
+              text="Edit background information"
+              className="text-[#c7d2fe] text-sm font-normal mt-5"
+              onClick={() => setEditBackgroundInfo(true)}
+            />
+          )}
+        </form>
 
         {/* Medical Information Tab */}
-        <div className={cn(activeTab === 3 ? "block" : "hidden")}>
+        <form
+          onSubmit={(e: FormEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            medicalInformationForm.handleSubmit();
+          }}
+          className={cn(activeTab === 3 ? "block" : "hidden")}
+        >
           <MedicalInformationTab
-            form={form}
+            form={medicalInformationForm}
             editMedicalInformation={editMedicalInformation}
+            formData={formData?.medicalInformation}
           />
-          <Button
-            text="Edit Medical information"
-            className="text-[#c7d2fe] text-sm font-normal mt-5"
-            onClick={() => setEditMedicalInformation(true)}
-          />
-        </div>
+
+          {editMedicalInformation ? (
+            <medicalInformationForm.Subscribe
+              selector={(state: any) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]: any) => (
+                <button
+                  style={{
+                    backgroundColor: "#14b8a6",
+                  }}
+                  className={cn(
+                    "border rounded-lg px-5 py-3 text-[#C7D2FE]",
+                    !canSubmit &&
+                      "bg-green-300 text-black disabled:cursor-not-allowed"
+                  )}
+                  type="submit"
+                  disabled={!canSubmit}
+                >
+                  {isSubmitting ? "Loading..." : "Update medical information"}
+                </button>
+              )}
+            />
+          ) : (
+            <Button
+              text="Edit Medical information"
+              className="text-[#c7d2fe] text-sm font-normal mt-5"
+              onClick={() => setEditMedicalInformation(true)}
+            />
+          )}
+        </form>
       </div>
     </div>
   );

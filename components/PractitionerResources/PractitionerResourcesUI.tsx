@@ -3,14 +3,10 @@
 import React from "react";
 import Title from "../Common/Title";
 import Accordion from "../Common/Accordion";
-import useSettingStore from "@/store/SettingStore";
 import { CircleHelp } from "lucide-react";
 import Tooltip from "../Common/Tooltip";
 
 const PractitionerResourcesUI = () => {
-  const { buttonBgColor } = useSettingStore((state) => ({
-    buttonBgColor: state.buttonBgColor,
-  }));
   return (
     <div className="mt-5 lg:mt-10 w-full lg:w-[60%] flex flex-col items-start justify-start gap-10">
       <Title
@@ -39,7 +35,7 @@ const PractitionerResourcesUI = () => {
                 <a
                   href="https://www.menopause.org.au/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   www.menopause.org.au
@@ -88,7 +84,7 @@ const PractitionerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Menopausal hormone therapies
@@ -110,7 +106,7 @@ const PractitionerResourcesUI = () => {
                 <a
                   href="https://www.menopause.org.au/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   www.menopause.org.au
@@ -120,7 +116,7 @@ const PractitionerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Menopausal hormone therapies
@@ -144,7 +140,7 @@ const PractitionerResourcesUI = () => {
                 <a
                   href=""
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   here
@@ -174,7 +170,7 @@ const PractitionerResourcesUI = () => {
                 <a
                   href="https://www.thewomens.org.au/"
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   www.thewomens.org.au{" "}
@@ -183,7 +179,7 @@ const PractitionerResourcesUI = () => {
                 <a
                   href=""
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   here
@@ -201,7 +197,7 @@ const PractitionerResourcesUI = () => {
           <div className="flex flex-col items-start justify-start gap-5">
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Managing menopause after cancer
@@ -232,7 +228,7 @@ const PractitionerResourcesUI = () => {
                   <a
                     href=""
                     target="_blank"
-                    style={{ color: buttonBgColor }}
+                    style={{ color: "#14b8a6" }}
                     className="underline"
                   >
                     here
@@ -243,7 +239,7 @@ const PractitionerResourcesUI = () => {
 
             <div>
               <h1
-                style={{ color: buttonBgColor }}
+                style={{ color: "#14b8a6" }}
                 className="text-xl font-semibold"
               >
                 Deciding About Hormone Therapy Use
@@ -256,7 +252,7 @@ const PractitionerResourcesUI = () => {
                 <a
                   href=""
                   target="_blank"
-                  style={{ color: buttonBgColor }}
+                  style={{ color: "#14b8a6" }}
                   className="underline"
                 >
                   here

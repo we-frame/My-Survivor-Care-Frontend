@@ -39,6 +39,7 @@ const Navbar: React.FC = () => {
       }
       Cookie.remove("access-token");
       Cookie.remove("refresh-token");
+      Cookie.remove("google-auth-userData");
 
       setRefresh(!refresh);
 
@@ -48,7 +49,9 @@ const Navbar: React.FC = () => {
     }
   };
 
-  useEffect(() => {}, [refresh]);
+  useEffect(() => {
+    console.log(refresh);
+  }, [refresh]);
 
   return (
     <nav>
@@ -77,7 +80,6 @@ const Navbar: React.FC = () => {
             {/* Desktop navigation links */}
             <div className="flex-none hidden lg:block">
               <div className="flex items-center gap-8">
-                <button className="text-base font-normal">About</button>
                 {Cookie.get("access-token") &&
                   navItems.map((item) => (
                     <Link key={item.href} href={item.href}>

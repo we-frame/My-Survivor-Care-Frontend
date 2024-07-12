@@ -33,7 +33,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Redirect to home if logged in and trying to access login or register
-  if (accessToken && (path === "/login" || path === "/register")) {
+  if (accessToken && (path === "/login")) {
     return NextResponse.redirect(new URL("/", request.nextUrl.origin));
   }
 

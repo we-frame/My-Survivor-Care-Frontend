@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
+import client from "./axiosInterceptor";
 
 // Base URL from environment variables
 const apiLink = process.env.NEXT_PUBLIC_BASE_URL;
@@ -31,7 +32,7 @@ export const makeRequest = async (
   }
 
   // Making the request with configured options
-  const res = await axios.request({
+  const res = await client.request({
     ...axiosOptions,
   });
 

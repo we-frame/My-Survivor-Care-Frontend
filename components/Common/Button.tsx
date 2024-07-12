@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import useSettingStore from "@/store/SettingStore";
 import { ButtonTypes } from "@/types/button";
 import React from "react";
 import Link from "next/link";
@@ -18,10 +17,6 @@ const Button = ({
   disabled,
   type = "button",
 }: ButtonTypes) => {
-  const { buttonBgColor } = useSettingStore((state) => ({
-    buttonBgColor: state.buttonBgColor,
-  }));
-
   const buttonClasses = cn(
     className,
     "btn flex items-center justify-center gap-2"
@@ -39,7 +34,7 @@ const Button = ({
     <Link href={link}>
       <button
         className={buttonClasses}
-        style={{ backgroundColor: btnBg ? btnBg : buttonBgColor }}
+        style={{ backgroundColor: btnBg ? btnBg : "#14b8a6" }}
         onClick={onClick}
         disabled={disabled}
         type={type}
@@ -50,7 +45,7 @@ const Button = ({
   ) : (
     <button
       className={buttonClasses}
-      style={{ backgroundColor: btnBg ? btnBg : buttonBgColor }}
+      style={{ backgroundColor: btnBg ? btnBg : "#14b8a6" }}
       onClick={onClick}
       disabled={disabled}
       type={type}

@@ -1,57 +1,168 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Title from "../Common/Title";
 import ProfileTabs from "./ProfileTabs";
 import Image from "next/image";
-import { RegisterFormValuesTypes } from "@/types/data";
 import { useForm } from "@tanstack/react-form";
+import useUserStore from "@/store/userStore";
+import { makeRequest } from "@/lib/api";
+import toast from "react-hot-toast";
 
 const ProfileUI = () => {
   const [editBackgroundInfo, setEditBackgroundInfo] = useState<boolean>(false);
   const [editMedicalInformation, setEditMedicalInformation] =
     useState<boolean>(false);
-  // Initializing form with default values and submission handler
-  const form = useForm<RegisterFormValuesTypes>({
-    defaultValues: {
-      BackgroundInformation: {
-        name: "",
-        dob: "",
-        preferred_pronoun: "",
-        ethnic_group: "unsure",
-        postcode: 12345,
-      },
-      MedicalInformation: {
-        cancer_treatment: "yes",
-        removal_ovaries: "no",
-        removal_uterus: "yes",
-        treatment_types: ["chemotherapy", "brachytherapy"],
-        cancer_type: "",
-        type_of_breast_cancer: "",
-        other_cancers: "",
-      },
-      MenopauseAssessment: {
-        work: 50,
-        social_activities: 50,
-        leisure_activities: 0,
-        sleep: 100,
-        mood: 50,
-        concentration: 0,
-        relations_with_others: 0,
-        sexuality: 0,
-        enjoyment_of_life: 50,
-        quality_of_life: 50,
-      },
-    },
+  const { userData } = useUserStore();
+  const [formData, setFormData] = useState<any>({
+    backgroundInformation: null,
+    medicalInformation: null,
+  });
+
+  const backgroundInformationForm = useForm<any>({
+    defaultValues: {},
 
     // Form submission handler
     onSubmit: async ({ value }) => {
-      console.log("Register form values ::", value);
+      console.log("backgroundInformationForm values ::", value);
+
+      Object.keys(value).forEach(async (answerID: any) => {
+        try {
+          const reqBody: any = {};
+          if (Array.isArray(value[answerID])) {
+            reqBody.answered_options = value[answerID].map((option: any) => {
+              return { option_id: option, answer_id: answerID };
+            });
+          } else {
+            try {
+              const optionIDS = JSON.parse(value[answerID]);
+              reqBody.answered_options = optionIDS.map((optionID: any) => {
+                return { option_id: optionID, answer_id: answerID };
+              });
+            } catch (error) {
+              reqBody.answer = value[answerID];
+            }
+          }
+
+          console.log(reqBody);
+          await makeRequest(
+            "PATCH",
+            `/items/answers/${answerID}`,
+            JSON.stringify(reqBody),
+            { "Content-Type": "application/json" }
+          );
+
+          setEditBackgroundInfo(false);
+          toast.success("Background Information Updated!");
+        } catch (error) {
+          console.log(error);
+          toast.error("Failed to update Background Information");
+        }
+      });
     },
   });
+
+  const medicalInformationForm = useForm<any>({
+    defaultValues: {},
+
+    // Form submission handler
+    onSubmit: async ({ value }) => {
+      console.log("medicalInformationForm values ::", value);
+
+      Object.keys(value).forEach(async (answerID: any) => {
+        try {
+          const reqBody: any = {};
+          if (Array.isArray(value[answerID])) {
+            reqBody.answered_options = value[answerID].map((option: any) => {
+              return { option_id: option, answer_id: answerID };
+            });
+          } else {
+            try {
+              const optionIDS = JSON.parse(value[answerID]);
+              reqBody.answered_options = optionIDS.map((optionID: any) => {
+                return { option_id: optionID, answer_id: answerID };
+              });
+            } catch (error) {
+              reqBody.answer = value[answerID];
+            }
+          }
+
+          console.log(reqBody);
+          await makeRequest(
+            "PATCH",
+            `/items/answers/${answerID}`,
+            JSON.stringify(reqBody),
+            { "Content-Type": "application/json" }
+          );
+
+          setEditMedicalInformation(false);
+          toast.success("Medical Information Updated!");
+        } catch (error) {
+          console.log(error);
+          toast.error("Failed to update Medical Information");
+        }
+      });
+    },
+  });
+
+  const fetchData = async (key: string, section: any) => {
+    try {
+      const response = await makeRequest("GET", `/api/answerbyform/${key}`);
+      const data = response?.data;
+
+      if (data) {
+        data?.forEach((item: any) => {
+          if (section === "backgroundInformation") {
+            if (item?.question?.type === "multiple_response") {
+              // Map answered options to an array of option IDs
+              const optionIds = item?.answered_options?.map(
+                (option: any) => option?.option_id?.id
+              );
+              backgroundInformationForm.setFieldValue(item?.id, optionIds);
+            } else {
+              // Handle other types like 'single_response'
+              backgroundInformationForm.setFieldValue(
+                item?.id,
+                item?.answer
+                  ? item?.answer
+                  : item?.answered_options[0]?.option_id?.id
+              );
+            }
+          } else if (section === "medicalInformation") {
+            if (item?.question?.type === "multiple_response") {
+              // Map answered options to an array of option IDs
+              const optionIds = item?.answered_options?.map(
+                (option: any) => option?.option_id?.id
+              );
+              medicalInformationForm.setFieldValue(item?.id, optionIds);
+            } else {
+              // Handle other types like 'single_response'
+              medicalInformationForm.setFieldValue(
+                item?.id,
+                item?.answer
+                  ? item?.answer
+                  : item?.answered_options[0]?.option_id?.id
+              );
+            }
+          }
+        });
+      }
+      setFormData((prev: any) => ({ ...prev, [section]: response?.data }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData("BI", "backgroundInformation");
+    fetchData("MI", "medicalInformation");
+  }, []);
   return (
     <div className="mt-5 lg:mt-10 flex flex-col gap-10">
-      <Title title="Hi Emily!" className="text-5xl font-bold" />
+      <Title
+        title={`Hi ${userData ? userData?.userData?.first_name : "Emily"}!`}
+        className="text-5xl font-bold"
+      />
 
       <div className="flex flex-col gap-4 max-w-[830px]">
         <Title
@@ -72,11 +183,13 @@ const ProfileUI = () => {
       <div className="w-full flex flex-col lg:flex-row items-center justify-center lg:items-start lg:justify-start gap-5 lg:gap-10">
         <div className="w-full lg:w-[75%]">
           <ProfileTabs
-            form={form}
+            medicalInformationForm={medicalInformationForm}
+            backgroundInformationForm={backgroundInformationForm}
             editBackgroundInfo={editBackgroundInfo}
             setEditBackgroundInfo={setEditBackgroundInfo}
             editMedicalInformation={editMedicalInformation}
             setEditMedicalInformation={setEditMedicalInformation}
+            formData={formData}
           />
         </div>
         <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-7">

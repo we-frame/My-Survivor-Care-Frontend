@@ -10,6 +10,7 @@ export interface TextInputTypes {
   bottomText?: string;
   className?: string;
   isDisabled?: boolean;
+  apiData?: any;
 }
 
 // Interface for Select Input component props
