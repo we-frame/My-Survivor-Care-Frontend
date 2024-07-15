@@ -35,46 +35,62 @@ const ReAssessmentUI = () => {
     onSubmit: async ({ value }) => {
       console.log("Re-Assessment form values ::", value);
 
-      const parameterRating: any = [];
-      var counter = 0;
-      var ratingSum = 0;
-      Object.keys(value).forEach((title) => {
-        counter++;
-        ratingSum = ratingSum + parseInt(value[title]);
+      if (formData.inputField) {
+        try {
+          await makeRequest("POST", "/items/answers", {
+            question: "84314be2-1bcc-4045-a42c-37e2faf35231",
+            question_type: "input",
+            answer: formData.inputField,
+          });
 
-        parameterRating.push({
-          title: title,
-          rating: value[title],
-        });
-      });
+          // Redirect to the home page after successful form submission
+          router.push("/profile");
+          toast.success("Re-Assessment form submitted successfully!");
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        const parameterRating: any = [];
+        var counter = 0;
+        var ratingSum = 0;
+        Object.keys(value).forEach((title) => {
+          counter++;
+          ratingSum = ratingSum + parseInt(value[title]);
 
-      const averageRating = ratingSum / counter;
-
-      const requestBody = {
-        menopause_history_id: {
-          average_rating: averageRating,
-          parameter_rating: parameterRating,
-        },
-      };
-
-      try {
-        await makeRequest(
-          "POST",
-          "/items/junction_directus_users_menopause_history",
-          requestBody
-        );
-
-        await makeRequest("PATCH", "/users/me", {
-          latest_menopause_history: requestBody?.menopause_history_id,
+          parameterRating.push({
+            title: title,
+            rating: value[title],
+          });
         });
 
-        getUserDetails(setUser);
+        const averageRating = ratingSum / counter;
 
-        // Redirect to the home page after successful form submission
-        router.push("/profile");
-        toast.success("Re-Assessment form submitted successfully!");
-      } catch (error) {
-        console.log(error);
+        const requestBody = {
+          menopause_history_id: {
+            average_rating: averageRating,
+            parameter_rating: parameterRating,
+          },
+        };
+
+        try {
+          await makeRequest(
+            "POST",
+            "/items/junction_directus_users_menopause_history",
+            requestBody
+          );
+
+          await makeRequest("PATCH", "/users/me", {
+            latest_menopause_history: requestBody?.menopause_history_id,
+          });
+
+          getUserDetails(setUser);
+
+          // Redirect to the home page after successful form submission
+          router.push("/profile");
+          toast.success("Re-Assessment form submitted successfully!");
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
   });
@@ -138,58 +154,6 @@ const ReAssessmentUI = () => {
           </div>
 
           <div className="max-w-full lg:max-w-[40%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-5">
-            {/* <div>
-              <form.Field
-                name="follow_the_recommendation"
-                children={(field: any) => (
-                  <SelectInput
-                    field={field}
-                    selectOptions={[
-                      { label: "Yes", value: "yes" },
-                      { label: "No", value: "no" },
-                    ]}
-                    label="Did you follow the recommendation as you were advised?"
-                    placeholder={"Choose a recommendation"}
-                    isRequired
-                  />
-                )}
-              />
-            </div>
-            <div>
-              <form.Field
-                name="find_the_recommendation"
-                children={(field: any) => (
-                  <SelectInput
-                    field={field}
-                    selectOptions={[
-                      { label: "Yes", value: "yes" },
-                      { label: "No", value: "no" },
-                    ]}
-                    label="Did you find the recommendation to be useful for you?"
-                    placeholder="Choose a recommendation"
-                    isRequired
-                  />
-                )}
-              />
-            </div>
-            <div>
-              <form.Field
-                name="reassess_your_symptoms"
-                children={(field: any) => (
-                  <SelectInput
-                    field={field}
-                    selectOptions={[
-                      { label: "Yes", value: "yes" },
-                      { label: "No", value: "no" },
-                    ]}
-                    label="Do you still want to reassess your symptoms?"
-                    placeholder="Choose a recommendation"
-                    isRequired
-                  />
-                )}
-              />
-            </div> */}
-
             <div>
               <label
                 htmlFor="follow_the_recommendation"
@@ -314,16 +278,47 @@ const ReAssessmentUI = () => {
                 </div>
               </>
             ) : null}
+            {formData.inputField && (
+              <div>
+                <label
+                  htmlFor="reassess_your_symptoms"
+                  className="form-control w-full max-w-md"
+                >
+                  <div className="label">
+                    <span className="label-text font-normal">
+                      Do you still want to reassess your symptoms?
+                    </span>
+                  </div>
+
+                  <select
+                    className={cn(`select select-bordered max-w-xs`)}
+                    id="reassess_your_symptoms"
+                    name="reassess_your_symptoms"
+                    value={formData.reassess_your_symptoms}
+                    onChange={handleChange}
+                  >
+                    <option value="" disabled selected>
+                      Choose a recommendation
+                    </option>
+                    <option value={"yes"} className="text-black">
+                      Yes
+                    </option>
+                    <option value={"no"} className="text-black">
+                      No
+                    </option>
+                  </select>
+                </label>
+              </div>
+            )}
           </div>
         </div>
 
-        {formData.follow_the_recommendation === "yes" &&
-          formData.reassess_your_symptoms === "yes" && (
-            <MenopauseReAssessment
-              form={form}
-              formData={formDataAPI.menopauseAssessment}
-            />
-          )}
+        {formData.reassess_your_symptoms === "yes" && (
+          <MenopauseReAssessment
+            form={form}
+            formData={formDataAPI.menopauseAssessment}
+          />
+        )}
 
         <div className="w-full flex items-center justify-center">
           <form.Subscribe
