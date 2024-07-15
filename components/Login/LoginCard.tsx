@@ -72,7 +72,7 @@ const LoginCard = ({ textCenter }: LoginCardTypes) => {
       Cookie.set("refresh-token", response.data.refresh_token);
 
       // Save user data in Zustand store
-      const getUserData = await makeRequest("GET", "/users/me");
+      const getUserData = await makeRequest("GET", "/users/me?fields=*,latest_menopause_history.*,menopause_history.*");
       setUser(getUserData?.data);
       if (!getUserData?.data?.is_registration_completed) {
         toast.error("Please complete your registration!.");
