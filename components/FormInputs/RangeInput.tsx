@@ -11,8 +11,8 @@ const RangeInput = ({
   className,
   rangeLength = 10,
   minValue = 0,
-  maxValue = 100,
-  rangeStep = 10,
+  maxValue = 10,
+  rangeStep = 1,
   isRequired = false,
   isDisabled = false,
 }: RangeInputTypes) => {

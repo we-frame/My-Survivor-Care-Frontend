@@ -2,8 +2,23 @@ import React from "react";
 import Title from "../Common/Title";
 import Button from "../Common/Button";
 import Accordion from "../Common/Accordion";
+import useUserStore from "@/store/userStore";
 
 const RecommendationsTab = () => {
+  const { userData } = useUserStore();
+  const averageRating =
+    userData?.userData?.latest_menopause_history?.average_rating;
+
+  // Helper function to determine the message based on averageRating
+  const getMessage = (rating: any) => {
+    if (rating <= 3.9) {
+      return "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has decreased from moderate to mild. Now, you can choose to self-manage your symptoms and/or continue working with your GP.";
+    } else if (rating <= 6.9) {
+      return "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has decreased from severe to moderate. Your GP may be able to take over managing your symptoms. You could ask your specialist to transfer your care to your GP or, you can continue with the current management plan with your specialists.";
+    }
+    return "";
+  };
+
   return (
     <div className="flex flex-col">
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 auto-rows-auto gap-5 lg:gap-10">
@@ -24,7 +39,6 @@ const RecommendationsTab = () => {
             title="About your score"
             className="text-sm font-bold"
             defaultChecked
-            // groupName="recommendations-tab"
           >
             <div className="w-full flex flex-col gap-3">
               <p className="text-xs font-normal">
@@ -43,29 +57,15 @@ const RecommendationsTab = () => {
       </div>
 
       <div className="w-full lg:w-[90%] flex flex-col items-start justify-start gap-5 mt-10 lg:mt-20">
-        <Title
-          title="Clinical Practice Guidelines"
-          className="text-xl lg:text-2xl font-semibold"
-        />
-        <p className="text-base font-normal">
-          Cancer patients dealing with menopausal symptoms often need a
-          different approach for symptom management compared to women going
-          through natural menopause. However, with proper care, most symptoms
-          can be effectively managed. Clinical guidelines exist to help guide
-          your doctors to provide suitable care. These guidelines can also help
-          you make informed decisions about the available treatment options for
-          managing your menopausal symptoms.
-        </p>
-        <p className="text-base font-normal">
-          Based on this, we advise sharing this introductory letter and clinical
-          guideline with your primary care doctor (GP) to work together on the
-          best plan to manage your symptoms.
-        </p>
-
-        <Button
-          text="Download introductory letter"
-          className="text-[#c7d2fe] font-normal text-sm"
-        />
+        {averageRating !== null && (
+          <>
+            <Title
+              title="Results"
+              className="text-xl lg:text-2xl font-semibold"
+            />
+            <p className="text-base font-normal">{getMessage(averageRating)}</p>
+          </>
+        )}
       </div>
     </div>
   );

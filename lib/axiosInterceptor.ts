@@ -15,7 +15,6 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 
 // Define the base URL for API requests, defaulting if env variable is not set
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-console.log("Base URL: " + BASE_URL);
 
 // Create an Axios instance with the base URL
 const client: AxiosInstance = axios.create();
@@ -87,6 +86,7 @@ client.interceptors.response.use(
 
         Cookies.remove("access-token");
         Cookies.remove("refresh-token");
+        window.localStorage.removeItem("user-store");
         return Promise.reject(refreshError); // If token refresh fails, reject the promise
       }
     }
