@@ -11,6 +11,7 @@ import { auth } from "@/lib/firebaseConfig";
 import toast from "react-hot-toast";
 import useUserStore from "@/store/userStore";
 import useLoadingStore from "@/store/loadingStore";
+import { getUserDetails } from "@/lib/getUserAPI";
 
 interface LoginCardTypes {
   textCenter?: boolean;
@@ -138,9 +139,9 @@ const LoginCard = ({ textCenter }: LoginCardTypes) => {
       Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
 
       router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
-      // Save user data in Zustand store
-      const getUserData = await makeRequest("GET", "/users/me");
-      setUser(getUserData?.data);
+
+      // Fetching user details after successful registration and updating the user store
+      getUserDetails(setUser);
 
       setRefresh(!refresh);
     } catch (error: any) {

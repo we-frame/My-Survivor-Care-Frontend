@@ -8,16 +8,31 @@ import { useForm } from "@tanstack/react-form";
 import useUserStore from "@/store/userStore";
 import { makeRequest } from "@/lib/api";
 import toast from "react-hot-toast";
+import Button from "../Common/Button";
+import Link from "next/link";
+import { getUserDetails } from "@/lib/getUserAPI";
 
 const ProfileUI = () => {
   const [editBackgroundInfo, setEditBackgroundInfo] = useState<boolean>(false);
   const [editMedicalInformation, setEditMedicalInformation] =
     useState<boolean>(false);
-  const { userData } = useUserStore();
+  const { userData, setUser } = useUserStore();
   const [formData, setFormData] = useState<any>({
     backgroundInformation: null,
     medicalInformation: null,
   });
+
+  const isoDateString =
+    userData?.userData?.latest_menopause_history?.date_created;
+  const date = new Date(isoDateString);
+
+  // Extracting the day, month, and year
+  const day = date.getDate(); // gets the day of the month
+  const month = date.getMonth() + 1; // getMonth returns 0-11, so add 1 for a 1-12 range
+  const year = date.getFullYear();
+
+  // Formatting the date as d-m-y
+  const formattedReAssessmentDate = `${day}-${month}-${year}`;
 
   const backgroundInformationForm = useForm<any>({
     defaultValues: {},
@@ -51,8 +66,13 @@ const ProfileUI = () => {
             { "Content-Type": "application/json" }
           );
 
+          getUserDetails(setUser);
           setEditBackgroundInfo(false);
           toast.success("Background Information Updated!");
+
+          if (typeof window !== "undefined") {
+            window.location.reload();
+          }
         } catch (error) {
           console.log(error);
           toast.error("Failed to update Background Information");
@@ -93,8 +113,13 @@ const ProfileUI = () => {
             { "Content-Type": "application/json" }
           );
 
+          getUserDetails(setUser);
           setEditMedicalInformation(false);
           toast.success("Medical Information Updated!");
+
+          if (typeof window !== "undefined") {
+            window.location.reload();
+          }
         } catch (error) {
           console.log(error);
           toast.error("Failed to update Medical Information");
@@ -119,15 +144,12 @@ const ProfileUI = () => {
             formSetter(item?.id, optionIds);
           } else {
             // Handle single response by providing a default value if `answer` is undefined
-            // const singleResponse =
-            //   item?.answer || item?.answered_options[0]?.option_id?.id;
             if (item?.answer) {
               formSetter(item?.id, item?.answer);
             } else if (item?.answered_options) {
               const optionID = item?.answered_options?.map(
                 (option: any) => option?.option_id?.id
               );
-
               formSetter(item?.id, optionID);
             }
           }
@@ -149,12 +171,6 @@ const ProfileUI = () => {
     fetchData("MI", "medicalInformation", medicalInformationForm.setFieldValue);
   }, []);
 
-  console.log(
-    backgroundInformationForm.getFieldValue(
-      "b882128d-02d5-4163-aeb8-8a788d431777"
-    )
-  );
-  console.log("data", formData.backgroundInformation);
   return (
     <div className="mt-5 lg:mt-10 flex flex-col gap-10">
       <Title
@@ -190,10 +206,10 @@ const ProfileUI = () => {
             formData={formData}
           />
         </div>
-        <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-7">
+        <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-12">
           <Image
-            alt="/public/profile_right_card_img.jpeg"
-            src={"/profile_right_card_img.jpeg"}
+            alt="/public/time-to-reassessment.jpeg"
+            src={"/time-to-reassessment.jpeg"}
             width={1000}
             height={1000}
             className="rounded-t-xl object-cover"
@@ -201,15 +217,18 @@ const ProfileUI = () => {
 
           <div className="p-5 flex flex-col items-start justify-start gap-3">
             <Title
-              title="Online Self-Management Platform"
+              title="Time to re-assess!"
               className="text-2xl font-semibold"
             />
 
-            <p className="text-base font-normal">
-              While you wait for your appointment to share your introductory
-              letter and the recommended clinical guideline with your GP, you
-              could try some self-help strategies at home.
+            <p className="text-base font-normal flex flex-col">
+              <span>You assessed your symptons on</span>
+              <span className="font-bold">{formattedReAssessmentDate}</span>
             </p>
+
+            <Link href={"/re-assessment"}>
+              <Button text="Reassess my symptoms" className="text-white" />
+            </Link>
           </div>
         </div>
       </div>

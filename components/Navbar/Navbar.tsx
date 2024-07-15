@@ -41,6 +41,10 @@ const Navbar: React.FC = () => {
       Cookie.remove("refresh-token");
       Cookie.remove("google-auth-userData");
 
+      if(typeof window.localStorage !== "undefined"){
+        window.localStorage.removeItem("user-store");
+      }
+
       setRefresh(!refresh);
 
       toast.success("Logged out!");

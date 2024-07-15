@@ -1,30 +1,111 @@
 "use client";
 
-import { ReAssessmentFormTypes } from "@/types/data";
 import { useForm } from "@tanstack/react-form";
-import React, { FormEvent, useState } from "react";
-import MenopauseAssessment from "../Register/MenopauseAssessment";
+import React, { FormEvent, useEffect, useState } from "react";
 import Title from "../Common/Title";
-import SelectInput from "../FormInputs/SelectInput";
 import { cn } from "@/lib/utils";
+import { makeRequest } from "@/lib/api";
+import MenopauseReAssessment from "./MenopauseReAssessment";
+import useUserStore from "@/store/userStore";
+import { getUserDetails } from "@/lib/getUserAPI";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const ReAssessmentUI = () => {
-  const [formData, setFormData] = useState<any>({
-    backgroundInformation: null,
-    medicalInformation: null,
+  const { setUser } = useUserStore(); // Get the setUser function from the store
+
+  const [formDataAPI, setFormDataAPI] = useState<any>({
     menopauseAssessment: null,
   });
+
+  const [formData, setFormData] = useState<any>({
+    follow_the_recommendation: "",
+    find_the_recommendation: "",
+    reassess_your_symptoms: "",
+    inputField: "",
+  });
+
+  const router = useRouter();
+
   // Initializing form with default values and submission handler
   const form = useForm<any>({
-    defaultValues: {
-      MenopauseAssessment: {},
-    },
+    defaultValues: {},
 
     // Form submission handler
     onSubmit: async ({ value }) => {
-      console.log("Register form values ::", value);
+      console.log("Re-Assessment form values ::", value);
+
+      const parameterRating: any = [];
+      var counter = 0;
+      var ratingSum = 0;
+      Object.keys(value).forEach((title) => {
+        counter++;
+        ratingSum = ratingSum + parseInt(value[title]);
+
+        parameterRating.push({
+          title: title,
+          rating: value[title],
+        });
+      });
+
+      const averageRating = ratingSum / counter;
+
+      const requestBody = {
+        menopause_history_id: {
+          average_rating: averageRating,
+          parameter_rating: parameterRating,
+        },
+      };
+
+      try {
+        await makeRequest(
+          "POST",
+          "/items/junction_directus_users_menopause_history",
+          requestBody
+        );
+
+        await makeRequest("PATCH", "/users/me", {
+          latest_menopause_history: requestBody?.menopause_history_id,
+        });
+
+        getUserDetails(setUser);
+
+        // Redirect to the home page after successful form submission
+        router.push("/profile");
+        toast.success("Re-Assessment form submitted successfully!");
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prevState: any) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const fetchData = async (key: string, section: any) => {
+    try {
+      const response = await makeRequest(
+        "GET",
+        `/items/form?filter={"key": {"_eq": "${key}"}}&fields=*,form_components.*,form_components.question_id.*,form_components.question_id.options.*,form_components.question_id.options.option_id.*`
+      );
+      setFormDataAPI((prev: any) => ({
+        ...prev,
+        [section]: response?.data[0],
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData("MA", "menopauseAssessment");
+  }, []);
+
   return (
     <div className="mt-5 lg:mt-10">
       <div className="w-full lg:w-[50%] flex flex-col items-start justify-start gap-5">
@@ -57,7 +138,7 @@ const ReAssessmentUI = () => {
           </div>
 
           <div className="max-w-full lg:max-w-[40%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-5">
-            <div>
+            {/* <div>
               <form.Field
                 name="follow_the_recommendation"
                 children={(field: any) => (
@@ -68,6 +149,7 @@ const ReAssessmentUI = () => {
                       { label: "No", value: "no" },
                     ]}
                     label="Did you follow the recommendation as you were advised?"
+                    placeholder={"Choose a recommendation"}
                     isRequired
                   />
                 )}
@@ -84,6 +166,7 @@ const ReAssessmentUI = () => {
                       { label: "No", value: "no" },
                     ]}
                     label="Did you find the recommendation to be useful for you?"
+                    placeholder="Choose a recommendation"
                     isRequired
                   />
                 )}
@@ -100,14 +183,147 @@ const ReAssessmentUI = () => {
                       { label: "No", value: "no" },
                     ]}
                     label="Do you still want to reassess your symptoms?"
+                    placeholder="Choose a recommendation"
                     isRequired
                   />
                 )}
               />
+            </div> */}
+
+            <div>
+              <label
+                htmlFor="follow_the_recommendation"
+                className="form-control w-full max-w-md"
+              >
+                <div className="label">
+                  <span className="label-text font-normal">
+                    Did you follow the recommendation as you were advised?
+                  </span>
+                </div>
+
+                <select
+                  className={cn(`select select-bordered max-w-xs`)}
+                  id="follow_the_recommendation"
+                  name="follow_the_recommendation"
+                  value={formData.follow_the_recommendation}
+                  onChange={handleChange}
+                >
+                  <option value="" disabled selected>
+                    Choose a recommendation
+                  </option>
+                  <option value={"yes"} className="text-black">
+                    Yes
+                  </option>
+                  <option value={"no"} className="text-black">
+                    No
+                  </option>
+                </select>
+              </label>
             </div>
+
+            {formData.follow_the_recommendation === "yes" ? (
+              <>
+                <div>
+                  <label
+                    htmlFor="find_the_recommendation"
+                    className="form-control w-full max-w-md"
+                  >
+                    <div className="label">
+                      <span className="label-text font-normal">
+                        Did you find the recommendation to be useful for you?
+                      </span>
+                    </div>
+
+                    <select
+                      className={cn(`select select-bordered max-w-xs`)}
+                      id="find_the_recommendation"
+                      name="find_the_recommendation"
+                      value={formData.find_the_recommendation}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled selected>
+                        Choose a recommendation
+                      </option>
+                      <option value={"yes"} className="text-black">
+                        Yes
+                      </option>
+                      <option value={"no"} className="text-black">
+                        No
+                      </option>
+                    </select>
+                  </label>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="reassess_your_symptoms"
+                    className="form-control w-full max-w-md"
+                  >
+                    <div className="label">
+                      <span className="label-text font-normal">
+                        Do you still want to reassess your symptoms?
+                      </span>
+                    </div>
+
+                    <select
+                      className={cn(`select select-bordered max-w-xs`)}
+                      id="reassess_your_symptoms"
+                      name="reassess_your_symptoms"
+                      value={formData.reassess_your_symptoms}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled selected>
+                        Choose a recommendation
+                      </option>
+                      <option value={"yes"} className="text-black">
+                        Yes
+                      </option>
+                      <option value={"no"} className="text-black">
+                        No
+                      </option>
+                    </select>
+                  </label>
+                </div>
+              </>
+            ) : formData.follow_the_recommendation === "no" ? (
+              <>
+                <div>
+                  <label
+                    htmlFor="inputField"
+                    className="form-control w-full max-w-xs"
+                  >
+                    <div className="label">
+                      <span className="label-text font-normal">
+                        Please tell us why you did not follow the previous
+                        recommendation?
+                      </span>
+                    </div>
+
+                    <textarea
+                      className={cn(
+                        "border rounded-md p-3 text-sm input-bordered w-full max-w-xs"
+                      )}
+                      id="inputField"
+                      name="inputField"
+                      value={formData.inputField}
+                      onChange={handleChange}
+                      rows={4}
+                      cols={50}
+                    />
+                  </label>
+                </div>
+              </>
+            ) : null}
           </div>
         </div>
-        <MenopauseAssessment form={form} />
+
+        {formData.follow_the_recommendation === "yes" &&
+          formData.reassess_your_symptoms === "yes" && (
+            <MenopauseReAssessment
+              form={form}
+              formData={formDataAPI.menopauseAssessment}
+            />
+          )}
 
         <div className="w-full flex items-center justify-center">
           <form.Subscribe
