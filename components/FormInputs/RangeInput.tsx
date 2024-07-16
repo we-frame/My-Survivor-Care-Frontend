@@ -15,6 +15,7 @@ const RangeInput = ({
   rangeStep = 1,
   isRequired = false,
   isDisabled = false,
+  defaultValue,
 }: RangeInputTypes) => {
   const rangeLabels = Array.from({ length: rangeLength + 1 }, (_, i) => i);
 
@@ -32,19 +33,32 @@ const RangeInput = ({
         </div>
       )}
       <div className="w-full">
-        <input
-          type="range"
-          name={field?.name}
-          required={isRequired}
-          value={field?.state?.value || 0}
-          onBlur={field.handleBlur}
-          onChange={(e) => field.handleChange(e.target.value)}
-          disabled={isDisabled}
-          min={minValue}
-          max={maxValue}
-          className={cn(className, "range range-xs")}
-          step={rangeStep}
-        />
+        {field ? (
+          <input
+            type="range"
+            name={field?.name}
+            required={isRequired}
+            value={field?.state?.value || 0}
+            onBlur={field?.handleBlur}
+            onChange={(e) => field?.handleChange(e.target.value)}
+            disabled={isDisabled}
+            min={minValue}
+            max={maxValue}
+            className={cn(className, "range range-xs")}
+            step={rangeStep}
+          />
+        ) : (
+          <input
+            type="range"
+            value={defaultValue}
+            disabled={isDisabled}
+            min={minValue}
+            max={maxValue}
+            className={cn(className, "range range-xs")}
+            step={rangeStep}
+          />
+        )}
+
         <div className="w-full flex justify-between text-xs px-1">
           {rangeLabels.map((label) => (
             <span key={label}>{label}</span>

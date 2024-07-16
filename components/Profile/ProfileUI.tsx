@@ -41,9 +41,10 @@ const ProfileUI = () => {
     onSubmit: async ({ value }) => {
       console.log("backgroundInformationForm values ::", value);
 
-      Object.keys(value).forEach(async (answerID: any) => {
-        try {
+      try {
+        Object.keys(value).forEach(async (answerID: any) => {
           const reqBody: any = {};
+
           if (Array.isArray(value[answerID])) {
             reqBody.answered_options = value[answerID].map((option: any) => {
               return { option_id: option };
@@ -65,19 +66,15 @@ const ProfileUI = () => {
             JSON.stringify(reqBody),
             { "Content-Type": "application/json" }
           );
+        });
 
-          getUserDetails(setUser);
-          setEditBackgroundInfo(false);
-          toast.success("Background Information Updated!");
-
-          if (typeof window !== "undefined") {
-            window.location.reload();
-          }
-        } catch (error) {
-          console.log(error);
-          toast.error("Failed to update Background Information");
-        }
-      });
+        getUserDetails(setUser);
+        setEditBackgroundInfo(false);
+        toast.success("Background Information Updated!");
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to update Background Information");
+      }
     },
   });
 
@@ -88,9 +85,10 @@ const ProfileUI = () => {
     onSubmit: async ({ value }) => {
       console.log("medicalInformationForm values ::", value);
 
-      Object.keys(value).forEach(async (answerID: any) => {
-        try {
+      try {
+        Object.keys(value).forEach(async (answerID: any) => {
           const reqBody: any = {};
+
           if (Array.isArray(value[answerID])) {
             reqBody.answered_options = value[answerID].map((option: any) => {
               return { option_id: option };
@@ -112,19 +110,15 @@ const ProfileUI = () => {
             JSON.stringify(reqBody),
             { "Content-Type": "application/json" }
           );
+        });
 
-          getUserDetails(setUser);
-          setEditMedicalInformation(false);
-          toast.success("Medical Information Updated!");
-
-          if (typeof window !== "undefined") {
-            window.location.reload();
-          }
-        } catch (error) {
-          console.log(error);
-          toast.error("Failed to update Medical Information");
-        }
-      });
+        getUserDetails(setUser);
+        setEditMedicalInformation(false);
+        toast.success("Medical Information Updated!");
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to update Medical Information");
+      }
     },
   });
 
