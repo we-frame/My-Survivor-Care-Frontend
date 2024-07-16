@@ -1,4 +1,3 @@
-// Import necessary Axios and Cookie handling modules
 import axios, {
   AxiosInstance,
   AxiosRequestConfig,
@@ -13,60 +12,55 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
 
-// Define the base URL for API requests, defaulting if env variable is not set
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+// Define the base URL for API requests
+const BASE_URL: any = process.env.NEXT_PUBLIC_BASE_URL;
 
 // Create an Axios instance with the base URL
-const client: AxiosInstance = axios.create();
+const client: AxiosInstance = axios.create({
+  baseURL: BASE_URL,
+});
 
-client.defaults.baseURL = "https://api.saley.agpro.co.in";
+// Handle session timeout actions
+const handleSessionTimeout = (): void => {
+  toast.error("Session timed out. Please log in again.");
+  Cookies.remove("access-token");
+  Cookies.remove("refresh-token");
+  window.localStorage.removeItem("user-store");
+  if (typeof window !== "undefined") {
+    window.location.reload();
+  }
+};
 
 // Set up a response interceptor
 client.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  }, // On success, return the response
-  async (error: AxiosError) => {
-    if (!error.config) {
-      return Promise.reject(error); // If config is not available, reject the promise
-    }
-
-    // Cast error config to the custom Axios request config
+  (response: AxiosResponse): AxiosResponse => response, // On success, return the response
+  async (error: AxiosError): Promise<AxiosResponse | AxiosError> => {
     const originalRequest: CustomAxiosRequestConfig =
       error.config as CustomAxiosRequestConfig;
 
-    // Handle 401 Unauthorized responses
-    if (error?.response?.status === 401 && !originalRequest._retry) {
+    if (error?.response?.status === 401 && !originalRequest?._retry) {
       originalRequest._retry = true; // Set retry flag
-      try {
-        // Retrieve the refresh token from cookies
-        const refreshToken = Cookies.get("refresh-token");
-        if (!refreshToken) {
-          throw new Error("No refresh token available"); // If no refresh token, throw error
-        }
 
-        // Axios request options
-        const axiosRequestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          data: {
+      const refreshToken: string | undefined = Cookies.get("refresh-token");
+      if (!refreshToken) {
+        handleSessionTimeout();
+        return Promise.reject(new Error("No refresh token available"));
+      }
+
+      try {
+        const response: AxiosResponse = await axios.post(
+          `${BASE_URL}/auth/refresh`,
+          {
             refresh_token: refreshToken,
             mode: "json",
           },
-        };
-
-        // API call to refresh the token using Axios
-        const response = await axios.post(
-          `${BASE_URL}/auth/refresh`,
-          axiosRequestOptions.data,
-          { headers: axiosRequestOptions.headers }
+          {
+            headers: { "Content-Type": "application/json" },
+          }
         );
 
-        const data = response?.data;
-
-        // Extract new tokens from data response
-        const accessToken = data?.data?.access_token;
-        const newRefreshToken = data?.data?.refresh_token;
+        const { access_token: accessToken, refresh_token: newRefreshToken } =
+          response?.data?.data || {};
 
         // Update cookies with new tokens
         Cookies.set("access-token", accessToken);
@@ -81,18 +75,13 @@ client.interceptors.response.use(
         return client(originalRequest);
       } catch (refreshError) {
         console.error("Error refreshing token:", refreshError);
-
-        toast.error("Session time out. Please login again.");
-
-        Cookies.remove("access-token");
-        Cookies.remove("refresh-token");
-        window.localStorage.removeItem("user-store");
-        return Promise.reject(refreshError); // If token refresh fails, reject the promise
+        handleSessionTimeout();
+        return Promise.reject(refreshError);
       }
     }
 
     console.log("Axios Interceptor Error ::", error);
-    return Promise.reject(error); // For all other errors, reject the promise
+    return Promise.reject(error);
   }
 );
 
