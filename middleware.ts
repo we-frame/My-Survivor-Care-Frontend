@@ -10,6 +10,7 @@ export function middleware(request: NextRequest) {
     "/practitioner-resources",
     "/healthcare-professional",
     "/profile",
+    "/download-result",
   ];
 
   // Array of all routes that are public
@@ -33,7 +34,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Redirect to home if logged in and trying to access login or register
-  if (accessToken && (path === "/login")) {
+  if (accessToken && path === "/login") {
     return NextResponse.redirect(new URL("/", request.nextUrl.origin));
   }
 

@@ -46,8 +46,14 @@ const LoginCard = ({ textCenter }: LoginCardTypes) => {
       // Determine whether to log in or register the user
       if (userExists && authType === "google") {
         await handleGoogleLogin(firebaseUser); // Existing user login
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
       } else if (!userExists) {
         await handleGoogleRegister(firebaseUser); // New user registration
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
       } else {
         toast.error("Please log in with email and password.");
       }
@@ -72,7 +78,10 @@ const LoginCard = ({ textCenter }: LoginCardTypes) => {
       Cookie.set("refresh-token", response.data.refresh_token);
 
       // Save user data in Zustand store
-      const getUserData = await makeRequest("GET", "/users/me?fields=*,latest_menopause_history.*,menopause_history.*");
+      const getUserData = await makeRequest(
+        "GET",
+        "/users/me?fields=*,latest_menopause_history.*,menopause_history.*"
+      );
       setUser(getUserData?.data);
       if (!getUserData?.data?.is_registration_completed) {
         toast.error("Please complete your registration!.");
@@ -86,7 +95,6 @@ const LoginCard = ({ textCenter }: LoginCardTypes) => {
 
         router.push("/");
       }
-
       setRefresh(!refresh);
     } catch (error: any) {
       // Handle login errors

@@ -48,7 +48,7 @@ export interface MultipleCheckboxInputTypes {
 }
 
 export interface RangeInputTypes {
-  field: FieldApi<any, any, any, any>;
+  field?: FieldApi<any, any, any, any>;
   label?: string;
   subLabel?: string;
   containerClassName?: string;
@@ -59,4 +59,5 @@ export interface RangeInputTypes {
   rangeStep?: number;
   isRequired?: boolean;
   isDisabled?: boolean;
+  defaultValue?: string;
 }
