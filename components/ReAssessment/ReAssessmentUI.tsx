@@ -12,7 +12,11 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 const ReAssessmentUI = () => {
-  const { setUser } = useUserStore(); // Get the setUser function from the store
+  const { setUser, userData } = useUserStore(); // Get the setUser function from the store
+  const previousAverageRating: number | null =
+    userData?.userData?.latest_menopause_history?.average_rating ?? null;
+
+  console.log(previousAverageRating);
 
   const [formDataAPI, setFormDataAPI] = useState<any>({
     menopauseAssessment: null,
@@ -50,6 +54,10 @@ const ReAssessmentUI = () => {
           console.log(error);
         }
       } else {
+        await makeRequest("PATCH", "users/me", {
+          previous_rating: previousAverageRating,
+        });
+
         const parameterRating: any = [];
         var counter = 0;
         var ratingSum = 0;
@@ -86,11 +94,13 @@ const ReAssessmentUI = () => {
           getUserDetails(setUser);
 
           // Redirect to the home page after successful form submission
-          router.push("/profile");
+          router.replace("/profile");
           toast.success("Re-Assessment form submitted successfully!");
         } catch (error) {
           console.log(error);
         }
+
+        // router.replace(router.asPath);
       }
     },
   });

@@ -22,6 +22,8 @@ const ProfileUI = () => {
     medicalInformation: null,
   });
 
+  const averageRating =
+    userData?.userData?.latest_menopause_history?.average_rating ?? null;
   const isoDateString =
     userData?.userData?.latest_menopause_history?.date_created;
   const date = new Date(isoDateString);
@@ -200,31 +202,61 @@ const ProfileUI = () => {
             formData={formData}
           />
         </div>
-        <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-12">
-          <Image
-            alt="/public/time-to-reassessment.jpeg"
-            src={"/time-to-reassessment.jpeg"}
-            width={1000}
-            height={1000}
-            className="rounded-t-xl object-cover"
-          />
 
-          <div className="p-5 flex flex-col items-start justify-start gap-3">
-            <Title
-              title="Time to re-assess!"
-              className="text-2xl font-semibold"
+        {averageRating ? (
+          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-12">
+            <Image
+              alt="/public/time-to-reassessment.jpeg"
+              src={"/time-to-reassessment.jpeg"}
+              width={1000}
+              height={1000}
+              className="rounded-t-xl object-cover"
             />
 
-            <p className="text-base font-normal flex flex-col">
-              <span>You assessed your symptons on</span>
-              <span className="font-bold">{formattedReAssessmentDate}</span>
-            </p>
+            <div className="p-5 flex flex-col items-start justify-start gap-3">
+              <Title
+                title="Time to re-assess!"
+                className="text-2xl font-semibold"
+              />
 
-            <Link href={"/re-assessment"}>
-              <Button text="Reassess my symptoms" className="text-white" />
-            </Link>
+              <p className="text-base font-normal flex flex-col">
+                <span>You assessed your symptons on</span>
+                <span className="font-bold">{formattedReAssessmentDate}</span>
+              </p>
+
+              <Link href={"/re-assessment"}>
+                <Button text="Reassess my symptoms" className="text-white" />
+              </Link>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-7">
+            <Image
+              alt="/public/profile_right_card_img.jpeg"
+              src={"/profile_right_card_img.jpeg"}
+              width={1000}
+              height={1000}
+              className="rounded-t-xl object-cover"
+            />
+
+            <div className="p-5 flex flex-col items-start justify-start gap-3">
+              <Title
+                title="Online Self-Management Platform"
+                className="text-2xl font-semibold"
+              />
+
+              <p className="text-base font-normal">
+                While you wait for your appointment to share your introductory
+                letter and the recommended clinical guideline with your GP, you
+                could try some self-help strategies at home.
+              </p>
+
+              <Link href={"/re-assessment"}>
+                <Button text="Access platform" className="text-white" />
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

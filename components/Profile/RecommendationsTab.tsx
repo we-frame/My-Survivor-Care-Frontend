@@ -7,78 +7,89 @@ import Link from "next/link";
 
 const RecommendationsTab: React.FC = () => {
   const { userData } = useUserStore();
-  const averageRating: number | null =
+  const [showQuestion, setShowQuestion] = useState(true);
+  const [userResponse, setUserResponse] = useState(null);
+  const averageRating =
     userData?.userData?.latest_menopause_history?.average_rating ?? null;
-  const [showQuestion, setShowQuestion] = useState<boolean>(true);
-  const [userResponse, setUserResponse] = useState<string | null>(null);
+  const previousRating = userData?.userData?.previous_rating ?? null;
 
-  const handleYesClick = () => {
-    setUserResponse("yes");
+  const messages: any = {
+    decrease: {
+      "0-3.9": {
+        message:
+          "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has decreased from moderate to mild. Now, you can choose to self-manage your symptoms and/or continue working with your GP.",
+        question: "Do you want to self-manage your symptoms now?",
+        noResponse:
+          "Thanks for using this reassessment tool. We hope you continue working with your GP to manage your symptoms.",
+      },
+      "4-6.9": {
+        message:
+          "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has decreased from severe to moderate. Your GP may be able to take over managing your symptoms. You could ask your specialist to transfer your care to your GP or, you can continue with the current management plan with your specialists.",
+        question: "Do you want to self-manage your symptoms now?",
+        noResponse:
+          "Thanks for using the reassessment tool. We hope you continue working with your specialist to reduce the impact of your symptoms.",
+      },
+    },
+    increase: {
+      "4-6.9": {
+        message:
+          "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has shifted from mild to moderate. We recommend more dedicated support.",
+        question: "Do you want more dedicated support?",
+        noResponse:
+          "Thanks for using the reassessment tool. We advise that you keep practicing the self-management tips to help reduce the impact of your symptoms.",
+      },
+      "7-10": {
+        message:
+          "Thank you for using this reassessment tool. Your answers suggest that the impact of your symptoms has shifted from moderate to severe. We recommend seeking additional support.",
+        question: "Do you want more dedicated support?",
+        noResponse:
+          "Thanks for using the reassessment tool. We advise that you keep practicing the self-management tips to help reduce the impact of your symptoms.",
+      },
+    },
+    same: {
+      "0-3.9": {
+        message:
+          "Thank you for using this reassessment tool. Your answers show that the impact of your symptoms remains mild. We suggest continuing with your current self-management. If you feel this is not working for you, you could seek more dedicated support.",
+        question: "Do you want more dedicated support?",
+      },
+      "4-6.9": {
+        message:
+          "Thank you for using this reassessment tool. Your answers show that the impact of your symptoms remains at a moderate level. We advise continuing what you are doing with your primary care doctor (GP) using the clinical guideline recommendations. If you feel this is not working for you, you could seek additional support.",
+        question: "Do you want more dedicated support?",
+      },
+      "7-10": {
+        message:
+          "Thank you for using this reassessment tool. Your answers suggest that the impact of your symptoms remains severe. We recommend continuing what you are doing with your specialist.",
+        question:
+          "Have you visited a specialist menopause after cancer clinic?",
+        yesResponse:
+          "We advise that you take your current report to your specialist for more care.",
+        noResponse:
+          "We advise asking for a referral from your GP to a specialist; for example, to a gynaecologist, oncologist, surgeon, cancer care nurse for more support.",
+      },
+    },
+  };
+
+  const getRatingCategory = (rating: any) => {
+    if (rating >= 0 && rating <= 3.9) return "0-3.9";
+    if (rating >= 4 && rating <= 6.9) return "4-6.9";
+    if (rating >= 7 && rating <= 10) return "7-10";
+    return "";
+  };
+
+  const handleButtonClick = (response: any) => {
+    setUserResponse(response);
     setShowQuestion(false);
   };
 
-  const handleNoClick = () => {
-    setUserResponse("no");
-    setShowQuestion(false);
-  };
-
-  const getMessage = (rating: number): string => {
-    if (rating <= 3.9) {
-      return "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has decreased from moderate to mild. Now, you can choose to self-manage your symptoms and/or continue working with your GP.";
-    } else if (rating <= 6.9) {
-      return "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has decreased from severe to moderate. Your GP may be able to take over managing your symptoms. You could ask your specialist to transfer your care to your GP or, you can continue with the current management plan with your specialists.";
-    } else if (rating >= 4 && rating <= 6.9) {
-      return "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has shifted from mild to moderate. We recommend more dedicated support.";
-    } else if (rating >= 7 && rating <= 10) {
-      return "Thank you for using this reassessment tool. Your answers suggest that the impact of your symptoms has shifted from moderate to severe. We recommend seeking additional support.";
-    }
-    return "";
-  };
-
-  const getFollowUpMessage = (rating: number, response: string): string => {
-    if (rating <= 3.9) {
-      return response === "no"
-        ? "Thanks for using this reassessment tool. We hope you continue working with your GP to manage your symptoms."
-        : "";
-    } else if (rating <= 6.9) {
-      return response === "no"
-        ? "Thanks for using the reassessment tool. We hope you continue working with your specialist to reduce the impact of your symptoms."
-        : "";
-    } else if (rating >= 4 && rating <= 6.9) {
-      return response === "no"
-        ? "Thanks for using the reassessment tool. We advise that you keep practicing the self-management tips to help reduce the impact of your symptoms."
-        : "";
-    } else if (rating >= 7 && rating <= 10) {
-      return response === "no"
-        ? "Thanks for using the reassessment tool. We hope you continue working with your GP to reduce the impact of your symptoms."
-        : "";
-    }
-    return "";
-  };
-
-  const getQuestion = (rating: number): string => {
-    if (rating <= 3.9) {
-      return "Do you want to self-manage your symptoms now?";
-    } else if (rating <= 6.9) {
-      return "Do you want to self-manage your symptoms now?";
-    } else if (rating >= 4 && rating <= 6.9) {
-      return "Do you want more dedicated support?";
-    } else if (rating >= 7 && rating <= 10) {
-      return "Do you want more dedicated support?";
-    }
-    return "";
-  };
-
-  const getButtonResponse = (rating: number): string => {
-    if (rating >= 7 && rating <= 10) {
-      return "Have you visited a specialist menopause after cancer clinic?";
-    }
-    return "";
-  };
-
-  const handleShowQuestion = () => {
-    setShowQuestion(true);
-  };
+  const category = getRatingCategory(averageRating);
+  const scoreChange =
+    previousRating > averageRating
+      ? "decrease"
+      : previousRating < averageRating
+      ? "increase"
+      : "same";
+  const displayInfo: any = messages[scoreChange][category];
 
   return (
     <div className="flex flex-col">
@@ -89,11 +100,13 @@ const RecommendationsTab: React.FC = () => {
             title="Moderate symptoms"
             className="text-3xl lg:text-4xl font-semibold"
           />
-          <Link href={"/download-result"}>
+
+          <Link href={averageRating ? "/download-result" : "#"}>
             <Button
               text="Download my results"
               btnBg="#f3f4f6"
               className="text-black shadow-sm"
+              disabled={!averageRating}
             />
           </Link>
         </div>
@@ -119,78 +132,68 @@ const RecommendationsTab: React.FC = () => {
         </div>
       </div>
 
-      <div className="w-full lg:w-[90%] flex flex-col items-start justify-start gap-5 mt-10 lg:mt-20">
-        {averageRating !== null && (
-          <>
-            <Title
-              title="Results"
-              className="text-xl lg:text-2xl font-semibold"
-            />
-            <p className="text-base font-normal">{getMessage(averageRating)}</p>
-            {showQuestion ? (
-              <div className="flex flex-col gap-3">
-                <p className="text-base font-normal">
-                  {getQuestion(averageRating)}
-                </p>
-                <div className="flex gap-3">
-                  <Button
-                    text="Yes"
-                    btnBg="#14b8a6"
-                    className="text-white"
-                    onClick={handleYesClick}
-                  />
-                  <Button
-                    text="No"
-                    btnBg="#f44336"
-                    className="text-white"
-                    onClick={handleNoClick}
-                  />
-                </div>
-              </div>
-            ) : (
+      {averageRating ? (
+        <div>
+          <Title title="Results" className="text-3xl font-semibold my-5" />
+          <p className="text-base my-3">{displayInfo?.message}</p>
+          {showQuestion && (
+            <div className="flex gap-3">
               <Button
-                text="Show Question"
-                btnBg="#f3f4f6"
-                className="text-black shadow-sm"
-                onClick={handleShowQuestion}
+                text="Yes"
+                btnBg="#14b8a6"
+                onClick={() => handleButtonClick("yes")}
               />
-            )}
-            {userResponse && (
-              <p className="text-base font-normal">
-                {getFollowUpMessage(averageRating, userResponse)}
-              </p>
-            )}
-            {averageRating >= 7 && averageRating <= 10 && (
-              <div className="flex flex-col gap-3 mt-5">
-                <p className="text-base font-normal">
-                  {getButtonResponse(averageRating)}
-                </p>
-                <div className="flex gap-3">
-                  <Button
-                    text="Yes"
-                    btnBg="#4caf50"
-                    className="text-white"
-                    onClick={handleYesClick}
-                  />
-                  <Button
-                    text="No"
-                    btnBg="#f44336"
-                    className="text-white"
-                    onClick={handleNoClick}
-                  />
-                </div>
-                {userResponse && (
-                  <p className="text-base font-normal">
-                    {userResponse === "no"
-                      ? "We advise asking for a referral from your GP to a specialist; for example, to a gynaecologist, oncologist, surgeon, cancer care nurse for more support."
-                      : "We advise that you take your current report to your specialist for more care."}
-                  </p>
-                )}
-              </div>
-            )}
-          </>
-        )}
-      </div>
+              <Button
+                text="No"
+                btnBg="#f44336"
+                onClick={() => handleButtonClick("no")}
+              />
+            </div>
+          )}
+          {userResponse === "no" && (
+            <p
+              className="text-base"
+              style={{ color: "green", fontWeight: 500 }}
+            >
+              {displayInfo?.noResponse}
+            </p>
+          )}
+          {userResponse === "yes" && (
+            <p
+              className="text-base"
+              style={{ color: "green", fontWeight: 500 }}
+            >
+              {displayInfo?.yesResponse}
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="w-full lg:w-[90%] flex flex-col items-start justify-start gap-5 mt-10 lg:mt-20">
+          <Title
+            title="Clinical Practice Guidelines"
+            className="text-xl lg:text-2xl font-semibold"
+          />
+          <p className="text-base font-normal">
+            Cancer patients dealing with menopausal symptoms often need a
+            different approach for symptom management compared to women going
+            through natural menopause. However, with proper care, most symptoms
+            can be effectively managed. Clinical guidelines exist to help guide
+            your doctors to provide suitable care. These guidelines can also
+            help you make informed decisions about the available treatment
+            options for managing your menopausal symptoms.
+          </p>
+          <p className="text-base font-normal">
+            Based on this, we advise sharing this introductory letter and
+            clinical guideline with your primary care doctor (GP) to work
+            together on the best plan to manage your symptoms.
+          </p>
+
+          <Button
+            text="Download introductory letter"
+            className="text-[#c7d2fe] font-normal text-sm"
+          />
+        </div>
+      )}
     </div>
   );
 };
