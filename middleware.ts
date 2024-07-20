@@ -11,10 +11,11 @@ export function middleware(request: NextRequest) {
     "/healthcare-professional",
     "/profile",
     "/download-result",
+    "/re-assessment",
   ];
 
   // Array of all routes that are public
-  const publicRoutes = ["/orders/inperson", "/orders/success"];
+  // const publicRoutes = ["/orders/inperson", "/orders/success"];
 
   // Store current request url in a custom header, which you can read later
   const requestHeaders = new Headers(request.headers);
@@ -27,8 +28,7 @@ export function middleware(request: NextRequest) {
   // Redirect to login if trying to access a protected route without an access token
   if (
     !accessToken &&
-    protectedRoutes.some((route) => path.startsWith(route)) &&
-    !publicRoutes.some((route) => path.startsWith(route))
+    protectedRoutes.some((route) => path.startsWith(route))
   ) {
     return NextResponse.redirect(new URL("/login", request.nextUrl.origin));
   }

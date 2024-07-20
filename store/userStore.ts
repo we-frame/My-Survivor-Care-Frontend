@@ -12,13 +12,16 @@ const savedState =
     ? JSON.parse(localStorage.getItem("user-store")!)
     : {};
 
-export const useUserStore = create<UserState>(
+const useUserStore = create<UserState>(
   persistMiddleware(
     (set) => ({
-      userData: savedState ? savedState : null,
-
-      setUser: (user) => set({ userData: user }),
-      clearUser: () => set({ userData: null }),
+      userData: savedState ? savedState?.userData : null,
+      setUser: (user) => {
+        set({ userData: { userData: user } });
+      },
+      clearUser: () => {
+        set({ userData: null });
+      },
     }),
     { name: "user-store" } // Name of the localStorage key to persist state
   )

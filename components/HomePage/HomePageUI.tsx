@@ -1,17 +1,37 @@
 "use client";
 
-import { checkLogin } from "@/lib/checkLogin";
 import Button from "../Common/Button";
 import LoginCard from "../Login/LoginCard";
 import useLoadingStore from "@/store/loadingStore";
 import { useEffect, useState } from "react";
 import Cookie from "js-cookie";
+import useRegistrationStore from "@/store/userRegistrationStore";
+import { cn } from "@/lib/utils";
+import useUserStore from "@/store/userStore";
 
 const HomePageUI = () => {
   const { refresh } = useLoadingStore();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const {
+    step,
+    setStep,
+    interested,
+    setInterested,
+    notInterestedMsg,
+    setNotInterestedMsg,
+    setEligible,
+  } = useRegistrationStore();
+  const { userData } = useUserStore();
+
+  const [isNotInterested, setIsNotInterested] = useState<boolean>(
+    notInterestedMsg !== null && notInterestedMsg !== ""
+  );
+
+  useEffect(() => {
+    setIsNotInterested(notInterestedMsg !== null && notInterestedMsg !== "");
+  }, [notInterestedMsg, step]);
 
   useEffect(() => {}, [refresh]);
+
   return (
     <div className="w-full mt-5 lg:mt-10 flex flex-col lg:flex-row marker:items-center justify-center lg:items-start lg:justify-start gap-12 lg:gap-20">
       <div className="w-full lg:w-[60%] flex flex-col items-start justify-start gap-5">
@@ -48,17 +68,93 @@ const HomePageUI = () => {
           caters to your needs.
         </p>
 
-        <div className="w-full">
-          <p className="text-xl font-semibold text-center">
-            Are you interested in taking part in this early testing of the
-            platform?
-          </p>
-        </div>
+        {!userData && (
+          <>
+            <div className="w-full">
+              <p
+                className={cn(
+                  (isNotInterested || step !== 1) && "text-[#c8cbd0]",
+                  "text-xl font-semibold text-center"
+                )}
+              >
+                Are you interested in taking part in this early testing of the
+                platform?
+              </p>
+            </div>
 
-        <div className="w-full flex items-center justify-center gap-3">
-          <Button text="Yes, I am" className="text-[#C7D2FE]" />
-          <Button text="No, I'm not" btnBg={"#f3f4f6"} />
-        </div>
+            <div className="w-full flex items-center justify-center gap-3">
+              <Button
+                text="Yes, I am"
+                className="text-[#C7D2FE]"
+                disabled={isNotInterested || step !== 1}
+                onClick={() => {
+                  setStep(2);
+                }}
+              />
+              <Button
+                text="No, I'm not"
+                btnBg={"#f3f4f6"}
+                disabled={isNotInterested || step !== 1}
+                onClick={() => {
+                  setInterested(false);
+                  setEligible(true);
+                  setNotInterestedMsg(
+                    "For now, access to this platform is only available to those participating in the early testing. Thank you for your time."
+                  );
+                }}
+              />
+            </div>
+
+            {step === 2 && (
+              <>
+                <div className="w-full">
+                  <p
+                    className={cn(
+                      (isNotInterested || step !== 2) && "text-[#c8cbd0]",
+                      "text-xl font-semibold text-center"
+                    )}
+                  >
+                    Have you been affected by cancer in the past, or are you
+                    currently, living with it?
+                  </p>
+                </div>
+
+                <div className="w-full flex items-center justify-center gap-3">
+                  <Button
+                    text="Yes, I am"
+                    className="text-[#C7D2FE]"
+                    disabled={isNotInterested || step !== 2}
+                    onClick={() => {
+                      setInterested(true);
+                      setEligible(true);
+                      setStep(2);
+                    }}
+                  />
+                  <Button
+                    text="No, I'm not"
+                    btnBg={"#f3f4f6"}
+                    disabled={isNotInterested || step !== 2}
+                    onClick={() => {
+                      setInterested(false);
+                      setEligible(true);
+                      setNotInterestedMsg(
+                        "We are sorry, but as this platform is for women living with or beyond cancer you are not eligible to create an account. Thank you for being so understanding."
+                      );
+                    }}
+                  />
+                </div>
+              </>
+            )}
+
+            {!interested && (
+              <div className="w-full">
+                <p className="text-center text-xl font-semibold text-green-700">
+                  {notInterestedMsg}
+                </p>
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       {!Cookie.get("access-token") && <LoginCard />}

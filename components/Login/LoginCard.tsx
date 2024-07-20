@@ -4,7 +4,7 @@ import GoogleIcon from "../Icon/GoogleIcon";
 import AppleIcon from "../Icon/AppleIcon";
 import Title from "../Common/Title";
 import { makeRequest } from "@/lib/api";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Cookie from "js-cookie";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebaseConfig";
@@ -12,56 +12,79 @@ import toast from "react-hot-toast";
 import useUserStore from "@/store/userStore";
 import useLoadingStore from "@/store/loadingStore";
 import { getUserDetails } from "@/lib/getUserAPI";
+import useRegistrationStore from "@/store/userRegistrationStore";
+import { cn } from "@/lib/utils";
 
 interface LoginCardTypes {
   textCenter?: boolean;
+  noHeading?: boolean;
+  noBgStyle?: boolean;
 }
 
-const LoginCard = ({ textCenter }: LoginCardTypes) => {
+const LoginCard = ({
+  textCenter,
+  noHeading = false,
+  noBgStyle = false,
+}: LoginCardTypes) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
   const { setUser } = useUserStore(); // Get the setUser function from the store
   const router = useRouter();
   const { refresh, setRefresh } = useLoadingStore();
+  const { interested, eligible } = useRegistrationStore();
+  const path = usePathname();
+  console.log(path);
 
   // Function to handle Google sign-in
   const handleGoogle = async () => {
-    setLoadingButton(true); // Enable loading state
-    const provider = new GoogleAuthProvider(); // Google Auth provider
-    try {
-      // Firebase Google sign-in
-      const result = await signInWithPopup(auth, provider);
-      const firebaseUser = result?.user;
-
-      // Check if user exists in your system
-      const checkUser = await makeRequest(
-        "GET",
-        // `/users?filter[email][_eq]=${firebaseUser?.email}&fields=auth_type`
-        `/users?filter={"email": {"_eq": "${firebaseUser?.email}"}}&fields=*`
+    if (!eligible) {
+      toast.error(
+        "Please answer whether you are interested in participating in the early testing."
       );
 
-      const userExists = checkUser?.data[0];
-      const authType = userExists?.auth_type; // Checking userAuth type
-
-      // Determine whether to log in or register the user
-      if (userExists && authType === "google") {
-        await handleGoogleLogin(firebaseUser); // Existing user login
-        if (typeof window !== "undefined") {
-          window.location.reload();
-        }
-      } else if (!userExists) {
-        await handleGoogleRegister(firebaseUser); // New user registration
-        if (typeof window !== "undefined") {
-          window.location.reload();
-        }
+      if (path === "/") {
+        return;
       } else {
-        toast.error("Please log in with email and password.");
+        router.push("/");
+        return;
       }
-    } catch (error) {
-      console.error("Firebase Sign-in Error:", error); // Log the error
-      toast.error("An error occurred during sign-in."); // Show error toast
-    } finally {
-      setLoadingButton(false); // Disable loading state
+    } else if (!interested) {
+      toast.error(
+        "You are not eligible for this program. Please review your answers to the eligibility questions."
+      );
+      return;
+    } else {
+      setLoadingButton(true); // Enable loading state
+      const provider = new GoogleAuthProvider(); // Google Auth provider
+      try {
+        // Firebase Google sign-in
+        const result = await signInWithPopup(auth, provider);
+        const firebaseUser = result?.user;
+
+        // Check if user exists in your system
+        const checkUser = await makeRequest(
+          "GET",
+          // `/users?filter[email][_eq]=${firebaseUser?.email}&fields=auth_type`
+          `/users?filter={"email": {"_eq": "${firebaseUser?.email}"}}&fields=*`
+        );
+
+        const userExists = checkUser?.data[0];
+        const authType = userExists?.auth_type; // Checking userAuth type
+
+        // Determine whether to log in or register the user
+        if (userExists && authType === "google") {
+          await handleGoogleLogin(firebaseUser); // Existing user login
+        } else if (!userExists) {
+          await handleGoogleRegister(firebaseUser); // New user registration
+        } else {
+          toast.error("Please log in with email and password.");
+        }
+      } catch (error) {
+        console.error("Firebase Sign-in Error:", error); // Log the error
+        toast.error("An error occurred during sign-in."); // Show error toast
+      } finally {
+        setLoadingButton(false); // Disable loading state
+      }
     }
   };
 
@@ -167,15 +190,23 @@ const LoginCard = ({ textCenter }: LoginCardTypes) => {
 
   return (
     <div className="flex flex-col items-center justify-center lg:items-start lg:justify-start gap-5">
-      <Title
-        title="Login to MySurvivorCare"
-        className={
-          textCenter
-            ? "text-center text-xl font-semibold"
-            : "text-center lg:text-left text-xl font-semibold"
-        }
-      />
-      <div className="bg-[#FFFFFF] flex flex-col items-center justify-center gap-3 shadow-xl px-5 py-7 rounded-xl">
+      {!noHeading && (
+        <Title
+          title="Login to MySurvivorCare"
+          className={
+            textCenter
+              ? "text-center text-xl font-semibold"
+              : "text-center lg:text-left text-xl font-semibold"
+          }
+        />
+      )}
+
+      <div
+        className={cn(
+          "flex flex-col items-center justify-center gap-3 disabled:cursor-not-allowed",
+          !noBgStyle && "bg-[#FFFFFF] shadow-xl px-5 py-7 rounded-xl"
+        )}
+      >
         <Button
           text={`Continue with Google`}
           className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base font-semibold btn-outline hover:text-black disabled:cursor-not-allowed"

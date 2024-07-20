@@ -2,11 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Title from "../Common/Title";
-import Button from "../Common/Button";
-import GoogleIcon from "../Icon/GoogleIcon";
-import AppleIcon from "../Icon/AppleIcon";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import LoginCard from "../Login/LoginCard";
 
 interface YourAccountTypes {
   privacy?: boolean;
@@ -29,8 +27,6 @@ const YourAccount = ({ privacy, setPrivacy }: YourAccountTypes) => {
       }
     }
   }, [uData]);
-
-  console.log(googleData);
   return (
     <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
       <div className="w-full lg:w-[20%] flex flex-col gap-3">
@@ -46,20 +42,7 @@ const YourAccount = ({ privacy, setPrivacy }: YourAccountTypes) => {
             {googleData ? (
               <div className="text-2xl font-semibold">{`Welcome! ${googleData?.displayName}`}</div>
             ) : (
-              <>
-                <Button
-                  text="Continue with Google"
-                  className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base font-semibold btn-outline hover:text-black"
-                  btnBg="#f8fafc"
-                  jsxIcon={<GoogleIcon width="20" height="20" />}
-                />
-                <Button
-                  text="Continue with Apple"
-                  className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base font-semibold btn-outline hover:text-black"
-                  btnBg="#f8fafc"
-                  jsxIcon={<AppleIcon width="20" height="20" />}
-                />
-              </>
+              <LoginCard noBgStyle noHeading />
             )}
           </div>
 
