@@ -131,8 +131,6 @@ const Navbar: React.FC = () => {
             </Link>
             {/* Sidebar navigation links */}
             <div className="menu flex flex-col items-start justify-start gap-8 mt-10">
-              <button className="text-base font-normal">About</button>
-
               {Cookie.get("access-token") &&
                 navItems?.map((item: NavItem) => (
                   <Link
@@ -148,13 +146,24 @@ const Navbar: React.FC = () => {
                     </button>
                   </Link>
                 ))}
-              {/* {} */}
-              <Button
-                onClick={closeDrawer}
-                text="Log in"
-                className="text-[#C7D2FE] text-base font-normal"
-                link="/login"
-              />
+              {Cookie.get("access-token") ? (
+                <Button
+                  text="Log out"
+                  className="text-black bg-[#f3f4f6] text-base font-medium"
+                  btnBg="#f3f4f6"
+                  onClick={() => {
+                    closeDrawer();
+                    logout();
+                  }}
+                />
+              ) : (
+                <Button
+                  onClick={closeDrawer}
+                  text="Log in"
+                  className="text-[#C7D2FE] text-base font-normal"
+                  link="/login"
+                />
+              )}
             </div>
           </div>
         </div>

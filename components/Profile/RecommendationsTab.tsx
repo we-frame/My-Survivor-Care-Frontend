@@ -77,6 +77,13 @@ const RecommendationsTab: React.FC = () => {
     return "";
   };
 
+  const getSymptomsHeading = (rating: any) => {
+    if (rating >= 0 && rating <= 3.9) return "Mild symptoms";
+    if (rating >= 4 && rating <= 6.9) return "Moderate symptoms";
+    if (rating >= 7 && rating <= 10) return "Severe symptoms";
+    return "Symptoms";
+  };
+
   const handleButtonClick = (response: any) => {
     setUserResponse(response);
     setShowQuestion(false);
@@ -97,7 +104,7 @@ const RecommendationsTab: React.FC = () => {
         <div className="flex flex-col items-start justify-start gap-4">
           <p className="text-sm font-normal">Symptom severity</p>
           <Title
-            title="Moderate symptoms"
+            title={getSymptomsHeading(averageRating)}
             className="text-3xl lg:text-4xl font-semibold"
           />
 
