@@ -8,6 +8,7 @@ import Cookie from "js-cookie";
 import useRegistrationStore from "@/store/userRegistrationStore";
 import { cn } from "@/lib/utils";
 import useUserStore from "@/store/userStore";
+import { useRouter } from "next/navigation";
 
 const HomePageUI = () => {
   const { refresh } = useLoadingStore();
@@ -25,6 +26,8 @@ const HomePageUI = () => {
   const [isNotInterested, setIsNotInterested] = useState<boolean>(
     notInterestedMsg !== null && notInterestedMsg !== ""
   );
+
+  const router = useRouter();
 
   useEffect(() => {
     setIsNotInterested(notInterestedMsg !== null && notInterestedMsg !== "");
@@ -128,6 +131,7 @@ const HomePageUI = () => {
                       setInterested(true);
                       setEligible(true);
                       setStep(2);
+                      router.push("/login");
                     }}
                   />
                   <Button
