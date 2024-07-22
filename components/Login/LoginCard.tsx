@@ -14,6 +14,7 @@ import useLoadingStore from "@/store/loadingStore";
 import { getUserDetails } from "@/lib/getUserAPI";
 import useRegistrationStore from "@/store/userRegistrationStore";
 import { cn } from "@/lib/utils";
+import { TriangleAlert } from "lucide-react";
 
 interface LoginCardTypes {
   textCenter?: boolean;
@@ -31,16 +32,45 @@ const LoginCard = ({
   const { setUser } = useUserStore(); // Get the setUser function from the store
   const router = useRouter();
   const { refresh, setRefresh } = useLoadingStore();
-  const { interested, eligible } = useRegistrationStore();
+  const {
+    step,
+    interested,
+    eligible,
+    setStep,
+    setInterested,
+    setEligible,
+    setNotInterestedMsg,
+  } = useRegistrationStore();
   const path = usePathname();
-  console.log(path);
 
   // Function to handle Google sign-in
   const handleGoogle = async () => {
     if (!eligible) {
-      toast.error(
-        "Please answer whether you are interested in participating in the early testing."
-      );
+      if (step === 1) {
+        toast.custom((t: any) => (
+          <div
+            className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
+              t.visible ? "toast-animate-enter" : "toast-animate-leave"
+            }`}
+          >
+            <TriangleAlert className="text-yellow-700" size={40} /> Please
+            answer whether you are interested in participating in the early
+            testing.
+          </div>
+        ));
+      } else if (step === 2) {
+        toast.custom((t: any) => (
+          <div
+            className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
+              t.visible ? "toast-animate-enter" : "toast-animate-leave"
+            }`}
+          >
+            <TriangleAlert className="text-yellow-700" size={40} /> Please
+            answer Have you been affected by cancer in the past, or are you
+            currently, living with it?
+          </div>
+        ));
+      }
 
       if (path === "/") {
         return;
@@ -49,8 +79,51 @@ const LoginCard = ({
         return;
       }
     } else if (!interested) {
-      toast.error(
-        "You are not eligible for this program. Please review your answers to the eligibility questions."
+      // toast.error(
+      //   "You are not eligible for this program. Please review your answers to the eligibility questions."
+      // );
+      toast.custom(
+        (t: any) => (
+          <div
+            className={cn(
+              "w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5",
+              t.visible ? "toast-animate-enter" : "toast-animate-leave"
+            )}
+          >
+            <div>
+              <TriangleAlert className="text-yellow-700" size={20} />
+            </div>
+            <div>
+              <p>
+                You are not eligible for this program. Please review your
+                answers to the eligibility questions.
+              </p>
+
+              <div className="w-full flex items-center justify-between mt-3">
+                <button
+                  onClick={() => {
+                    setStep(1);
+                    setInterested(false);
+                    setEligible(false);
+                    setNotInterestedMsg(null);
+                    router.push("/");
+                    toast.dismiss();
+                  }}
+                  className="px-2 py-1 rounded-md border border-yellow-700 shadow-md"
+                >
+                  Re-take
+                </button>
+                <button
+                  onClick={() => toast.dismiss()}
+                  className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          </div>
+        ),
+        { duration: 5000 }
       );
       return;
     } else {
