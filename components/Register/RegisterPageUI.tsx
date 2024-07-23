@@ -30,8 +30,7 @@ const RegisterPageUI = () => {
   // Initializing form with default values and submission handler
   const form = useForm<any>({
     defaultValues: {
-      BackgroundInformation: {
-      },
+      BackgroundInformation: {},
       MedicalInformation: {},
       MenopauseAssessment: {},
     },
@@ -84,6 +83,7 @@ const RegisterPageUI = () => {
           try {
             await makeRequest("POST", `/items/answers`, Answer);
             await makeRequest("PATCH", "/users/me", {
+              last_assessment_date: new Date().toISOString(),
               is_registration_completed: true,
             });
 

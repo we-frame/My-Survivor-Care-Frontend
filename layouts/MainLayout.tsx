@@ -1,6 +1,8 @@
 "use client";
 
+import ReAssessmentTimerModal from "@/components/Common/ReAssessmentTimerModal";
 import Navbar from "@/components/Navbar/Navbar";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -10,6 +12,7 @@ interface MainLayoutTypes {
 
 const MainLayout = ({ children }: MainLayoutTypes) => {
   const [isHydrated, setIsHydrated] = useState(false);
+  const path = usePathname();
 
   useEffect(() => {
     // Ensure state is hydrated from localStorage
@@ -39,6 +42,7 @@ const MainLayout = ({ children }: MainLayoutTypes) => {
       />
       <Navbar />
       <main>{children}</main>
+      {path !== "/re-assessment" && <ReAssessmentTimerModal />}
     </>
   );
 };

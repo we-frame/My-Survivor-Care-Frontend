@@ -113,7 +113,7 @@ const HomePageUI = () => {
                 <div className="w-full">
                   <p
                     className={cn(
-                      (isNotInterested || step !== 2) && "text-[#c8cbd0]",
+                      (isNotInterested || interested) && "text-[#c8cbd0]",
                       "text-xl font-semibold text-center"
                     )}
                   >
@@ -126,7 +126,7 @@ const HomePageUI = () => {
                   <Button
                     text="Yes, I am"
                     className="text-[#C7D2FE]"
-                    disabled={isNotInterested || step !== 2}
+                    disabled={isNotInterested || interested}
                     onClick={() => {
                       setInterested(true);
                       setEligible(true);
@@ -137,7 +137,7 @@ const HomePageUI = () => {
                   <Button
                     text="No, I'm not"
                     btnBg={"#f3f4f6"}
-                    disabled={isNotInterested || step !== 2}
+                    disabled={isNotInterested || interested}
                     onClick={() => {
                       setInterested(false);
                       setEligible(true);

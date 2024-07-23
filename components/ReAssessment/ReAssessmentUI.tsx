@@ -47,6 +47,10 @@ const ReAssessmentUI = () => {
             answer: formData.inputField,
           });
 
+          await makeRequest("PATCH", "/users/me", {
+            last_assessment_date: new Date().toISOString(),
+          });
+
           // Redirect to the home page after successful form submission
           router.push("/profile");
           toast.success("Re-Assessment form submitted successfully!");
@@ -55,6 +59,7 @@ const ReAssessmentUI = () => {
         }
       } else {
         await makeRequest("PATCH", "users/me", {
+          last_assessment_date: new Date().toISOString(),
           previous_rating: previousAverageRating,
         });
 
@@ -88,6 +93,7 @@ const ReAssessmentUI = () => {
           );
 
           await makeRequest("PATCH", "/users/me", {
+            last_assessment_date: new Date().toISOString(),
             latest_menopause_history: requestBody?.menopause_history_id,
           });
 
@@ -99,8 +105,6 @@ const ReAssessmentUI = () => {
         } catch (error) {
           console.log(error);
         }
-
-        // router.replace(router.asPath);
       }
     },
   });

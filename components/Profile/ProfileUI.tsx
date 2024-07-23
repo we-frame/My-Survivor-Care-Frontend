@@ -258,6 +258,7 @@ const ProfileUI = () => {
           </div>
         )}
       </div>
+      
     </div>
   );
 };

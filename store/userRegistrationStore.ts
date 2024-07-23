@@ -3,12 +3,12 @@ import { create } from "zustand";
 // Define the state type
 interface RegistrationState {
   step: number;
-  interested: boolean | null;
+  interested: boolean;
   notInterestedMsg: string | null;
-  eligible: boolean | null;
-  setEligible: (eligible: boolean | null) => void;
+  eligible: boolean;
+  setEligible: (eligible: boolean) => void;
   setStep: (step: number) => void;
-  setInterested: (interested: boolean | null) => void;
+  setInterested: (interested: boolean) => void;
   setNotInterestedMsg: (notInterestedMsg: string | null) => void;
 }
 
