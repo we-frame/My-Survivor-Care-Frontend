@@ -4,12 +4,14 @@ import Title from "./Title";
 import Link from "next/link";
 import Button from "./Button";
 import { makeRequest } from "@/lib/api";
+import { usePathname } from "next/navigation";
 
 const ReAssessmentTimerModal = () => {
   const { userData } = useUserStore(); // Fetch userData from the store
   const [showModal, setShowModal] = useState<boolean>(false); // State to manage modal visibility
   const [timerDays, setTimerDays] = useState<number | null>(null); // State to hold the number of days until reassessment
   const dialogRef = useRef<HTMLDialogElement>(null); // Ref to access the dialog element directly
+  const path = usePathname();
 
   const isoDateString = userData?.userData?.last_assessment_date;
   const date = isoDateString ? new Date(isoDateString) : new Date(); // Convert the ISO date string to a Date object or default to today if null
@@ -36,7 +38,7 @@ const ReAssessmentTimerModal = () => {
   // Fetch timer days on component mount
   useEffect(() => {
     getTimerDays();
-  }, []);
+  }, [path]);
 
   // Effect to check the current date against the reassessment date
   useEffect(() => {
