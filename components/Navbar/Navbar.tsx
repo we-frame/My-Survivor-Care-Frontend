@@ -79,7 +79,7 @@ const Navbar: React.FC = () => {
             {/* Logo linking to the homepage */}
             <Link href={"/"}>
               <div className="flex-1 pr-2">
-                <h1 className="text-lg font-semibold">MySurvivorCare</h1>
+                <h1 className="text-lg xl-text-2xl font-semibold">MySurvivorCare</h1>
               </div>
             </Link>
             {/* Desktop navigation links */}

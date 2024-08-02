@@ -268,8 +268,8 @@ const LoginCard = ({
           title="Login to MySurvivorCare"
           className={
             textCenter
-              ? "text-center text-xl font-semibold"
-              : "text-center lg:text-left text-xl font-semibold"
+              ? "text-center text-xl xl:text-3xl font-semibold"
+              : "text-center lg:text-left text-xl xl:text-3xl font-semibold"
           }
         />
       )}
@@ -282,7 +282,7 @@ const LoginCard = ({
       >
         <Button
           text={`Continue with Google`}
-          className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base font-semibold btn-outline hover:text-black disabled:cursor-not-allowed"
+          className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base xl:text-xl font-semibold btn-outline hover:text-black disabled:cursor-not-allowed"
           btnBg="#f8fafc"
           jsxIcon={<GoogleIcon width="20" height="20" />}
           disabled={loadingButton}
@@ -290,7 +290,7 @@ const LoginCard = ({
         />
         <Button
           text={`Continue with Apple`}
-          className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base font-semibold btn-outline hover:text-black disabled:cursor-not-allowed"
+          className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base xl:text-xl font-semibold btn-outline hover:text-black disabled:cursor-not-allowed"
           btnBg="#f8fafc"
           jsxIcon={<AppleIcon width="20" height="20" />}
           disabled={loading}
