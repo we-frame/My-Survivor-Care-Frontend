@@ -19,7 +19,7 @@ const Button = ({
 }: ButtonTypes) => {
   const buttonClasses = cn(
     className,
-    "btn flex items-center justify-center gap-2"
+    "btn flex items-center justify-center gap-2 xl:text-lg"
   );
 
   const buttonContent = (

@@ -39,37 +39,38 @@ const HomePageUI = () => {
     <div className="w-full mt-5 lg:mt-10 flex flex-col lg:flex-row marker:items-center justify-center lg:items-start lg:justify-start gap-12 lg:gap-20">
       <div
         className={cn(
-          "w-full lg:w-[60%] flex flex-col items-start justify-start gap-20"
+          "w-full flex flex-col items-start justify-start gap-20",
+          !Cookie.get("access-token") && "lg:w-[60%]"
         )}
       >
         <div className="w-full flex flex-col items-start justify-start gap-5">
-          <h1 className="text-4xl font-semibold">
+          <h1 className="text-2xl xl:text-4xl font-semibold">
             Welcome to the MySurvivorCare Platform.
           </h1>
 
-          <p className="text-base font-normal">
+          <p className="text-base xl:text-xl font-normal">
             This is a platform which assesses your menopause symptoms and give
             you resources to help manage your symptoms.
           </p>
-          <p className="text-base font-normal">
+          <p className="text-base xl:text-xl font-normal">
             Menopause symptoms – namely hot flushes and night sweats - are
             common after cancer treatment. They can impact negatively on your
             quality of life. There may be treatment that can reduce the impact
             of these symptoms.
           </p>
-          <p className="text-base font-normal">
+          <p className="text-base xl:text-xl font-normal">
             Associate Professor Michelle Peate, in collaboration with consumer
             organisations, and researchers and clinicians at the Universities of
             Melbourne, Western Sydney, Western Australia, and the Peter
             MacCallum Cancer Centre have developed this web-based app to help
             cancer survivors manage menopause symptoms after cancer.
           </p>
-          <p className="text-base font-normal">
+          <p className="text-base xl:text-xl font-normal">
             Survivors can use the MySurvivorCare app to assess their symptoms.
             Based on this, recommendations on how to manage symptoms will be
             provided.
           </p>
-          <p className="text-base font-normal">
+          <p className="text-base xl:text-xl font-normal">
             We invite you to take part in early testing of the MySurvivorCare
             app. We hope that it will help you to manage your symptoms. Your
             feedback will help us create a platform that is practical, easy to
@@ -83,7 +84,7 @@ const HomePageUI = () => {
               <p
                 className={cn(
                   (isNotInterested || step !== 1) && "text-[#c8cbd0]",
-                  "text-xl font-semibold text-center"
+                  "text-xl xl:text-3xl font-semibold text-center"
                 )}
               >
                 Are you interested in taking part in this early testing of the
@@ -120,7 +121,7 @@ const HomePageUI = () => {
                   <p
                     className={cn(
                       (isNotInterested || interested) && "text-[#c8cbd0]",
-                      "text-xl font-semibold text-center"
+                      "text-xl xl:text-3xl font-semibold text-center"
                     )}
                   >
                     Have you been affected by cancer in the past, or are you
@@ -158,7 +159,7 @@ const HomePageUI = () => {
 
             {!interested && (
               <div className="w-full">
-                <p className="text-center text-xl font-semibold text-green-700">
+                <p className="text-center text-xl 2xl:text-3xl font-semibold text-green-700">
                   {notInterestedMsg}
                 </p>
               </div>
