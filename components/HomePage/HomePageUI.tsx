@@ -37,42 +37,48 @@ const HomePageUI = () => {
 
   return (
     <div className="w-full mt-5 lg:mt-10 flex flex-col lg:flex-row marker:items-center justify-center lg:items-start lg:justify-start gap-12 lg:gap-20">
-      <div className="w-full lg:w-[60%] flex flex-col items-start justify-start gap-5">
-        <h1 className="text-4xl font-semibold">
-          Welcome to the MySurvivorCare Platform.
-        </h1>
+      <div
+        className={cn(
+          "w-full lg:w-[60%] flex flex-col items-start justify-start gap-20"
+        )}
+      >
+        <div className="w-full flex flex-col items-start justify-start gap-5">
+          <h1 className="text-4xl font-semibold">
+            Welcome to the MySurvivorCare Platform.
+          </h1>
 
-        <p className="text-base font-normal">
-          This is a platform which assesses your menopause symptoms and give you
-          resources to help manage your symptoms.
-        </p>
-        <p className="text-base font-normal">
-          Menopause symptoms – namely hot flushes and night sweats - are common
-          after cancer treatment. They can impact negatively on your quality of
-          life. There may be treatment that can reduce the impact of these
-          symptoms.
-        </p>
-        <p className="text-base font-normal">
-          Associate Professor Michelle Peate, in collaboration with consumer
-          organisations, and researchers and clinicians at the Universities of
-          Melbourne, Western Sydney, Western Australia, and the Peter MacCallum
-          Cancer Centre have developed this web-based app to help cancer
-          survivors manage menopause symptoms after cancer.
-        </p>
-        <p className="text-base font-normal">
-          Survivors can use the MySurvivorCare app to assess their symptoms.
-          Based on this, recommendations on how to manage symptoms will be
-          provided.
-        </p>
-        <p className="text-base font-normal">
-          We invite you to take part in early testing of the MySurvivorCare app.
-          We hope that it will help you to manage your symptoms. Your feedback
-          will help us create a platform that is practical, easy to use, and
-          caters to your needs.
-        </p>
+          <p className="text-base font-normal">
+            This is a platform which assesses your menopause symptoms and give
+            you resources to help manage your symptoms.
+          </p>
+          <p className="text-base font-normal">
+            Menopause symptoms – namely hot flushes and night sweats - are
+            common after cancer treatment. They can impact negatively on your
+            quality of life. There may be treatment that can reduce the impact
+            of these symptoms.
+          </p>
+          <p className="text-base font-normal">
+            Associate Professor Michelle Peate, in collaboration with consumer
+            organisations, and researchers and clinicians at the Universities of
+            Melbourne, Western Sydney, Western Australia, and the Peter
+            MacCallum Cancer Centre have developed this web-based app to help
+            cancer survivors manage menopause symptoms after cancer.
+          </p>
+          <p className="text-base font-normal">
+            Survivors can use the MySurvivorCare app to assess their symptoms.
+            Based on this, recommendations on how to manage symptoms will be
+            provided.
+          </p>
+          <p className="text-base font-normal">
+            We invite you to take part in early testing of the MySurvivorCare
+            app. We hope that it will help you to manage your symptoms. Your
+            feedback will help us create a platform that is practical, easy to
+            use, and caters to your needs.
+          </p>
+        </div>
 
         {!userData && (
-          <>
+          <div className="w-full flex flex-col items-start justify-start gap-5">
             <div className="w-full">
               <p
                 className={cn(
@@ -157,7 +163,7 @@ const HomePageUI = () => {
                 </p>
               </div>
             )}
-          </>
+          </div>
         )}
       </div>
 
