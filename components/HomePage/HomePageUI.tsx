@@ -95,7 +95,7 @@ const HomePageUI = () => {
             <div className="w-full flex items-center justify-center gap-3">
               <Button
                 text="Yes, I am"
-                className="text-[#C7D2FE]"
+                className="text-white"
                 disabled={isNotInterested || step !== 1}
                 onClick={() => {
                   setStep(2);
@@ -132,7 +132,7 @@ const HomePageUI = () => {
                 <div className="w-full flex items-center justify-center gap-3">
                   <Button
                     text="Yes, I am"
-                    className="text-[#C7D2FE]"
+                    className="text-white"
                     disabled={isNotInterested || interested}
                     onClick={() => {
                       setInterested(true);

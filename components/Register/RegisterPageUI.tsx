@@ -164,7 +164,7 @@ const RegisterPageUI = () => {
                   backgroundColor: "#14b8a6",
                 }}
                 className={cn(
-                  "border rounded-lg px-5 py-3 text-[#C7D2FE]",
+                  "border rounded-lg px-5 py-3 text-white",
                   !canSubmit &&
                     "bg-green-300 text-black disabled:cursor-not-allowed"
                 )}

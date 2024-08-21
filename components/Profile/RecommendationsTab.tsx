@@ -197,7 +197,7 @@ const RecommendationsTab: React.FC = () => {
 
           <Button
             text="Download introductory letter"
-            className="text-[#c7d2fe] font-normal text-sm"
+            className="text-white font-normal text-sm"
           />
         </div>
       )}

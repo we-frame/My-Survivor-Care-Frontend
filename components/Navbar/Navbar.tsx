@@ -15,10 +15,10 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
+  { href: "/profile", label: "My Profile" },
   { href: "/consumer-resources", label: "Consumer Resources" },
   { href: "/practitioner-resources", label: "Practitioner Resources" },
   { href: "/healthcare-professional", label: "Find a Healthcare Professional" },
-  { href: "/profile", label: "Profile" },
 ];
 
 const Navbar: React.FC = () => {
@@ -79,7 +79,9 @@ const Navbar: React.FC = () => {
             {/* Logo linking to the homepage */}
             <Link href={"/"}>
               <div className="flex-1 pr-2">
-                <h1 className="text-lg xl-text-2xl font-semibold">MySurvivorCare</h1>
+                <h1 className="text-lg xl-text-2xl font-semibold">
+                  MySurvivorCare
+                </h1>
               </div>
             </Link>
             {/* Desktop navigation links */}
@@ -104,7 +106,7 @@ const Navbar: React.FC = () => {
                 ) : (
                   <Button
                     text="Log in"
-                    className="text-[#C7D2FE] text-base font-normal"
+                    className="text-white text-base font-normal"
                     link="/login"
                   />
                 )}
@@ -160,7 +162,7 @@ const Navbar: React.FC = () => {
                 <Button
                   onClick={closeDrawer}
                   text="Log in"
-                  className="text-[#C7D2FE] text-base font-normal"
+                  className="text-white text-base font-normal"
                   link="/login"
                 />
               )}

@@ -166,7 +166,7 @@ const ProfileTabs = ({
                     backgroundColor: "#14b8a6",
                   }}
                   className={cn(
-                    "border rounded-lg px-5 py-3 text-[#C7D2FE]",
+                    "border rounded-lg px-5 py-3 text-white",
                     !canSubmit &&
                       "bg-green-300 text-black disabled:cursor-not-allowed"
                   )}
@@ -182,7 +182,7 @@ const ProfileTabs = ({
           ) : (
             <Button
               text="Edit background information"
-              className="text-[#c7d2fe] text-sm font-normal mt-5"
+              className="text-white text-sm font-normal mt-5"
               onClick={() => setEditBackgroundInfo(true)}
             />
           )}
@@ -212,7 +212,7 @@ const ProfileTabs = ({
                     backgroundColor: "#14b8a6",
                   }}
                   className={cn(
-                    "border rounded-lg px-5 py-3 text-[#C7D2FE]",
+                    "border rounded-lg px-5 py-3 text-white",
                     !canSubmit &&
                       "bg-green-300 text-black disabled:cursor-not-allowed"
                   )}
@@ -226,7 +226,7 @@ const ProfileTabs = ({
           ) : (
             <Button
               text="Edit Medical information"
-              className="text-[#c7d2fe] text-sm font-normal mt-5"
+              className="text-white text-sm font-normal mt-5"
               onClick={() => setEditMedicalInformation(true)}
             />
           )}
