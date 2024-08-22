@@ -204,7 +204,7 @@ const ProfileUI = () => {
         </div>
 
         {averageRating ? (
-          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-12">
+          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-12 bg-white">
             <Image
               alt="/public/time-to-reassessment.jpeg"
               src={"/time-to-reassessment.jpeg"}
@@ -230,7 +230,7 @@ const ProfileUI = () => {
             </div>
           </div>
         ) : (
-          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-7">
+          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-7 bg-white">
             <Image
               alt="/public/profile_right_card_img.jpeg"
               src={"/profile_right_card_img.jpeg"}
@@ -258,7 +258,6 @@ const ProfileUI = () => {
           </div>
         )}
       </div>
-      
     </div>
   );
 };

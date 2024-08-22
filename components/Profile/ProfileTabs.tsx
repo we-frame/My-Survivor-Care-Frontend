@@ -56,8 +56,7 @@ const ProfileTabs = ({
         <button
           onClick={handlePreviousTab}
           disabled={activeTab === 1}
-          className="lg:hidden px-4 py-2"
-        >
+          className="lg:hidden px-4 py-2">
           &lt;
         </button>
 
@@ -69,8 +68,7 @@ const ProfileTabs = ({
               borderColor: "#14b8a6",
               color: "#14b8a6",
             }}
-            aria-selected={activeTab === activeTab}
-          >
+            aria-selected={activeTab === activeTab}>
             {activeTab === 1
               ? "Recommendations"
               : activeTab === 2
@@ -83,8 +81,7 @@ const ProfileTabs = ({
         <button
           onClick={handleNextTab}
           disabled={activeTab === 3}
-          className="lg:hidden px-4 py-2"
-        >
+          className="lg:hidden px-4 py-2">
           &gt;
         </button>
 
@@ -100,8 +97,7 @@ const ProfileTabs = ({
               borderColor: activeTab === 1 ? "#14b8a6" : "",
               color: activeTab === 1 ? "#14b8a6" : "",
             }}
-            aria-selected={activeTab === 1}
-          >
+            aria-selected={activeTab === 1}>
             Recommendations
           </button>
           <button
@@ -114,8 +110,7 @@ const ProfileTabs = ({
               borderColor: activeTab === 2 ? "#14b8a6" : "",
               color: activeTab === 2 ? "#14b8a6" : "",
             }}
-            aria-selected={activeTab === 2}
-          >
+            aria-selected={activeTab === 2}>
             Background information
           </button>
           <button
@@ -128,15 +123,14 @@ const ProfileTabs = ({
               borderColor: activeTab === 3 ? "#14b8a6" : "",
               color: activeTab === 3 ? "#14b8a6" : "",
             }}
-            aria-selected={activeTab === 3}
-          >
+            aria-selected={activeTab === 3}>
             Medical information
           </button>
         </div>
       </div>
 
       {/* Tab Content */}
-      <div className="p-5 rounded-xl shadow-lg">
+      <div className="p-5 rounded-xl shadow-lg bg-white">
         {/* Recommendations Tab */}
         <div className={cn(activeTab === 1 ? "block" : "hidden")}>
           <RecommendationsTab />
@@ -149,8 +143,7 @@ const ProfileTabs = ({
             e.stopPropagation();
             backgroundInformationForm.handleSubmit();
           }}
-          className={cn(activeTab === 2 ? "block" : "hidden")}
-        >
+          className={cn(activeTab === 2 ? "block" : "hidden")}>
           <BackgroundInformationTab
             form={backgroundInformationForm}
             editBackgroundInfo={editBackgroundInfo}
@@ -171,8 +164,7 @@ const ProfileTabs = ({
                       "bg-green-300 text-black disabled:cursor-not-allowed"
                   )}
                   type="submit"
-                  disabled={!canSubmit}
-                >
+                  disabled={!canSubmit}>
                   {isSubmitting
                     ? "Loading..."
                     : "Update background information"}
@@ -195,8 +187,7 @@ const ProfileTabs = ({
             e.stopPropagation();
             medicalInformationForm.handleSubmit();
           }}
-          className={cn(activeTab === 3 ? "block" : "hidden")}
-        >
+          className={cn(activeTab === 3 ? "block" : "hidden")}>
           <MedicalInformationTab
             form={medicalInformationForm}
             editMedicalInformation={editMedicalInformation}
@@ -217,8 +208,7 @@ const ProfileTabs = ({
                       "bg-green-300 text-black disabled:cursor-not-allowed"
                   )}
                   type="submit"
-                  disabled={!canSubmit}
-                >
+                  disabled={!canSubmit}>
                   {isSubmitting ? "Loading..." : "Update medical information"}
                 </button>
               )}
