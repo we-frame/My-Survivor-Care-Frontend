@@ -56,8 +56,7 @@ const LoginCard = ({
           <div
             className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
               t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            }`}
-          >
+            }`}>
             <TriangleAlert className="text-yellow-700" size={40} /> Please
             answer whether you are interested in participating in the early
             testing.
@@ -68,8 +67,7 @@ const LoginCard = ({
           <div
             className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
               t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            }`}
-          >
+            }`}>
             <TriangleAlert className="text-yellow-700" size={40} /> Please
             answer Have you been affected by cancer in the past, or are you
             currently, living with it?
@@ -93,8 +91,7 @@ const LoginCard = ({
             className={cn(
               "w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5",
               t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            )}
-          >
+            )}>
             <div>
               <TriangleAlert className="text-yellow-700" size={20} />
             </div>
@@ -114,14 +111,12 @@ const LoginCard = ({
                     router.push("/");
                     toast.dismiss();
                   }}
-                  className="px-2 py-1 rounded-md border border-yellow-700 shadow-md"
-                >
+                  className="px-2 py-1 rounded-md border border-yellow-700 shadow-md">
                   Re-take
                 </button>
                 <button
                   onClick={() => toast.dismiss()}
-                  className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md"
-                >
+                  className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md">
                   Dismiss
                 </button>
               </div>
@@ -189,7 +184,8 @@ const LoginCard = ({
 
         Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
 
-        router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
+        // router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
+        router.push("/profile");
       } else {
         // Notify user of successful login
         toast.success("Login successful");
@@ -273,8 +269,7 @@ const LoginCard = ({
           <div
             className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
               t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            }`}
-          >
+            }`}>
             <TriangleAlert className="text-yellow-700" size={40} /> Please
             answer whether you are interested in participating in the early
             testing.
@@ -285,8 +280,7 @@ const LoginCard = ({
           <div
             className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
               t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            }`}
-          >
+            }`}>
             <TriangleAlert className="text-yellow-700" size={40} /> Please
             answer Have you been affected by cancer in the past, or are you
             currently, living with it?
@@ -310,8 +304,7 @@ const LoginCard = ({
             className={cn(
               "w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5",
               t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            )}
-          >
+            )}>
             <div>
               <TriangleAlert className="text-yellow-700" size={20} />
             </div>
@@ -331,14 +324,12 @@ const LoginCard = ({
                     router.push("/");
                     toast.dismiss();
                   }}
-                  className="px-2 py-1 rounded-md border border-yellow-700 shadow-md"
-                >
+                  className="px-2 py-1 rounded-md border border-yellow-700 shadow-md">
                   Re-take
                 </button>
                 <button
                   onClick={() => toast.dismiss()}
-                  className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md"
-                >
+                  className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md">
                   Dismiss
                 </button>
               </div>
@@ -411,7 +402,8 @@ const LoginCard = ({
       if (!getUserData?.data?.is_registration_completed) {
         toast.error("Please complete your registration!.");
         Cookie.set("apple-auth-userData", btoa(JSON.stringify(appleUser)));
-        router.push(`/register?u=${btoa(JSON.stringify(appleUser))}`);
+        // router.push(`/register?u=${btoa(JSON.stringify(appleUser))}`);
+        router.push("/profile");
       } else {
         toast.success("Login successful");
         router.push("/");
@@ -478,8 +470,7 @@ const LoginCard = ({
         className={cn(
           "flex flex-col items-center justify-center gap-3 disabled:cursor-not-allowed",
           !noBgStyle && "bg-[#FFFFFF] shadow-xl px-5 py-7 rounded-xl"
-        )}
-      >
+        )}>
         <Button
           text={`Continue with Google`}
           className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base xl:text-xl font-semibold btn-outline hover:text-black disabled:cursor-not-allowed"
