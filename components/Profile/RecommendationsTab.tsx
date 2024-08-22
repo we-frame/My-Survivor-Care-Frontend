@@ -4,6 +4,7 @@ import Button from "../Common/Button";
 import Accordion from "../Common/Accordion";
 import useUserStore from "@/store/userStore";
 import Link from "next/link";
+import { title } from "process";
 
 const RecommendationsTab: React.FC = () => {
   const { userData } = useUserStore();
@@ -12,6 +13,22 @@ const RecommendationsTab: React.FC = () => {
   const averageRating =
     userData?.userData?.latest_menopause_history?.average_rating ?? null;
   const previousRating = userData?.userData?.previous_rating ?? null;
+
+  const Infos: any = {
+    "0-3.9": {
+      title: `To help address your symptoms, we recommend using the self-help program. `,
+      subtitle: `This self-help program is designed for women who are looking for non-medical opDons instead of menopause or hormone replacement therapy (HRT). Research suggests it works well for women dealing with menopause after cancer treatment. It has also been recommended by the North American Menopause Society (NAMS 2015)(read more here) and The National Institute for Health and Care Excellence (NICE, 2015b)(read more here) for hot flushes, night sweats, stress, sleep problems, anxiety and depressed mood during menopause.`,
+    },
+    "4-6.9": {
+      title: "Clinical Practice Guidelines ",
+      subtitle:
+        "Cancer patients dealing with menopausal symptoms often need a different approach for symptom management compared to women going through natural menopause. However, with proper care, most symptoms can be effectively managed. Clinical guidelines exist to help guide your doctors to provide suitable care. These guidelines can also help you make informed decisions about the available treatment opDons for managing your menopausal symptoms...",
+    },
+    "7-10": {
+      title: "Introductory letter to take to your GP",
+      subtitle: `We advise you to ask for a referral to a specialist for more dedicated support, for example, a gynaecologist, oncologist, surgeon, or cancer care nurse. Please share this introductory letter with your doctor (GP).`,
+    },
+  };
 
   const messages: any = {
     decrease: {
@@ -139,8 +156,15 @@ const RecommendationsTab: React.FC = () => {
         </div>
       </div>
 
-      {averageRating ? (
+      {averageRating !== null && averageRating !== undefined ? (
         <div>
+          <div className="space-y-5">
+            <Title
+              title={Infos[category].title}
+              className="text-xl lg:text-2xl font-semibold my-5"
+            />
+            <p className="text-base font-normal">{Infos[category].subtitle}</p>
+          </div>
           <Title title="Results" className="text-3xl font-semibold my-5" />
           <p className="text-base my-3">{displayInfo?.message}</p>
           {showQuestion && (
