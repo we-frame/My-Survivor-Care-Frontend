@@ -13,7 +13,7 @@ const SelectInput: React.FC<SelectInputTypes> = ({
   selectOptions,
   defaultValue = "",
 }) => {
-  console.log(field.state.value);
+  // console.log(field.state.value);
   return (
     <div>
       <label className="form-control w-full max-w-md">
@@ -34,8 +34,7 @@ const SelectInput: React.FC<SelectInputTypes> = ({
           onBlur={field.handleBlur}
           onChange={(e) => field.handleChange(e.target.value)}
           defaultValue={field.state.value}
-          disabled={isDisabled}
-        >
+          disabled={isDisabled}>
           {placeholder && (
             <option value="" disabled selected>
               {placeholder}

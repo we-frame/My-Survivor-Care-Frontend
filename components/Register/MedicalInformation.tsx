@@ -10,7 +10,7 @@ interface MedicalInformationTypes {
 }
 
 const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
-  console.log(formData);
+  // console.log(formData);
   return (
     <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
       <div className="w-full lg:w-[20%] flex flex-col gap-3">
@@ -50,23 +50,56 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                 <div key={question_id?.id}>
                   <form.Field
                     name={`MedicalInformation.${question_id?.id}`}
-                    children={(field: any) => (
-                      <SelectInput
-                        field={field}
-                        selectOptions={question_id?.options?.map(
-                          (option: any) => ({
-                            label: option?.option_id?.title,
-                            value: JSON.stringify([
-                              option?.option_id?.id,
-                            ]),
-                          })
-                        )}
-                        placeholder={question_id?.question}
-                        label={question_id?.question}
-                        isRequired={question_id?.required}
-                        bottomText={question_id?.description}
-                      />
-                    )}
+                    children={(field: any) => {
+                      const selected = field.getValue();
+                      const descrptionBox = question_id?.options.filter(
+                        (el: any) =>
+                          el.option_id.id === (selected ?? "").slice(2, -2)
+                      );
+                      // console.log(
+                      //   descrptionBox,
+                      //   (selected ?? "").slice(2, -2),
+                      //   "desc"
+                      // );
+                      return (
+                        <>
+                          <SelectInput
+                            field={field}
+                            selectOptions={question_id?.options?.map(
+                              (option: any) => ({
+                                label: option?.option_id?.title,
+                                value: JSON.stringify([option?.option_id?.id]),
+                              })
+                            )}
+                            placeholder={question_id?.question}
+                            label={question_id?.question}
+                            isRequired={question_id?.required}
+                            bottomText={question_id?.description}
+                          />
+                          {descrptionBox.length > 0 &&
+                            [
+                              "prefer not to say",
+                              "other (please describe)",
+                              "prefer to self-describe",
+                            ].includes(
+                              descrptionBox[0].option_id.title.toLocaleLowerCase()
+                            ) && (
+                              <textarea
+                                rows={4}
+                                cols={33}
+                                placeholder="Describe here"
+                                className="border-2 rounded-lg px-3 py-2"></textarea>
+                            )}
+                          {/* {console.log(
+                            field.getValue(),
+                            question_id?.options.filter(
+                              (el: any) => el.option_id.id
+                            ),
+                            field.name
+                          )} */}
+                        </>
+                      );
+                    }}
                   />
                 </div>
               );
