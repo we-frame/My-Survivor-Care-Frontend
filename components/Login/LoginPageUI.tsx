@@ -43,6 +43,15 @@ const LoginPageUI = () => {
           </div>
           <div className="collapse-content flex flex-col items-start justify-start gap-5">
             <p className="text-base font-normal">
+              No, To register with MySurvivorCare you must{" "}
+              <span>
+                <Link href={"/register"} className="text-[#4338ca]">
+                  login
+                </Link>{" "}
+              </span>
+              in via Google or Apple.
+            </p>
+            {/* <p className="text-base font-normal">
               You can register for a MySurvivorCare account{" "}
               <Link href={"/register"} className="text-[#4338ca]">
                 here.
@@ -52,7 +61,7 @@ const LoginPageUI = () => {
               Please note, this menopause symptom management platform is in
               early testing and you need to have been affected by, or currently
               living with cancer to participate.
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
