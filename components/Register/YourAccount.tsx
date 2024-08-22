@@ -58,7 +58,7 @@ const YourAccount = ({ privacy, setPrivacy }: YourAccountTypes) => {
               />
               <p className="text-sm font-normal">
                 I have read and agree with the{" "}
-                <Link href="" className="text-[#4338ca]">
+                <Link href="/privacy" className="text-[#4338ca]">
                   privacy statement
                 </Link>
               </p>
