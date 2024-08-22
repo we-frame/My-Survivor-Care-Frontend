@@ -121,7 +121,7 @@ const RecommendationsTab: React.FC = () => {
           <Accordion
             title="About your score"
             className="text-sm font-bold"
-            defaultChecked
+            // defaultChecked
           >
             <div className="w-full flex flex-col gap-3">
               <p className="text-xs font-normal">
@@ -160,16 +160,14 @@ const RecommendationsTab: React.FC = () => {
           {userResponse === "no" && (
             <p
               className="text-base"
-              style={{ color: "green", fontWeight: 500 }}
-            >
+              style={{ color: "green", fontWeight: 500 }}>
               {displayInfo?.noResponse}
             </p>
           )}
           {userResponse === "yes" && (
             <p
               className="text-base"
-              style={{ color: "green", fontWeight: 500 }}
-            >
+              style={{ color: "green", fontWeight: 500 }}>
               {displayInfo?.yesResponse}
             </p>
           )}
