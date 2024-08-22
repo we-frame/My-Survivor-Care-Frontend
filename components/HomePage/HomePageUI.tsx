@@ -41,8 +41,7 @@ const HomePageUI = () => {
         className={cn(
           "w-full flex flex-col items-start justify-start gap-20",
           !Cookie.get("access-token") && "lg:w-[60%]"
-        )}
-      >
+        )}>
         <div className="w-full flex flex-col items-start justify-start gap-5">
           <h1 className="text-2xl xl:text-4xl font-semibold">
             Welcome to the MySurvivorCare Platform.
@@ -85,8 +84,7 @@ const HomePageUI = () => {
                 className={cn(
                   (isNotInterested || step !== 1) && "text-[#c8cbd0]",
                   "text-xl xl:text-3xl font-semibold text-center"
-                )}
-              >
+                )}>
                 Are you interested in taking part in this early testing of the
                 platform?
               </p>
@@ -122,8 +120,7 @@ const HomePageUI = () => {
                     className={cn(
                       (isNotInterested || interested) && "text-[#c8cbd0]",
                       "text-xl xl:text-3xl font-semibold text-center"
-                    )}
-                  >
+                    )}>
                     Have you been affected by cancer in the past, or are you
                     currently, living with it?
                   </p>
@@ -138,7 +135,7 @@ const HomePageUI = () => {
                       setInterested(true);
                       setEligible(true);
                       setStep(2);
-                      router.push("/login");
+                      router.push("/register");
                     }}
                   />
                   <Button

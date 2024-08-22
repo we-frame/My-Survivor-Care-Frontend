@@ -10,6 +10,8 @@ import { makeRequest } from "@/lib/api";
 import toast from "react-hot-toast";
 import Button from "../Common/Button";
 import Link from "next/link";
+import ProfileRightCardImg from "@/public/profile_right_card_img.jpeg";
+import TimeToReassessImg from "@/public/time-to-reassessment.jpeg";
 import { getUserDetails } from "@/lib/getUserAPI";
 
 const ProfileUI = () => {
@@ -204,10 +206,10 @@ const ProfileUI = () => {
         </div>
 
         {averageRating ? (
-          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-12">
+          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-12 bg-white">
             <Image
               alt="/public/time-to-reassessment.jpeg"
-              src={"/time-to-reassessment.jpeg"}
+              src={TimeToReassessImg}
               width={1000}
               height={1000}
               className="rounded-t-xl object-cover"
@@ -230,10 +232,10 @@ const ProfileUI = () => {
             </div>
           </div>
         ) : (
-          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-7">
+          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-7 bg-white">
             <Image
               alt="/public/profile_right_card_img.jpeg"
-              src={"/profile_right_card_img.jpeg"}
+              src={ProfileRightCardImg}
               width={1000}
               height={1000}
               className="rounded-t-xl object-cover"
@@ -258,7 +260,6 @@ const ProfileUI = () => {
           </div>
         )}
       </div>
-      
     </div>
   );
 };

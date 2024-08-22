@@ -56,23 +56,45 @@ const BackgroundInformation = ({
                 <div key={question_id?.id}>
                   <form.Field
                     name={`BackgroundInformation.${question_id?.id}`}
-                    children={(field: any) => (
-                      <SelectInput
-                        field={field}
-                        selectOptions={question_id?.options?.map(
-                          (option: any) => ({
-                            label: option?.option_id?.title,
-                            value: JSON.stringify([
-                              option?.option_id?.id,
-                            ]),
-                          })
-                        )}
-                        placeholder={question_id?.question}
-                        label={question_id?.question}
-                        isRequired={question_id?.required}
-                        bottomText={question_id?.description}
-                      />
-                    )}
+                    children={(field: any) => {
+                      const selected = field.getValue();
+                      const descrptionBox = question_id?.options.filter(
+                        (el: any) =>
+                          el.option_id.id === (selected ?? "").slice(2, -2)
+                      );
+
+                      return (
+                        <>
+                          <SelectInput
+                            field={field}
+                            selectOptions={question_id?.options?.map(
+                              (option: any) => ({
+                                label: option?.option_id?.title,
+                                value: JSON.stringify([option?.option_id?.id]),
+                              })
+                            )}
+                            placeholder={question_id?.question}
+                            label={question_id?.question}
+                            isRequired={question_id?.required}
+                            bottomText={question_id?.description}
+                          />
+                          {descrptionBox.length > 0 &&
+                            [
+                              "prefer not to say",
+                              "other (please describe)",
+                              "prefer to self-describe",
+                            ].includes(
+                              descrptionBox[0].option_id.title.toLocaleLowerCase()
+                            ) && (
+                              <textarea
+                                rows={4}
+                                cols={33}
+                                placeholder="Describe here"
+                                className="border-2 rounded-lg px-3 py-2"></textarea>
+                            )}
+                        </>
+                      );
+                    }}
                   />
                 </div>
               );
