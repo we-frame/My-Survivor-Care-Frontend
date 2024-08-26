@@ -1,18 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Title from "../Common/Title";
 import Button from "../Common/Button";
 import Accordion from "../Common/Accordion";
 import useUserStore from "@/store/userStore";
 import Link from "next/link";
 import { title } from "process";
+import { makeRequest } from "@/lib/api";
+import { getUserDetails } from "@/lib/getUserAPI";
 
 const RecommendationsTab: React.FC = () => {
-  const { userData } = useUserStore();
+  const { userData, setUser } = useUserStore();
   const [showQuestion, setShowQuestion] = useState(true);
   const [userResponse, setUserResponse] = useState(null);
-  const averageRating =
-    userData?.userData?.latest_menopause_history?.average_rating ?? null;
+  const [averageRating, setAverageRating] = useState(
+    userData?.userData?.latest_menopause_history?.average_rating ?? null
+  );
+  const [btnResponse, setBtnResponse] = useState(false);
+
   const previousRating = userData?.userData?.previous_rating ?? null;
+
+  useEffect(() => {
+    if (averageRating && btnResponse) {
+      const data = makeRequest(
+        "POST",
+        "/items/junction_directus_users_menopause_history",
+        {
+          menopause_history_id: {
+            average_rating: averageRating,
+          },
+        }
+      ).then((res) => getUserDetails(setUser));
+    }
+  }, [averageRating]);
 
   const Infos: any = {
     "0-3.9": {
@@ -56,8 +75,13 @@ const RecommendationsTab: React.FC = () => {
           "Thanks for using the reassessment tool. We advise that you keep practicing the self-management tips to help reduce the impact of your symptoms.",
       },
       "7-10": {
-        message:
-          "Thank you for using this reassessment tool. Your answers suggest that the impact of your symptoms has shifted from moderate to severe. We recommend seeking additional support.",
+        message: `Thank you for using this reassessment tool. Your answers suggest that the impact of your symptoms has shifted from ${
+          previousRating < 4
+            ? "mild"
+            : previousRating < 7
+            ? "moderate"
+            : "severe"
+        } to severe. We recommend seeking additional support.`,
         question: "Do you want more dedicated support?",
         noResponse:
           "Thanks for using the reassessment tool. We advise that you keep practicing the self-management tips to help reduce the impact of your symptoms.",
@@ -68,11 +92,13 @@ const RecommendationsTab: React.FC = () => {
         message:
           "Thank you for using this reassessment tool. Your answers show that the impact of your symptoms remains mild. We suggest continuing with your current self-management. If you feel this is not working for you, you could seek more dedicated support.",
         question: "Do you want more dedicated support?",
+        onYesTitle: "Moderate symptoms",
       },
       "4-6.9": {
         message:
           "Thank you for using this reassessment tool. Your answers show that the impact of your symptoms remains at a moderate level. We advise continuing what you are doing with your primary care doctor (GP) using the clinical guideline recommendations. If you feel this is not working for you, you could seek additional support.",
         question: "Do you want more dedicated support?",
+        onYesTitle: "Severe symptoms",
       },
       "7-10": {
         message:
@@ -81,6 +107,7 @@ const RecommendationsTab: React.FC = () => {
           "Have you visited a specialist menopause after cancer clinic?",
         yesResponse:
           "We advise that you take your current report to your specialist for more care.",
+        onYesTitle: "Severe symptoms",
         noResponse:
           "We advise asking for a referral from your GP to a specialist; for example, to a gynaecologist, oncologist, surgeon, cancer care nurse for more support.",
       },
@@ -104,6 +131,13 @@ const RecommendationsTab: React.FC = () => {
   const handleButtonClick = (response: any) => {
     setUserResponse(response);
     setShowQuestion(false);
+    if (response === "yes") {
+      setBtnResponse(true);
+      const rating = averageRating;
+      if (rating >= 0 && rating <= 3.9) setAverageRating("4");
+      if (rating >= 4 && rating <= 6.9) setAverageRating("7");
+      if (rating >= 7 && rating <= 10) setAverageRating("8");
+    }
   };
 
   const category = getRatingCategory(averageRating);
