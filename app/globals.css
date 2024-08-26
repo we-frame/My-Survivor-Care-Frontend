@@ -67,4 +67,6 @@ input[type="number"] {
   animation: fadeOut 0.3s forwards;
 }
 
-
+.container {
+  @apply w-full mx-auto max-w-screen-xl;
+}

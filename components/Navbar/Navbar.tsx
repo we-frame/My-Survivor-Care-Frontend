@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
   }, [refresh]);
 
   return (
-    <nav>
+    <nav className={"container"}>
       <div className="drawer">
         {/* Input checkbox to control the drawer state */}
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
@@ -71,8 +71,7 @@ const Navbar: React.FC = () => {
               <label
                 htmlFor="my-drawer-3"
                 aria-label="open sidebar"
-                className="btn btn-square btn-ghost"
-              >
+                className="btn btn-square btn-ghost">
                 <Menu />
               </label>
             </div>
@@ -119,8 +118,7 @@ const Navbar: React.FC = () => {
           <label
             htmlFor="my-drawer-3"
             aria-label="close sidebar"
-            className="drawer-overlay"
-          ></label>
+            className="drawer-overlay"></label>
           <div className="menu p-4 w-80 min-h-full bg-base-200">
             {/* Sidebar logo linking to the homepage */}
             <Link href={"/"} onClick={closeDrawer}>
@@ -138,12 +136,10 @@ const Navbar: React.FC = () => {
                   <Link
                     onClick={closeDrawer}
                     key={item?.href}
-                    href={item?.href}
-                  >
+                    href={item?.href}>
                     <button
                       onClick={closeDrawer}
-                      className="text-base font-normal"
-                    >
+                      className="text-base font-normal">
                       {item?.label}
                     </button>
                   </Link>
