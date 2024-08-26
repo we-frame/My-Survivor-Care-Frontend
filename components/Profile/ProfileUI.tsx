@@ -204,8 +204,7 @@ const ProfileUI = () => {
             formData={formData}
           />
         </div>
-
-        {averageRating ? (
+        {/* {averageRating ? (
           <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-12 bg-white">
             <Image
               alt="/public/time-to-reassessment.jpeg"
@@ -231,34 +230,34 @@ const ProfileUI = () => {
               </Link>
             </div>
           </div>
-        ) : (
-          <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-7 bg-white">
-            <Image
-              alt="/public/profile_right_card_img.jpeg"
-              src={ProfileRightCardImg}
-              width={1000}
-              height={1000}
-              className="rounded-t-xl object-cover"
+        ) :  */}
+
+        <div className="w-full lg:w-[25%] rounded-xl shadow-lg mt-7 bg-white">
+          <Image
+            alt="/public/profile_right_card_img.jpeg"
+            src={ProfileRightCardImg}
+            width={1000}
+            height={1000}
+            className="rounded-t-xl object-cover"
+          />
+
+          <div className="p-5 flex flex-col items-start justify-start gap-3">
+            <Title
+              title="Online Self-Management Platform"
+              className="text-2xl font-semibold"
             />
 
-            <div className="p-5 flex flex-col items-start justify-start gap-3">
-              <Title
-                title="Online Self-Management Platform"
-                className="text-2xl font-semibold"
-              />
+            <p className="text-base font-normal">
+              While you wait for your appointment to share your introductory
+              letter and the recommended clinical guideline with your GP, you
+              could try some self-help strategies at home.
+            </p>
 
-              <p className="text-base font-normal">
-                While you wait for your appointment to share your introductory
-                letter and the recommended clinical guideline with your GP, you
-                could try some self-help strategies at home.
-              </p>
-
-              <Link href={"/re-assessment"}>
-                <Button text="Access platform" className="text-white" />
-              </Link>
-            </div>
+            <Link href={"/re-assessment"}>
+              <Button text="Access platform" className="text-white" />
+            </Link>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
