@@ -29,7 +29,16 @@ const RecommendationsTab: React.FC = () => {
             average_rating: averageRating,
           },
         }
-      ).then((res) => getUserDetails(setUser));
+      )
+        .then(() =>
+          makeRequest("PATCH", "/users/me", {
+            last_assessment_date: new Date().toISOString(),
+            latest_menopause_history: {
+              average_rating: averageRating,
+            },
+          })
+        )
+        .then((res) => getUserDetails(setUser));
     }
   }, [averageRating]);
 
