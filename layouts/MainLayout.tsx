@@ -41,7 +41,7 @@ const MainLayout = ({ children }: MainLayoutTypes) => {
         }}
       />
       <Navbar />
-      <main>{children}</main>
+      <main className="container">{children}</main>
       {path !== "/re-assessment" && <ReAssessmentTimerModal />}
     </>
   );
