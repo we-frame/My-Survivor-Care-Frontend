@@ -158,6 +158,18 @@ const RecommendationsTab: React.FC = () => {
       : "same";
   const displayInfo: any = messages[scoreChange][category];
 
+  const handleDownload = () => {
+    // Create a link element, hide it, direct it towards the blob, and click it
+    const link = document.createElement("a");
+    const moderate = "MSC-letter-moderate.pdf";
+    const severe = "MSC-letter-severe.pdf";
+    link.href = `/${averageRating < 7 ? moderate : severe}`; // Path to your PDF file in the public folder
+    link.download = averageRating < 7 ? moderate : severe; // The file name for the downloaded file
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link); // Clean up and remove the link
+  };
+
   return (
     <div className="flex flex-col">
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 auto-rows-auto gap-5 lg:gap-10">
@@ -208,35 +220,49 @@ const RecommendationsTab: React.FC = () => {
             />
             <p className="text-base font-normal">{Infos[category].subtitle}</p>
           </div>
-          <Title title="Results" className="text-3xl font-semibold my-5" />
-          <p className="text-base my-3">{displayInfo?.message}</p>
-          {showQuestion && (
-            <div className="flex gap-3">
+          {previousRating == null ? (
+            Number(averageRating) <= 3.9 ? (
+              ""
+            ) : (
               <Button
-                text="Yes"
-                btnBg="#14b8a6"
-                onClick={() => handleButtonClick("yes")}
+                text="Download introductory letter"
+                className="text-white font-normal text-sm mt-5"
+                onClick={handleDownload}
               />
-              <Button
-                text="No"
-                btnBg="#f44336"
-                onClick={() => handleButtonClick("no")}
-              />
-            </div>
-          )}
-          {userResponse === "no" && (
-            <p
-              className="text-base"
-              style={{ color: "green", fontWeight: 500 }}>
-              {displayInfo?.noResponse}
-            </p>
-          )}
-          {userResponse === "yes" && (
-            <p
-              className="text-base"
-              style={{ color: "green", fontWeight: 500 }}>
-              {displayInfo?.yesResponse}
-            </p>
+            )
+          ) : (
+            <>
+              <Title title="Results" className="text-3xl font-semibold my-5" />
+              <p className="text-base my-3">{displayInfo?.message}</p>
+              {showQuestion && (
+                <div className="flex gap-3">
+                  <Button
+                    text="Yes"
+                    btnBg="#14b8a6"
+                    onClick={() => handleButtonClick("yes")}
+                  />
+                  <Button
+                    text="No"
+                    btnBg="#f44336"
+                    onClick={() => handleButtonClick("no")}
+                  />
+                </div>
+              )}
+              {userResponse === "no" && (
+                <p
+                  className="text-base"
+                  style={{ color: "green", fontWeight: 500 }}>
+                  {displayInfo?.noResponse}
+                </p>
+              )}
+              {userResponse === "yes" && (
+                <p
+                  className="text-base"
+                  style={{ color: "green", fontWeight: 500 }}>
+                  {displayInfo?.yesResponse}
+                </p>
+              )}
+            </>
           )}
         </div>
       ) : (
