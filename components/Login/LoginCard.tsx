@@ -135,7 +135,7 @@ const LoginCard = ({
         // Notify user of successful login
         toast.success("Login successful");
 
-        router.push("/");
+        router.push("/profile");
       }
       setRefresh(!refresh);
     } catch (error: any) {
@@ -413,8 +413,8 @@ const LoginCard = ({
       setRefresh(!refresh);
     } catch (error: any) {
       console.log(error);
-      toast.error("Invalid Credentials, Please check your email and password",{
-        duration:5000
+      toast.error("Invalid Credentials, Please check your email and password", {
+        duration: 5000,
       });
     }
   };
