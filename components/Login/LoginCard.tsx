@@ -143,7 +143,9 @@ const LoginCard = ({
       console.log(error);
 
       // Show error message
-      toast.error("Invalid Credentials, Please check your email and password");
+      toast.error("Invalid Credentials, Please check your email and password", {
+        duration: 5000,
+      });
     }
   };
 
@@ -411,7 +413,9 @@ const LoginCard = ({
       setRefresh(!refresh);
     } catch (error: any) {
       console.log(error);
-      toast.error("Invalid Credentials, Please check your email and password");
+      toast.error("Invalid Credentials, Please check your email and password",{
+        duration:5000
+      });
     }
   };
 
