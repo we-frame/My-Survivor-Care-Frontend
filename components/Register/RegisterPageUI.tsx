@@ -13,8 +13,11 @@ import { makeRequest } from "@/lib/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import Cookie from "js-cookie";
+import { getUserDetails } from "@/lib/getUserAPI";
+import useUserStore from "@/store/userStore";
 
 const RegisterPageUI = () => {
+  const { setUser } = useUserStore();
   const [formData, setFormData] = useState<any>({
     backgroundInformation: null,
     medicalInformation: null,
@@ -86,6 +89,48 @@ const RegisterPageUI = () => {
               last_assessment_date: new Date().toISOString(),
               is_registration_completed: true,
             });
+
+            // return console.log(value, "values");
+
+            const parameterRating: any = [];
+            var counter = 0;
+            var ratingSum = 0;
+            Object.keys(value.MenopauseAssessment).forEach((title) => {
+              counter++;
+              ratingSum =
+                ratingSum + parseInt(value.MenopauseAssessment[title]);
+
+              parameterRating.push({
+                title: title,
+                rating: value.MenopauseAssessment[title],
+              });
+            });
+
+            const averageRating = ratingSum / counter;
+
+            const requestBody = {
+              menopause_history_id: {
+                average_rating: averageRating,
+                parameter_rating: parameterRating,
+              },
+            };
+
+            try {
+              await makeRequest(
+                "POST",
+                "/items/junction_directus_users_menopause_history",
+                requestBody
+              );
+
+              await makeRequest("PATCH", "/users/me", {
+                last_assessment_date: new Date().toISOString(),
+                latest_menopause_history: requestBody?.menopause_history_id,
+              });
+
+              getUserDetails(setUser);
+            } catch (error) {
+              console.log("menopause_history_update:", error);
+            }
 
             Cookie.remove("google-auth-userData");
             router.push("/profile");
