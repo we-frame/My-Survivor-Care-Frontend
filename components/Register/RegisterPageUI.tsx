@@ -88,7 +88,7 @@ const RegisterPageUI = () => {
             });
 
             Cookie.remove("google-auth-userData");
-            router.push("/");
+            router.push("/profile");
             toast.success("Registration successful!");
           } catch (error) {
             console.log(error);
@@ -139,8 +139,7 @@ const RegisterPageUI = () => {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="bg-[#ffffff] mt-10 p-4 lg:p-6 rounded-lg shadow-lg flex flex-col gap-10"
-      >
+        className="bg-[#ffffff] mt-10 p-4 lg:p-6 rounded-lg shadow-lg flex flex-col gap-10">
         <YourAccount setPrivacy={setPrivacy} privacy={privacy} />
         <BackgroundInformation
           form={form}
@@ -169,8 +168,7 @@ const RegisterPageUI = () => {
                     "bg-green-300 text-black disabled:cursor-not-allowed"
                 )}
                 type="submit"
-                disabled={!canSubmit}
-              >
+                disabled={!canSubmit}>
                 {isSubmitting ? "Loading..." : "Create my profile"}
               </button>
             )}
