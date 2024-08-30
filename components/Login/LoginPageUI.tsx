@@ -3,6 +3,7 @@
 import LoginCard from "./LoginCard";
 import Link from "next/link";
 import Title from "../Common/Title";
+import LoginStatement from "./LoginStatement";
 
 const LoginPageUI = () => {
   return (
@@ -10,6 +11,7 @@ const LoginPageUI = () => {
       <LoginCard textCenter />
 
       <div className="flex flex-col items-center justify-center gap-5 max-w-[435px]">
+        <LoginStatement/>
         <div className="collapse collapse-plus bg-base-200">
           <input type="radio" name="my-accordion-3" defaultChecked />
           <div className="collapse-title text-xl font-semibold">
