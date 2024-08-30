@@ -13,8 +13,11 @@ import { makeRequest } from "@/lib/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import Cookie from "js-cookie";
+import { getUserDetails } from "@/lib/getUserAPI";
+import useUserStore from "@/store/userStore";
 
 const RegisterPageUI = () => {
+  const { setUser } = useUserStore();
   const [formData, setFormData] = useState<any>({
     backgroundInformation: null,
     medicalInformation: null,
@@ -87,8 +90,50 @@ const RegisterPageUI = () => {
               is_registration_completed: true,
             });
 
+            // return console.log(value, "values");
+
+            const parameterRating: any = [];
+            var counter = 0;
+            var ratingSum = 0;
+            Object.keys(value.MenopauseAssessment).forEach((title) => {
+              counter++;
+              ratingSum =
+                ratingSum + parseInt(value.MenopauseAssessment[title]);
+
+              parameterRating.push({
+                title: title,
+                rating: value.MenopauseAssessment[title],
+              });
+            });
+
+            const averageRating = ratingSum / counter;
+
+            const requestBody = {
+              menopause_history_id: {
+                average_rating: averageRating,
+                parameter_rating: parameterRating,
+              },
+            };
+
+            try {
+              await makeRequest(
+                "POST",
+                "/items/junction_directus_users_menopause_history",
+                requestBody
+              );
+
+              await makeRequest("PATCH", "/users/me", {
+                last_assessment_date: new Date().toISOString(),
+                latest_menopause_history: requestBody?.menopause_history_id,
+              });
+
+              getUserDetails(setUser);
+            } catch (error) {
+              console.log("menopause_history_update:", error);
+            }
+
             Cookie.remove("google-auth-userData");
-            router.push("/");
+            router.push("/profile");
             toast.success("Registration successful!");
           } catch (error) {
             console.log(error);
@@ -139,8 +184,7 @@ const RegisterPageUI = () => {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="bg-[#ffffff] mt-10 p-4 lg:p-6 rounded-lg shadow-lg flex flex-col gap-10"
-      >
+        className="bg-[#ffffff] mt-10 p-4 lg:p-6 rounded-lg shadow-lg flex flex-col gap-10">
         <YourAccount setPrivacy={setPrivacy} privacy={privacy} />
         <BackgroundInformation
           form={form}
@@ -169,8 +213,7 @@ const RegisterPageUI = () => {
                     "bg-green-300 text-black disabled:cursor-not-allowed"
                 )}
                 type="submit"
-                disabled={!canSubmit}
-              >
+                disabled={!canSubmit}>
                 {isSubmitting ? "Loading..." : "Create my profile"}
               </button>
             )}

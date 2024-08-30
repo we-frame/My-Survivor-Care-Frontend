@@ -48,161 +48,6 @@ const LoginCard = ({
   } = useRegistrationStore();
   const path = usePathname();
 
-  // Function to handle Google sign-in
-  const handleGoogle = async () => {
-    if (!eligible) {
-      if (step === 1) {
-        toast.custom((t: any) => (
-          <div
-            className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
-              t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            }`}>
-            <TriangleAlert className="text-yellow-700" size={40} /> Please
-            answer whether you are interested in participating in the early
-            testing.
-          </div>
-        ));
-      } else if (step === 2) {
-        toast.custom((t: any) => (
-          <div
-            className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
-              t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            }`}>
-            <TriangleAlert className="text-yellow-700" size={40} /> Please
-            answer Have you been affected by cancer in the past, or are you
-            currently, living with it?
-          </div>
-        ));
-      }
-
-      if (path === "/") {
-        return;
-      } else {
-        router.push("/");
-        return;
-      }
-    } else if (!interested) {
-      // toast.error(
-      //   "You are not eligible for this program. Please review your answers to the eligibility questions."
-      // );
-      toast.custom(
-        (t: any) => (
-          <div
-            className={cn(
-              "w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5",
-              t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            )}>
-            <div>
-              <TriangleAlert className="text-yellow-700" size={20} />
-            </div>
-            <div>
-              <p>
-                You are not eligible for this program. Please review your
-                answers to the eligibility questions.
-              </p>
-
-              <div className="w-full flex items-center justify-between mt-3">
-                <button
-                  onClick={() => {
-                    setStep(1);
-                    setInterested(false);
-                    setEligible(false);
-                    setNotInterestedMsg(null);
-                    router.push("/");
-                    toast.dismiss();
-                  }}
-                  className="px-2 py-1 rounded-md border border-yellow-700 shadow-md">
-                  Re-take
-                </button>
-                <button
-                  onClick={() => toast.dismiss()}
-                  className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md">
-                  Dismiss
-                </button>
-              </div>
-            </div>
-          </div>
-        ),
-        { duration: 5000 }
-      );
-      return;
-    } else {
-      setLoadingButton(true); // Enable loading state
-      const provider = new GoogleAuthProvider(); // Google Auth provider
-      try {
-        // Firebase Google sign-in
-        const result = await signInWithPopup(auth, provider);
-        const firebaseUser = result?.user;
-
-        // Check if user exists in your system
-        const checkUser = await makeRequest(
-          "GET",
-          // `/users?filter[email][_eq]=${firebaseUser?.email}&fields=auth_type`
-          `/users?filter={"email": {"_eq": "${firebaseUser?.email}"}}&fields=*`
-        );
-
-        const userExists = checkUser?.data[0];
-        const authType = userExists?.auth_type; // Checking userAuth type
-
-        // Determine whether to log in or register the user
-        if (userExists && authType === "google") {
-          await handleGoogleLogin(firebaseUser); // Existing user login
-        } else if (!userExists) {
-          await handleGoogleRegister(firebaseUser); // New user registration
-        } else {
-          toast.error("Please log in with email and password.");
-        }
-      } catch (error) {
-        console.error("Firebase Sign-in Error:", error); // Log the error
-        toast.error("An error occurred during sign-in."); // Show error toast
-      } finally {
-        setLoadingButton(false); // Disable loading state
-      }
-    }
-  };
-
-  const handleGoogleLogin = async (firebaseUser: any) => {
-    try {
-      // login API
-      const response = await makeRequest("POST", "/auth/login", {
-        email: firebaseUser?.email,
-        password: firebaseUser?.uid,
-      });
-
-      // Set cookies for tokens
-      Cookie.set("access-token", response.data.access_token);
-      Cookie.set("refresh-token", response.data.refresh_token);
-
-      // Save user data in Zustand store
-      const getUserData = await makeRequest(
-        "GET",
-        "/users/me?fields=*,latest_menopause_history.*,menopause_history.*"
-      );
-      setUser(getUserData?.data);
-      if (!getUserData?.data?.is_registration_completed) {
-        toast.error("Please complete your registration!.");
-
-        Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
-
-        // router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
-        router.push("/profile");
-      } else {
-        // Notify user of successful login
-        toast.success("Login successful");
-
-        router.push("/");
-      }
-      setRefresh(!refresh);
-    } catch (error: any) {
-      // Handle login errors
-      console.log(error);
-
-      // Show error message
-      toast.error("Invalid Credentials, Please check your email and password");
-    }
-  };
-
-  // This function is responsible for registering a new user using information from Firebase
   const handleGoogleRegister = async (firebaseUser: any) => {
     try {
       // Make an API request to create a new user
@@ -261,6 +106,163 @@ const LoginCard = ({
       }
     }
   };
+  const handleGoogleLogin = async (firebaseUser: any) => {
+    try {
+      // login API
+      const response = await makeRequest("POST", "/auth/login", {
+        email: firebaseUser?.email,
+        password: firebaseUser?.uid,
+      });
+
+      // Set cookies for tokens
+      Cookie.set("access-token", response.data.access_token);
+      Cookie.set("refresh-token", response.data.refresh_token);
+
+      // Save user data in Zustand store
+      const getUserData = await makeRequest(
+        "GET",
+        "/users/me?fields=*,latest_menopause_history.*,menopause_history.*"
+      );
+      setUser(getUserData?.data);
+      if (!getUserData?.data?.is_registration_completed) {
+        toast.error("Please complete your registration!.");
+
+        Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
+
+        // router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
+        router.push("/profile");
+      } else {
+        // Notify user of successful login
+        toast.success("Login successful");
+
+        router.push("/profile");
+      }
+      setRefresh(!refresh);
+    } catch (error: any) {
+      // Handle login errors
+      console.log(error);
+
+      // Show error message
+      toast.error("Invalid Credentials, Please check your email and password", {
+        duration: 5000,
+      });
+    }
+  };
+
+  // Function to handle Google sign-in
+  const handleGoogle = async () => {
+    // if (!eligible) {
+    // if (step === 1) {
+    //   toast.custom((t: any) => (
+    //     <div
+    //       className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
+    //         t.visible ? "toast-animate-enter" : "toast-animate-leave"
+    //       }`}>
+    //       <TriangleAlert className="text-yellow-700" size={40} /> Please
+    //       answer whether you are interested in participating in the early
+    //       testing.
+    //     </div>
+    //   ));
+    // } else if (step === 2) {
+    //   toast.custom((t: any) => (
+    //     <div
+    //       className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
+    //         t.visible ? "toast-animate-enter" : "toast-animate-leave"
+    //       }`}>
+    //       <TriangleAlert className="text-yellow-700" size={40} /> Please
+    //       answer Have you been affected by cancer in the past, or are you
+    //       currently, living with it?
+    //     </div>
+    //   ));
+    // }
+
+    //   if (path === "/") {
+    //     return;
+    //   } else {
+    //     router.push("/");
+    //     return;
+    //   }
+    // } else if (!interested) {
+    //   // toast.error(
+    //   //   "You are not eligible for this program. Please review your answers to the eligibility questions."
+    //   // );
+    //   toast.custom(
+    //     (t: any) => (
+    //       <div
+    //         className={cn(
+    //           "w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5",
+    //           t.visible ? "toast-animate-enter" : "toast-animate-leave"
+    //         )}>
+    //         <div>
+    //           <TriangleAlert className="text-yellow-700" size={20} />
+    //         </div>
+    //         <div>
+    //           <p>
+    //             You are not eligible for this program. Please review your
+    //             answers to the eligibility questions.
+    //           </p>
+
+    //           <div className="w-full flex items-center justify-between mt-3">
+    //             <button
+    //               onClick={() => {
+    //                 setStep(1);
+    //                 setInterested(false);
+    //                 setEligible(false);
+    //                 setNotInterestedMsg(null);
+    //                 router.push("/");
+    //                 toast.dismiss();
+    //               }}
+    //               className="px-2 py-1 rounded-md border border-yellow-700 shadow-md">
+    //               Re-take
+    //             </button>
+    //             <button
+    //               onClick={() => toast.dismiss()}
+    //               className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md">
+    //               Dismiss
+    //             </button>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     ),
+    //     { duration: 5000 }
+    //   );
+    //   return;
+    // } else {
+    setLoadingButton(true); // Enable loading state
+    const provider = new GoogleAuthProvider(); // Google Auth provider
+    try {
+      // Firebase Google sign-in
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUser = result?.user;
+
+      // Check if user exists in your system
+      const checkUser = await makeRequest(
+        "GET",
+        // `/users?filter[email][_eq]=${firebaseUser?.email}&fields=auth_type`
+        `/users?filter={"email": {"_eq": "${firebaseUser?.email}"}}&fields=*`
+      );
+
+      const userExists = checkUser?.data[0];
+      const authType = userExists?.auth_type; // Checking userAuth type
+
+      // Determine whether to log in or register the user
+      if (userExists && authType === "google") {
+        await handleGoogleLogin(firebaseUser); // Existing user login
+      } else if (!userExists) {
+        await handleGoogleRegister(firebaseUser); // New user registration
+      } else {
+        toast.error("Please log in with email and password.");
+      }
+    } catch (error) {
+      console.error("Firebase Sign-in Error:", error); // Log the error
+      toast.error("An error occurred during sign-in."); // Show error toast
+    } finally {
+      setLoadingButton(false); // Disable loading state
+    }
+    // }
+  };
+
+  // This function is responsible for registering a new user using information from Firebase
 
   const handleApple = async () => {
     if (!eligible) {
@@ -411,7 +413,9 @@ const LoginCard = ({
       setRefresh(!refresh);
     } catch (error: any) {
       console.log(error);
-      toast.error("Invalid Credentials, Please check your email and password");
+      toast.error("Invalid Credentials, Please check your email and password", {
+        duration: 5000,
+      });
     }
   };
 

@@ -1,6 +1,7 @@
 import React from "react";
 import Title from "../Common/Title";
 import RangeInput from "../FormInputs/RangeInput";
+import RichText from "../Common/RichText";
 
 interface MenopauseAssessmentTypes {
   form?: any;
@@ -19,7 +20,14 @@ const MenopauseAssessment = ({ form, formData }: MenopauseAssessmentTypes) => {
       <div className="max-w-full lg:max-w-[40%] grid grid-cols-1 auto-rows-auto gap-x-10 gap-y-10">
         <div className="flex flex-col gap-3">
           <Title title={formData?.title} className="text-xl font-semibold" />
-          <p className="text-xs font-normal">{formData?.description}</p>
+          {formData?.sub_description ? (
+            <RichText
+              className="text-xs font-normal"
+              content={formData?.sub_description}
+            />
+          ) : (
+            <p className="text-xs font-normal">{formData?.description}</p>
+          )}
         </div>
         {formData?.form_components?.map((component: any) => {
           const { question_id } = component;
