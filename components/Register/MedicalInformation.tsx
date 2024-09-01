@@ -56,6 +56,7 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                         (el: any) =>
                           el.option_id.id === (selected ?? "").slice(2, -2)
                       );
+
                       // console.log(
                       //   descrptionBox,
                       //   (selected ?? "").slice(2, -2),
@@ -71,10 +72,14 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                                 value: JSON.stringify([option?.option_id?.id]),
                               })
                             )}
+                            options={question_id?.options.map(
+                              (el: any) => el.option_id
+                            )}
                             placeholder={question_id?.question}
                             label={question_id?.question}
                             isRequired={question_id?.required}
                             bottomText={question_id?.description}
+                            form={form}
                           />
                           {descrptionBox.length > 0 &&
                             [

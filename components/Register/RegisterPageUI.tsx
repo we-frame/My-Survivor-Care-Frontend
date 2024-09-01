@@ -152,7 +152,7 @@ const RegisterPageUI = () => {
     try {
       const response = await makeRequest(
         "GET",
-        `/items/form?filter={"key": {"_eq": "${key}"}}&fields=*,form_components.*,form_components.question_id.*,form_components.question_id.options.*,form_components.question_id.options.option_id.*`
+        `/items/form?filter={"key": {"_eq": "${key}"}}&fields=*,form_components.*,form_components.question_id.*,form_components.question_id.options.*,form_components.question_id.options.option_id.*,form_components.question_id.options.option_id.questions.*.*.*`
       );
       setFormData((prev: any) => ({ ...prev, [section]: response?.data[0] }));
     } catch (error) {
