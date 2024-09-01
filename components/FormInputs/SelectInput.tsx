@@ -1,6 +1,7 @@
 import React from "react";
 import { SelectInputTypes } from "@/types/formInput";
 import { cn } from "@/lib/utils";
+import Question from "../Common/Question";
 
 const SelectInput: React.FC<SelectInputTypes> = ({
   field,
@@ -12,8 +13,13 @@ const SelectInput: React.FC<SelectInputTypes> = ({
   isDisabled = false,
   selectOptions,
   defaultValue = "",
+  options = [],
+  form,
 }) => {
-  // console.log(field.state.value);
+  let subQuestion = options.find(
+    (option: any) => option?.id === field.state?.value?.slice(2, -2)
+  )?.questions;
+  // console.log(field.state.value, "subQuestion", subQuestion, options[0]?.id);
   return (
     <div>
       <label className="form-control w-full max-w-md">
@@ -56,6 +62,33 @@ const SelectInput: React.FC<SelectInputTypes> = ({
           </div>
         )}
       </label>
+      <>
+        {
+          <div>
+            {Array.isArray(subQuestion) &&
+              subQuestion.length > 0 &&
+              subQuestion.map((question: any) => {
+                // console.log(question.question_id, field.state.value);
+                let questionId = question?.question_id?.id;
+                if (typeof question?.question_id === "string") {
+                  questionId = question?.question_id;
+                } else {
+                  questionId = question?.question_id?.id;
+                }
+                return (
+                  <div key={questionId}>
+                    {/* <>{console.log(form, "form")}</> */}
+                    <Question
+                      question_id={questionId}
+                      fieldName={field.name}
+                      form={form}
+                    />
+                  </div>
+                );
+              })}
+          </div>
+        }
+      </>
 
       {field.state.meta.touchedErrors && (
         <p className="mt-2 text-xs font-medium text-red-500">
