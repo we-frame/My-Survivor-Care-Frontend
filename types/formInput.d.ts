@@ -28,6 +28,8 @@ export interface SelectInputTypes {
     label: string;
   }[];
   defaultValue?: string;
+  options?: any;
+  form?:any;
 }
 
 // Interface for individual Checkbox options in a Multiple Checkbox component
