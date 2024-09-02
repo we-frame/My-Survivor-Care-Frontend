@@ -16,8 +16,6 @@ const ReAssessmentUI = () => {
   const previousAverageRating: number | null =
     userData?.userData?.latest_menopause_history?.average_rating ?? null;
 
-  console.log(previousAverageRating);
-
   const [formDataAPI, setFormDataAPI] = useState<any>({
     menopauseAssessment: null,
   });
@@ -46,9 +44,11 @@ const ReAssessmentUI = () => {
             question_type: "input",
             answer: formData.inputField,
           });
+          // return console.log(previousAverageRating, "previousAverageRating");
 
           await makeRequest("PATCH", "/users/me", {
             last_assessment_date: new Date().toISOString(),
+            previous_rating: previousAverageRating,
           });
 
           // Redirect to the home page after successful form submission
@@ -160,8 +160,7 @@ const ReAssessmentUI = () => {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="bg-[#ffffff] mt-10 p-6 rounded-lg shadow-lg flex flex-col gap-10"
-      >
+        className="bg-[#ffffff] mt-10 p-6 rounded-lg shadow-lg flex flex-col gap-10">
         <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
           <div className="w-full lg:w-[20%] flex flex-col gap-3">
             <Title title="Before you start" className="text-xl font-semibold" />
@@ -171,8 +170,7 @@ const ReAssessmentUI = () => {
             <div>
               <label
                 htmlFor="follow_the_recommendation"
-                className="form-control w-full max-w-md"
-              >
+                className="form-control w-full max-w-md">
                 <div className="label">
                   <span className="label-text font-normal">
                     Did you follow the recommendation as you were advised?
@@ -184,8 +182,7 @@ const ReAssessmentUI = () => {
                   id="follow_the_recommendation"
                   name="follow_the_recommendation"
                   value={formData.follow_the_recommendation}
-                  onChange={handleChange}
-                >
+                  onChange={handleChange}>
                   <option value="" disabled selected>
                     Choose a recommendation
                   </option>
@@ -204,8 +201,7 @@ const ReAssessmentUI = () => {
                 <div>
                   <label
                     htmlFor="find_the_recommendation"
-                    className="form-control w-full max-w-md"
-                  >
+                    className="form-control w-full max-w-md">
                     <div className="label">
                       <span className="label-text font-normal">
                         Did you find the recommendation to be useful for you?
@@ -217,8 +213,7 @@ const ReAssessmentUI = () => {
                       id="find_the_recommendation"
                       name="find_the_recommendation"
                       value={formData.find_the_recommendation}
-                      onChange={handleChange}
-                    >
+                      onChange={handleChange}>
                       <option value="" disabled selected>
                         Choose a recommendation
                       </option>
@@ -235,8 +230,7 @@ const ReAssessmentUI = () => {
                 <div>
                   <label
                     htmlFor="reassess_your_symptoms"
-                    className="form-control w-full max-w-md"
-                  >
+                    className="form-control w-full max-w-md">
                     <div className="label">
                       <span className="label-text font-normal">
                         Do you still want to reassess your symptoms?
@@ -248,8 +242,7 @@ const ReAssessmentUI = () => {
                       id="reassess_your_symptoms"
                       name="reassess_your_symptoms"
                       value={formData.reassess_your_symptoms}
-                      onChange={handleChange}
-                    >
+                      onChange={handleChange}>
                       <option value="" disabled selected>
                         Choose a recommendation
                       </option>
@@ -268,8 +261,7 @@ const ReAssessmentUI = () => {
                 <div>
                   <label
                     htmlFor="inputField"
-                    className="form-control w-full max-w-xs"
-                  >
+                    className="form-control w-full max-w-xs">
                     <div className="label">
                       <span className="label-text font-normal">
                         Please tell us why you did not follow the previous
@@ -289,6 +281,12 @@ const ReAssessmentUI = () => {
                       cols={50}
                     />
                   </label>
+                  {formData.inputField && (
+                    <p className="text-sm mt-4 text-red-500">
+                      We suggest that you follow the advice you were given for
+                      at least three months before using this tool.
+                    </p>
+                  )}
                 </div>
               </>
             ) : null}
@@ -296,8 +294,7 @@ const ReAssessmentUI = () => {
               <div>
                 <label
                   htmlFor="reassess_your_symptoms"
-                  className="form-control w-full max-w-md"
-                >
+                  className="form-control w-full max-w-md">
                   <div className="label">
                     <span className="label-text font-normal">
                       Do you still want to reassess your symptoms?
@@ -309,8 +306,7 @@ const ReAssessmentUI = () => {
                     id="reassess_your_symptoms"
                     name="reassess_your_symptoms"
                     value={formData.reassess_your_symptoms}
-                    onChange={handleChange}
-                  >
+                    onChange={handleChange}>
                     <option value="" disabled selected>
                       Choose a recommendation
                     </option>
@@ -348,9 +344,12 @@ const ReAssessmentUI = () => {
                     "bg-green-300 text-black disabled:cursor-not-allowed"
                 )}
                 type="submit"
-                disabled={!canSubmit}
-              >
-                {isSubmitting ? "Loading..." : "Submit re-assessment"}
+                disabled={!canSubmit}>
+                {isSubmitting
+                  ? "Loading..."
+                  : formData.reassess_your_symptoms === "no"
+                  ? "Back to My Profile"
+                  : "Submit re-assessment"}
               </button>
             )}
           />
