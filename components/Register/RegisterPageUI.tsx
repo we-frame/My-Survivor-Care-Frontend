@@ -29,6 +29,32 @@ const RegisterPageUI = () => {
   const encodedNewUserData = atob(uData);
   const [privacy, setPrivacy] = useState<any>(false);
   const router = useRouter();
+  const [MenoData, setMenoData] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchMenoPauseQuestions() {
+      try {
+        const { data } = await makeRequest(
+          "GET",
+          "/items/form?filter[title][_contains]=Menopause&fields=form_components.question_id.question,Menopause&fields=form_components.question_id.id"
+        );
+        // console.log(data?.[0]?.form_components, "meno");
+        const QuestionsArray = data?.[0]?.form_components?.reduce(
+          (acc: any, component: any) => {
+            const { id, question } = component.question_id;
+            acc[id] = question; // Setting id as the key and question as the value
+            return acc;
+          },
+          {}
+        );
+
+        setMenoData(QuestionsArray);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchMenoPauseQuestions();
+  }, []);
 
   // Initializing form with default values and submission handler
   const form = useForm<any>({
@@ -90,8 +116,6 @@ const RegisterPageUI = () => {
               is_registration_completed: true,
             });
 
-            // return console.log(value, "values");
-
             const parameterRating: any = [];
             var counter = 0;
             var ratingSum = 0;
@@ -101,7 +125,7 @@ const RegisterPageUI = () => {
                 ratingSum + parseInt(value.MenopauseAssessment[title]);
 
               parameterRating.push({
-                title: title,
+                title: MenoData[title] ?? title,
                 rating: value.MenopauseAssessment[title],
               });
             });
