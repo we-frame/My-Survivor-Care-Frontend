@@ -44,10 +44,11 @@ const ReAssessmentUI = () => {
             question_type: "input",
             answer: formData.inputField,
           });
+          // return console.log(previousAverageRating, "previousAverageRating");
 
           await makeRequest("PATCH", "/users/me", {
             last_assessment_date: new Date().toISOString(),
-            previousAverageRating: previousAverageRating,
+            previous_rating: previousAverageRating,
           });
 
           // Redirect to the home page after successful form submission
@@ -344,7 +345,11 @@ const ReAssessmentUI = () => {
                 )}
                 type="submit"
                 disabled={!canSubmit}>
-                {isSubmitting ? "Loading..." : "Submit re-assessment"}
+                {isSubmitting
+                  ? "Loading..."
+                  : formData.reassess_your_symptoms === "no"
+                  ? "Back to My Profile"
+                  : "Submit re-assessment"}
               </button>
             )}
           />
