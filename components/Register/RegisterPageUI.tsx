@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import Cookie from "js-cookie";
 import { getUserDetails } from "@/lib/getUserAPI";
 import useUserStore from "@/store/userStore";
+import { HormonalCancer } from "@/data/hormonal-cancer-question-id";
 
 const RegisterPageUI = () => {
   const { setUser } = useUserStore();
@@ -111,9 +112,16 @@ const RegisterPageUI = () => {
         if (privacy) {
           try {
             await makeRequest("POST", `/items/answers`, Answer);
+            const isHormonalCancer = Answer.some((answer: any) => {
+              return (
+                answer.question_type === "select" &&
+                HormonalCancer.includes(answer.answered_options[0].option_id)
+              );
+            });
             await makeRequest("PATCH", "/users/me", {
               last_assessment_date: new Date().toISOString(),
               is_registration_completed: true,
+              symptom_reassessment_logic: { hormonal: isHormonalCancer },
             });
 
             const parameterRating: any = [];

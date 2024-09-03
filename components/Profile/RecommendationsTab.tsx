@@ -4,9 +4,9 @@ import Button from "../Common/Button";
 import Accordion from "../Common/Accordion";
 import useUserStore from "@/store/userStore";
 import Link from "next/link";
-import { title } from "process";
 import { makeRequest } from "@/lib/api";
 import { getUserDetails } from "@/lib/getUserAPI";
+import { moderateText } from "@/data/moderate-symptom-text";
 
 const RecommendationsTab: React.FC = () => {
   const { userData, setUser } = useUserStore();
@@ -16,7 +16,7 @@ const RecommendationsTab: React.FC = () => {
     userData?.userData?.latest_menopause_history?.average_rating ?? null
   );
   const [btnResponse, setBtnResponse] = useState(false);
-
+  const { hormonal } = userData?.userData?.symptom_reassessment_logic ?? false;
   const previousRating = userData?.userData?.previous_rating ?? null;
 
   useEffect(() => {
@@ -267,10 +267,7 @@ const RecommendationsTab: React.FC = () => {
         </div>
       ) : (
         <div className="w-full lg:w-[90%] flex flex-col items-start justify-start gap-5 mt-10 lg:mt-20">
-          <Title
-            title="Clinical Practice Guidelines"
-            className="text-xl lg:text-2xl font-semibold"
-          />
+          <Title title="" className="text-xl lg:text-2xl font-semibold" />
           <p className="text-base font-normal">
             Cancer patients dealing with menopausal symptoms often need a
             different approach for symptom management compared to women going
@@ -292,6 +289,40 @@ const RecommendationsTab: React.FC = () => {
           />
         </div>
       )}
+
+      {averageRating &&
+        Number(averageRating ?? 0) > 3.9 &&
+        Number(averageRating ?? 0) < 7 && (
+          <div className="w-full lg:w-[90%] flex flex-col items-start justify-start gap-5 mt-10 ">
+            <Title
+              title={
+                hormonal
+                  ? moderateText?.hormonal.title
+                  : moderateText.default.title
+              }
+              className="text-xl lg:text-2xl font-semibold"
+            />
+            {hormonal
+              ? moderateText.hormonal.para.map((el) => <p>{el}</p>)
+              : moderateText.default.para.map((el) => <p>{el}</p>)}
+            {hormonal ? (
+              <div>{moderateText.hormonal.richText}</div>
+            ) : (
+              <div>{moderateText.default.richText}</div>
+            )}
+            <p>
+              While you wait for your appointment to share your introductory
+              letter and the recommended clinical guideline with your GP, you
+              could try some self-help strategies at home.
+            </p>
+            <p>
+              Click on this link to access the online{" "}
+              <Link href="/profile" className="text-violet-600 underline">
+                self-management platform
+              </Link>
+            </p>
+          </div>
+        )}
     </div>
   );
 };
