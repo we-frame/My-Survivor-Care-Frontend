@@ -15,7 +15,7 @@ const ReAssessmentUI = () => {
   const { setUser, userData } = useUserStore(); // Get the setUser function from the store
   const previousAverageRating: number | null =
     userData?.userData?.latest_menopause_history?.average_rating ?? null;
-
+  const [timerDays, setTimerDays] = useState(1);
   const [formDataAPI, setFormDataAPI] = useState<any>({
     menopauseAssessment: null,
   });
@@ -28,6 +28,18 @@ const ReAssessmentUI = () => {
   });
 
   const router = useRouter();
+
+  useEffect(() => {
+    const getTimerDays = async () => {
+      try {
+        const data = await makeRequest("GET", "/items/config");
+        setTimerDays(data?.data?.assessment_duration);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getTimerDays();
+  }, []);
 
   // Initializing form with default values and submission handler
   const form = useForm<any>({
@@ -92,8 +104,14 @@ const ReAssessmentUI = () => {
             requestBody
           );
 
+          let next_assessment_date = new Date();
+          next_assessment_date.setDate(
+            next_assessment_date.getDate() + timerDays
+          );
+
           await makeRequest("PATCH", "/users/me", {
             last_assessment_date: new Date().toISOString(),
+            next_assessment_date: next_assessment_date.toISOString(),
             latest_menopause_history: requestBody?.menopause_history_id,
           });
 
