@@ -14,7 +14,7 @@ const BackgroundInformation = ({
   showHeading = true,
   formData,
 }: BackgroundInformationTypes) => {
-  console.log(formData);
+  // console.log(formData);
   return (
     <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
       {showHeading && (
@@ -78,7 +78,7 @@ const BackgroundInformation = ({
                             isRequired={question_id?.required}
                             bottomText={question_id?.description}
                           />
-                          {descrptionBox.length > 0 &&
+                          {/* {descrptionBox.length > 0 &&
                             [
                               "prefer not to say",
                               "other (please describe)",
@@ -91,7 +91,7 @@ const BackgroundInformation = ({
                                 cols={33}
                                 placeholder="Describe here"
                                 className="border-2 rounded-lg px-3 py-2"></textarea>
-                            )}
+                            )} */}
                         </>
                       );
                     }}

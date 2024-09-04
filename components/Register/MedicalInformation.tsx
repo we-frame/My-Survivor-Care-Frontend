@@ -81,7 +81,7 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                             bottomText={question_id?.description}
                             form={form}
                           />
-                          {descrptionBox.length > 0 &&
+                          {/* {descrptionBox.length > 0 &&
                             [
                               "prefer not to say",
                               "other (please describe)",
@@ -94,7 +94,7 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                                 cols={33}
                                 placeholder="Describe here"
                                 className="border-2 rounded-lg px-3 py-2"></textarea>
-                            )}
+                            )} */}
                           {/* {console.log(
                             field.getValue(),
                             question_id?.options.filter(

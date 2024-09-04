@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import Cookie from "js-cookie";
 import { getUserDetails } from "@/lib/getUserAPI";
 import useUserStore from "@/store/userStore";
+import { HormonalCancer } from "@/data/hormonal-cancer-question-id";
 
 const RegisterPageUI = () => {
   const { setUser } = useUserStore();
@@ -30,6 +31,7 @@ const RegisterPageUI = () => {
   const [privacy, setPrivacy] = useState<any>(false);
   const router = useRouter();
   const [MenoData, setMenoData] = useState<any>(null);
+  const [timerDays, setTimerDays] = useState<any>(1);
 
   useEffect(() => {
     async function fetchMenoPauseQuestions() {
@@ -54,6 +56,18 @@ const RegisterPageUI = () => {
       }
     }
     fetchMenoPauseQuestions();
+  }, []);
+
+  useEffect(() => {
+    const getTimerDays = async () => {
+      try {
+        const data = await makeRequest("GET", "/items/config");
+        setTimerDays(data?.data?.assessment_duration);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getTimerDays();
   }, []);
 
   // Initializing form with default values and submission handler
@@ -111,9 +125,16 @@ const RegisterPageUI = () => {
         if (privacy) {
           try {
             await makeRequest("POST", `/items/answers`, Answer);
+            const isHormonalCancer = Answer.some((answer: any) => {
+              return (
+                answer.question_type === "select" &&
+                HormonalCancer.includes(answer.answered_options[0].option_id)
+              );
+            });
             await makeRequest("PATCH", "/users/me", {
               last_assessment_date: new Date().toISOString(),
               is_registration_completed: true,
+              symptom_reassessment_logic: { hormonal: isHormonalCancer },
             });
 
             const parameterRating: any = [];
@@ -146,9 +167,15 @@ const RegisterPageUI = () => {
                 requestBody
               );
 
+              let next_assessment_date = new Date();
+              next_assessment_date.setDate(
+                next_assessment_date.getDate() + timerDays
+              );
+
               await makeRequest("PATCH", "/users/me", {
                 last_assessment_date: new Date().toISOString(),
                 latest_menopause_history: requestBody?.menopause_history_id,
+                next_assessment_date: next_assessment_date.toISOString(),
               });
 
               getUserDetails(setUser);
