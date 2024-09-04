@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState, useRef } from "react";
 import useUserStore from "@/store/userStore";
 import Title from "./Title";
@@ -5,6 +6,8 @@ import Link from "next/link";
 import Button from "./Button";
 import { makeRequest } from "@/lib/api";
 import { usePathname } from "next/navigation";
+import toast from "react-hot-toast";
+import { getUserDetails } from "@/lib/getUserAPI";
 
 const ReAssessmentTimerModal = () => {
   const { userData } = useUserStore(); // Fetch userData from the store
@@ -14,14 +17,62 @@ const ReAssessmentTimerModal = () => {
   const path = usePathname();
 
   const isoDateString = userData?.userData?.last_assessment_date;
+  const nextAssessmentDay = userData?.userData?.next_assessment_date;
   const date = isoDateString ? new Date(isoDateString) : new Date(); // Convert the ISO date string to a Date object or default to today if null
+  const [reAssessmentDate, setReAssessmentDate] = useState<Date | null>(
+    nextAssessmentDay ? new Date(nextAssessmentDay) : null
+  );
+  const { setUser } = useUserStore();
 
   // Calculate reAssessmentDate only if timerDays is not null
-  let reAssessmentDate: Date | null = null;
-  if (timerDays !== null && isoDateString) {
-    reAssessmentDate = new Date(date);
-    reAssessmentDate.setDate(reAssessmentDate.getDate() + timerDays); // Set the reassessment date based on timerDays
-  }
+
+  // if (timerDays !== null && isoDateString) {
+  //   let AssessmentDate = new Date(date);
+  //   AssessmentDate.setDate(AssessmentDate.getDate() + timerDays);
+  //   setReAssessmentDate(AssessmentDate); // Set the reassessment date based on timerDays
+  // }
+
+  // useEffect(() => {
+  //   console.log("i ran");
+  //   if (timerDays !== null && isoDateString) {
+  //     let AssessmentDate = new Date(date);
+  //     AssessmentDate.setDate(AssessmentDate.getDate() + timerDays);
+  //     console.log(AssessmentDate, "changes");
+  //     setReAssessmentDate(AssessmentDate); // Set the reassessment date based on timerDays
+  //   }
+  // }, [timerDays]);
+
+  //  useEffect(() => {
+  //   console.log("i ran");
+  //   if (nextAssessmentDate) {
+
+  //     setReAssessmentDate(nextAssessmentDate); // Set the reassessment date based on timerDays
+  //   }
+  // }, [timerDays]);
+
+  const ChangeNextAssessmendDate = async (date: Date) => {
+    try {
+      await makeRequest("PATCH", "/users/me", {
+        next_assessment_date: date.toISOString(),
+      })
+        .then(() => setReAssessmentDate(date))
+        .then(() =>
+          toast.error("Re-assessment date postponed successfully", {
+            icon: null,
+            duration: 5000,
+          })
+        )
+        .then(() => {
+          getUserDetails(setUser);
+        });
+    } catch (err) {
+      console.log(err);
+      toast.error(
+        "Something went wrong while postponing reassessment, please try again",
+        { duration: 5000 }
+      );
+    }
+  };
 
   const today = new Date(); // Current date
 
@@ -30,6 +81,7 @@ const ReAssessmentTimerModal = () => {
     try {
       const data = await makeRequest("GET", "/items/config");
       setTimerDays(data?.data?.assessment_duration);
+      // setTimerDays(0.04);
     } catch (error) {
       console.log(error);
     }
@@ -47,17 +99,27 @@ const ReAssessmentTimerModal = () => {
       if (dialogRef.current) {
         dialogRef.current.showModal(); // Use the dialog ref to show the modal
       }
+    } else {
+      setShowModal(false);
     }
   }, [reAssessmentDate, today]);
 
+  const PostponeAssessment = () => {
+    if (timerDays) {
+      const PostponedDate = new Date();
+      PostponedDate.setDate(PostponedDate.getDate() + timerDays);
+      ChangeNextAssessmendDate(PostponedDate);
+    }
+    // timerDays && setTimerDays((prev) => (prev ?? 0) + 1);
+  };
+
   return (
     <>
-      {showModal ? (
+      {timerDays && showModal ? (
         <dialog
           ref={dialogRef}
           id="reAssessmentTimer"
-          className="w-11/12 max-w-md border-none rounded-lg shadow-xl p-0 overflow-hidden"
-        >
+          className="w-11/12 max-w-md border-none rounded-lg shadow-xl p-0 overflow-hidden">
           <div className="p-5 flex flex-col items-center justify-center gap-6 bg-white">
             <Title
               title="Reassessment Reminder"
@@ -67,12 +129,21 @@ const ReAssessmentTimerModal = () => {
               It's time to reassess your symptoms and track your progress. Click
               the button below to take your reassessment.
             </p>
-            <Link href="/re-assessment">
+            <div className="flex flex-row items-center justify-center gap-4">
+              <Link href="/re-assessment">
+                <Button
+                  text="Reassess my symptoms"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                />
+              </Link>
               <Button
-                text="Reassess my symptoms"
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                type={"reset"}
+                text="Do it later"
+                btnBg="#ef4444"
+                onClick={PostponeAssessment}
+                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
               />
-            </Link>
+            </div>
           </div>
         </dialog>
       ) : null}
