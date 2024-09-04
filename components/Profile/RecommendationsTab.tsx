@@ -185,7 +185,7 @@ const RecommendationsTab: React.FC = () => {
         <div className="flex flex-col items-start justify-start gap-4">
           <p className="text-sm font-normal">Symptom severity</p>
           <Title
-            title={getSymptomsHeading(averageRating) + averageRating}
+            title={getSymptomsHeading(averageRating)}
             className="text-3xl lg:text-4xl font-semibold"
           />
 
