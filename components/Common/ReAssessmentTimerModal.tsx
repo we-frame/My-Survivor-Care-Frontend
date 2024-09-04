@@ -20,7 +20,11 @@ const ReAssessmentTimerModal = () => {
   const nextAssessmentDay = userData?.userData?.next_assessment_date;
   const date = isoDateString ? new Date(isoDateString) : new Date(); // Convert the ISO date string to a Date object or default to today if null
   const [reAssessmentDate, setReAssessmentDate] = useState<Date | null>(
-    nextAssessmentDay ? new Date(nextAssessmentDay) : null
+    nextAssessmentDay
+      ? new Date(nextAssessmentDay)
+      : userData?.userData
+      ? new Date()
+      : null
   );
   const { setUser } = useUserStore();
 
