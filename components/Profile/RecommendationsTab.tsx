@@ -34,6 +34,7 @@ const RecommendationsTab: React.FC = () => {
           makeRequest("PATCH", "/users/me", {
             last_assessment_date: new Date().toISOString(),
             latest_menopause_history: {
+              ...userData?.userData?.latest_menopause_history,
               average_rating: averageRating,
             },
           })
