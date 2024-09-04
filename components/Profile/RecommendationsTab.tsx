@@ -8,6 +8,13 @@ import { makeRequest } from "@/lib/api";
 import { getUserDetails } from "@/lib/getUserAPI";
 import { moderateText } from "@/data/moderate-symptom-text";
 
+const getRatingCategory = (rating: any) => {
+  if (rating >= 0 && rating <= 3.9) return "0-3.9";
+  if (rating >= 4 && rating <= 6.9) return "4-6.9";
+  if (rating >= 7 && rating <= 10) return "7-10";
+  return "";
+};
+
 const RecommendationsTab: React.FC = () => {
   const { userData, setUser } = useUserStore();
   const [showQuestion, setShowQuestion] = useState(true);
@@ -18,8 +25,16 @@ const RecommendationsTab: React.FC = () => {
   const [btnResponse, setBtnResponse] = useState(false);
   const { hormonal } = userData?.userData?.symptom_reassessment_logic ?? false;
   const previousRating = userData?.userData?.previous_rating ?? null;
+  const [category, setCategory] = useState(getRatingCategory(averageRating));
 
   useEffect(() => {
+    setAverageRating(
+      userData?.userData?.latest_menopause_history?.average_rating ?? null
+    );
+  }, [userData]);
+
+  useEffect(() => {
+    setCategory(getRatingCategory(averageRating));
     if (averageRating && btnResponse) {
       const data = makeRequest(
         "POST",
@@ -124,13 +139,6 @@ const RecommendationsTab: React.FC = () => {
     },
   };
 
-  const getRatingCategory = (rating: any) => {
-    if (rating >= 0 && rating <= 3.9) return "0-3.9";
-    if (rating >= 4 && rating <= 6.9) return "4-6.9";
-    if (rating >= 7 && rating <= 10) return "7-10";
-    return "";
-  };
-
   const getSymptomsHeading = (rating: any) => {
     if (rating >= 0 && rating <= 3.9) return "Mild symptoms";
     if (rating >= 4 && rating <= 6.9) return "Moderate symptoms";
@@ -150,7 +158,7 @@ const RecommendationsTab: React.FC = () => {
     }
   };
 
-  const category = getRatingCategory(averageRating);
+  // const category = getRatingCategory(averageRating);
   const scoreChange =
     previousRating > averageRating
       ? "decrease"
