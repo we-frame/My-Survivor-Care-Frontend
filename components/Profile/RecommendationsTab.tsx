@@ -7,6 +7,7 @@ import Link from "next/link";
 import { makeRequest } from "@/lib/api";
 import { getUserDetails } from "@/lib/getUserAPI";
 import { moderateText } from "@/data/moderate-symptom-text";
+import RichText from "../Common/RichText";
 
 const getRatingCategory = (rating: any) => {
   if (rating >= 0 && rating <= 3.9) return "0-3.9";
@@ -61,16 +62,87 @@ const RecommendationsTab: React.FC = () => {
   const Infos: any = {
     "0-3.9": {
       title: `To help address your symptoms, we recommend using the self-help program. `,
-      subtitle: `This self-help program is designed for women who are looking for non-medical opDons instead of menopause or hormone replacement therapy (HRT). Research suggests it works well for women dealing with menopause after cancer treatment. It has also been recommended by the North American Menopause Society (NAMS 2015)(read more here) and The National Institute for Health and Care Excellence (NICE, 2015b)(read more here) for hot flushes, night sweats, stress, sleep problems, anxiety and depressed mood during menopause.`,
+      subtitle: (
+        <p>
+          This self-help program is designed for women who are looking for
+          non-medical opDons instead of menopause or hormone replacement therapy
+          (HRT). Research suggests it works well for women dealing with
+          menopause after cancer treatment. It has also been recommended by the
+          North American Menopause Society (NAMS 2015)(read more here) and The
+          National Institute for Health and Care Excellence (NICE, 2015b)(read
+          more here) for hot flushes, night sweats, stress, sleep problems,
+          anxiety and depressed mood during menopause.
+        </p>
+      ),
     },
     "4-6.9": {
       title: "Clinical Practice Guidelines ",
-      subtitle:
-        "Cancer patients dealing with menopausal symptoms often need a different approach for symptom management compared to women going through natural menopause. However, with proper care, most symptoms can be effectively managed. Clinical guidelines exist to help guide your doctors to provide suitable care. These guidelines can also help you make informed decisions about the available treatment opDons for managing your menopausal symptoms...",
+      subtitle: (
+        <p>
+          Cancer patients dealing with menopausal symptoms often need a
+          different approach for symptom management compared to women going
+          through natural menopause. However, with proper care, most symptoms
+          can be effectively managed. Clinical guidelines exist to help guide
+          your doctors to provide suitable care. These guidelines can also help
+          you make informed decisions about the available treatment opDons for
+          managing your menopausal symptoms...
+        </p>
+      ),
     },
     "7-10": {
       title: "Introductory letter to take to your GP",
-      subtitle: `We advise you to ask for a referral to a specialist for more dedicated support, for example, a gynaecologist, oncologist, surgeon, or cancer care nurse. Please share this introductory letter with your doctor (GP).`,
+      subtitle: (
+        <div>
+          <p>
+            We advise you to ask for a referral to a specialist for more
+            dedicated support, for example, a gynaecologist, oncologist,
+            surgeon, or cancer care nurse. Please share this introductory letter
+            with your doctor (GP).
+          </p>
+          <br />
+          <div>
+            <h2 className="font-semibold text-lg">
+              Details of Specialist Menopause After Cancer Clinics
+            </h2>
+            <ol className="pl-4 pt-2 space-y-2">
+              <li className="list-decimal">
+                <p>
+                  King Edward Memorial Hospital: The Menopausal Symptoms After
+                  Cancer (MSAC) Clinic
+                </p>
+                <p>
+                  For more information about the clinic, visit{" "}
+                  <a
+                    href="https://www.kemh.health.wa.gov.au"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline text-violet-600">
+                    www.kemh.health.wa.gov.au
+                  </a>
+                  .
+                </p>
+              </li>
+              <li className="list-decimal">
+                <p>
+                  The Royal Women’s Hospital - The Menopause Symptoms After
+                  Cancer Clinic
+                </p>
+                <p>
+                  For more information about the clinic, visit{" "}
+                  <a
+                    href="https://www.thewomens.org.au"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline text-violet-600">
+                    www.thewomens.org.au
+                  </a>
+                  .
+                </p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      ),
     },
   };
 
@@ -227,7 +299,7 @@ const RecommendationsTab: React.FC = () => {
               title={Infos[category].title}
               className="text-xl lg:text-2xl font-semibold my-5"
             />
-            <p className="text-base font-normal">{Infos[category].subtitle}</p>
+            {Infos[category].subtitle}
           </div>
           {previousRating == null ? (
             Number(averageRating) <= 3.9 ? (
