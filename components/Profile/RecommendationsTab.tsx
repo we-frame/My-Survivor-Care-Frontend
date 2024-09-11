@@ -65,8 +65,8 @@ const RecommendationsTab: React.FC = () => {
       subtitle: (
         <p>
           This self-help program is designed for women who are looking for
-          non-medical opDons instead of menopause or hormone replacement therapy
-          (HRT). Research suggests it works well for women dealing with
+          non-medical options instead of menopause or hormone replacement
+          therapy (HRT). Research suggests it works well for women dealing with
           menopause after cancer treatment. It has also been recommended by the
           North American Menopause Society (NAMS 2015)(read more here) and The
           National Institute for Health and Care Excellence (NICE, 2015b)(read
@@ -84,7 +84,7 @@ const RecommendationsTab: React.FC = () => {
           through natural menopause. However, with proper care, most symptoms
           can be effectively managed. Clinical guidelines exist to help guide
           your doctors to provide suitable care. These guidelines can also help
-          you make informed decisions about the available treatment opDons for
+          you make informed decisions about the available treatment options for
           managing your menopausal symptoms...
         </p>
       ),

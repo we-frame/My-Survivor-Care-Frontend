@@ -16,8 +16,7 @@ const HealthcareProfessionalUI = () => {
         <Accordion
           title="Find an Australasian Menopause Society Doctor"
           className="text-2xl font-semibold"
-          groupName="consumer-resources"
-        >
+          groupName="consumer-resources">
           <div className="flex flex-col items-start justify-start gap-5">
             <p className="text-base font-normal">
               To assist you in finding a doctor suitable for your needs, the
@@ -36,8 +35,7 @@ const HealthcareProfessionalUI = () => {
                   href="https://www.menopause.org.au/"
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   www.menopause.org.au
                 </a>
               </p>
@@ -48,8 +46,7 @@ const HealthcareProfessionalUI = () => {
         <Accordion
           title="Find a McGrath Breast Care Nurse"
           className="text-2xl font-semibold"
-          groupName="consumer-resources"
-        >
+          groupName="consumer-resources">
           <div className="flex flex-col items-start justify-start gap-5">
             <p className="text-base font-normal">
               If you're looking for a breast care nurse, McGrath Breast Care
@@ -65,8 +62,7 @@ const HealthcareProfessionalUI = () => {
                   href="https://www.mcgrathfoundation.com.au/"
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   www.mcgrathfoundation.com.au
                 </a>
               </p>
@@ -77,8 +73,7 @@ const HealthcareProfessionalUI = () => {
         <Accordion
           title="Teal Support Nurse Program-Ovarian Cancer Survivors"
           className="text-2xl font-semibold"
-          groupName="consumer-resources"
-        >
+          groupName="consumer-resources">
           <div className="flex flex-col items-start justify-start gap-3">
             <p className="text-base font-normal">
               The Teal Support Program is a free telehealth outreach program
@@ -96,8 +91,7 @@ const HealthcareProfessionalUI = () => {
                   href="https://www.ovariancancer.net.au/"
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   www.ovariancancer.net.au
                 </a>
               </p>
@@ -108,8 +102,7 @@ const HealthcareProfessionalUI = () => {
         <Accordion
           title="NET Nurse- NeuroEndocrine Cancer Survivors"
           className="text-2xl font-semibold"
-          groupName="consumer-resources"
-        >
+          groupName="consumer-resources">
           <div className="flex flex-col items-start justify-start gap-5">
             <p className="text-base font-normal">
               NeuroEndocrine Cancer Australia offer a FREE, confidential
@@ -125,8 +118,7 @@ const HealthcareProfessionalUI = () => {
                   href="https://https://neuroendocrine.org.au/"
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   https://neuroendocrine.org.au
                 </a>
               </p>
@@ -137,8 +129,7 @@ const HealthcareProfessionalUI = () => {
         <Accordion
           title="Related websites"
           className="text-2xl font-semibold"
-          groupName="consumer-resources"
-        >
+          groupName="consumer-resources">
           <div className="flex flex-col items-start justify-start gap-5">
             <p className="text-base font-normal">
               We're here to help you with managing menopause symptoms after
@@ -153,8 +144,7 @@ const HealthcareProfessionalUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Jean Hailes Foundation
               </h1>
               <p className="text-base font-normal">
@@ -167,8 +157,7 @@ const HealthcareProfessionalUI = () => {
                   href=""
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   Visit website
                 </a>
               </p>
@@ -177,8 +166,7 @@ const HealthcareProfessionalUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Australasian Menopause Society
               </h1>
               <p className="text-base font-normal">
@@ -190,8 +178,7 @@ const HealthcareProfessionalUI = () => {
                   href=""
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   Visit website
                 </a>
               </p>
@@ -200,8 +187,7 @@ const HealthcareProfessionalUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Ask Early Menopause
               </h1>
               <p className="text-base font-normal">
@@ -209,13 +195,12 @@ const HealthcareProfessionalUI = () => {
                 reliable information from top experts. It helps you understand
                 menopause, provides tools like a personal dashboard to track
                 symptoms, and supports you in finding a healthy lifestyle and
-                the best management opDons for your situation.{" "}
+                the best management options for your situation.{" "}
                 <a
                   href=""
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   Visit website
                 </a>
               </p>
@@ -224,8 +209,7 @@ const HealthcareProfessionalUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Cancer Council
               </h1>
               <p className="text-base font-normal">
@@ -237,8 +221,7 @@ const HealthcareProfessionalUI = () => {
                   href=""
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   Visit website
                 </a>
               </p>
@@ -247,8 +230,7 @@ const HealthcareProfessionalUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Healthtalk Australia
               </h1>
               <p className="text-base font-normal">
@@ -261,8 +243,7 @@ const HealthcareProfessionalUI = () => {
                   href=""
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   Visit website
                 </a>
               </p>
