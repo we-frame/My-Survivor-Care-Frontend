@@ -14,7 +14,7 @@ const BackgroundInformation = ({
   showHeading = true,
   formData,
 }: BackgroundInformationTypes) => {
-  // console.log(formData);
+  // console.log(formData, "Background Info");
   return (
     <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
       {showHeading && (
@@ -73,10 +73,14 @@ const BackgroundInformation = ({
                                 value: JSON.stringify([option?.option_id?.id]),
                               })
                             )}
+                            options={question_id?.options.map(
+                              (el: any) => el.option_id
+                            )}
                             placeholder={question_id?.question}
                             label={question_id?.question}
                             isRequired={question_id?.required}
                             bottomText={question_id?.description}
+                            form={form}
                           />
                           {/* {descrptionBox.length > 0 &&
                             [

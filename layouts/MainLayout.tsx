@@ -42,9 +42,9 @@ const MainLayout = ({ children }: MainLayoutTypes) => {
       />
       <Navbar />
       <main className="container">{children}</main>
-      {!["/re-assessment", "/login", "/register"].includes(
-        path
-      ) && <ReAssessmentTimerModal />}
+      {!["/re-assessment", "/login", "/register", "/"].includes(path) && (
+        <ReAssessmentTimerModal />
+      )}
     </>
   );
 };
