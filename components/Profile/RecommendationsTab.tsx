@@ -8,6 +8,7 @@ import { makeRequest } from "@/lib/api";
 import { getUserDetails } from "@/lib/getUserAPI";
 import { moderateText } from "@/data/moderate-symptom-text";
 import RichText from "../Common/RichText";
+import { ProfileActions } from "@/data/profile-button-actions";
 
 const getRatingCategory = (rating: any) => {
   if (rating >= 0 && rating <= 3.9) return "0-3.9";
@@ -27,16 +28,27 @@ const RecommendationsTab: React.FC = () => {
   const { hormonal } = userData?.userData?.symptom_reassessment_logic ?? false;
   const previousRating = userData?.userData?.previous_rating ?? null;
   const [category, setCategory] = useState(getRatingCategory(averageRating));
+  const [scoreChange, setScoreChange] = useState("same");
 
   useEffect(() => {
-    setAverageRating(
-      userData?.userData?.latest_menopause_history?.average_rating ?? null
-    );
+    if (
+      userData?.userData?.latest_menopause_history?.average_rating !==
+      averageRating
+    ) {
+      setAverageRating(
+        userData?.userData?.latest_menopause_history?.average_rating ?? null
+      );
+    }
+    setShowQuestion(userData?.userData?.show_dedicated_support_button ?? true);
   }, [userData]);
 
   useEffect(() => {
     setCategory(getRatingCategory(averageRating));
-    if (averageRating && btnResponse) {
+    if (
+      userData?.userData?.latest_menopause_history?.average_rating !==
+        averageRating &&
+      btnResponse
+    ) {
       const data = makeRequest(
         "POST",
         "/items/junction_directus_users_menopause_history",
@@ -57,7 +69,14 @@ const RecommendationsTab: React.FC = () => {
         )
         .then((res) => getUserDetails(setUser));
     }
-  }, [averageRating]);
+    const scores =
+      getRatingCategory(previousRating) == getRatingCategory(averageRating)
+        ? "same"
+        : previousRating < averageRating
+        ? "increase"
+        : "decrease";
+    setScoreChange(scores);
+  }, [averageRating, previousRating]);
 
   const Infos: any = {
     "0-3.9": {
@@ -78,15 +97,23 @@ const RecommendationsTab: React.FC = () => {
     "4-6.9": {
       title: "Clinical Practice Guidelines ",
       subtitle: (
-        <p>
-          Cancer patients dealing with menopausal symptoms often need a
-          different approach for symptom management compared to women going
-          through natural menopause. However, with proper care, most symptoms
-          can be effectively managed. Clinical guidelines exist to help guide
-          your doctors to provide suitable care. These guidelines can also help
-          you make informed decisions about the available treatment options for
-          managing your menopausal symptoms...
-        </p>
+        <div>
+          <p>
+            Cancer patients dealing with menopausal symptoms often need a
+            different approach for symptom management compared to women going
+            through natural menopause. However, with proper care, most symptoms
+            can be effectively managed. Clinical guidelines exist to help guide
+            your doctors to provide suitable care. These guidelines can also
+            help you make informed decisions about the available treatment
+            options for managing your menopausal symptoms.
+          </p>
+          <br />
+          <p>
+            Based on this, we advise sharing this introductory letter and
+            clinical guideline with your primary care doctor (GP) to work
+            together on the best plan to manage your symptoms.
+          </p>
+        </div>
       ),
     },
     "7-10": {
@@ -220,8 +247,20 @@ const RecommendationsTab: React.FC = () => {
 
   const handleButtonClick = (response: any) => {
     setUserResponse(response);
+    async function PatchBtnResponse() {
+      await makeRequest("PATCH", "/users/me", {
+        show_dedicated_support_button: false,
+      }).then(() => {
+        getUserDetails(setUser);
+      });
+    }
+    PatchBtnResponse();
     setShowQuestion(false);
-    if (response === "yes") {
+    console.log(typeof averageRating, previousRating, scoreChange, "ratings");
+    if (
+      response === "yes" &&
+      (scoreChange === "increase" || scoreChange === "same")
+    ) {
       setBtnResponse(true);
       const rating = averageRating;
       if (rating >= 0 && rating <= 3.9) setAverageRating("4");
@@ -231,12 +270,12 @@ const RecommendationsTab: React.FC = () => {
   };
 
   // const category = getRatingCategory(averageRating);
-  const scoreChange =
-    previousRating > averageRating
-      ? "decrease"
-      : previousRating < averageRating
-      ? "increase"
-      : "same";
+  // const scoreChange =
+  //   getRatingCategory(previousRating) == getRatingCategory(averageRating)
+  //     ? "same"
+  //     : previousRating < averageRating
+  //     ? "increase"
+  //     : "decrease";
   const displayInfo: any = messages[scoreChange][category];
 
   const handleDownload = () => {
@@ -292,49 +331,43 @@ const RecommendationsTab: React.FC = () => {
           </Accordion>
         </div>
       </div>
+      {/* results sections */}
 
-      {averageRating !== null && averageRating !== undefined ? (
-        <div>
-          <div className="space-y-5">
-            <Title
-              title={Infos[category].title}
-              className="text-xl lg:text-2xl font-semibold my-5"
-            />
-            {Infos[category].subtitle}
-          </div>
-          {previousRating == null ? (
-            Number(averageRating) <= 3.9 ? (
-              ""
-            ) : (
-              <Button
-                text="Download introductory letter"
-                className="text-white font-normal text-sm mt-5"
-                onClick={handleDownload}
-              />
-            )
-          ) : (
-            <>
-              <Title title="Results" className="text-3xl font-semibold my-5" />
-              <p className="text-base my-3">{displayInfo?.message}</p>
-              {showQuestion && (
-                <div>
-                  <p className="text-base font-semibold mb-2">
-                    {displayInfo?.question}
-                  </p>
-                  <div className="flex  gap-3">
-                    <Button
-                      text="Yes"
-                      btnBg="#14b8a6"
-                      onClick={() => handleButtonClick("yes")}
-                    />
-                    <Button
-                      text="No"
-                      btnBg="#f44336"
-                      onClick={() => handleButtonClick("no")}
-                    />
-                  </div>
-                </div>
-              )}
+      {averageRating == null || averageRating == undefined ? (
+        <>
+          {" "}
+          <Title
+            title="Profile Unavailable"
+            className="text-3xl font-semibold my-5"
+          />
+          <p>
+            Please complete your registration process by visiting{" "}
+            <Link href={"/register"} className="underline text-violet-600">
+              Register
+            </Link>
+          </p>
+        </>
+      ) : (
+        <>
+          <Title title="Results" className="text-3xl font-semibold my-5" />
+          <p className="text-base my-3">{displayInfo?.message}</p>
+          {showQuestion && displayInfo?.question ? (
+            <div>
+              <p className="text-base font-semibold mb-2">
+                {displayInfo?.question}
+              </p>
+              <div className="flex  gap-3">
+                <Button
+                  text="Yes"
+                  btnBg="#14b8a6"
+                  onClick={() => handleButtonClick("yes")}
+                />
+                <Button
+                  text="No"
+                  btnBg="#f44336"
+                  onClick={() => handleButtonClick("no")}
+                />
+              </div>
               {userResponse === "no" && (
                 <p
                   className="text-base"
@@ -349,35 +382,74 @@ const RecommendationsTab: React.FC = () => {
                   {displayInfo?.yesResponse}
                 </p>
               )}
-            </>
+            </div>
+          ) : previousRating === null || previousRating === undefined ? (
+            <div className="space-y-5">
+              <Title
+                title={Infos[category].title}
+                className="text-xl lg:text-2xl font-semibold my-5"
+              />
+              {Infos[category].subtitle}
+              {/* {Number(averageRating) <= 3.9 ? (
+                ""
+              ) : (
+                <Button
+                  text="Download introductory letter"
+                  className="text-white font-normal text-sm mt-5"
+                  onClick={handleDownload}
+                />
+              )} */}
+            </div>
+          ) : (
+            <div className="space-y-5">
+              <Title
+                title={Infos[category].title}
+                className="text-xl lg:text-2xl font-semibold my-5"
+              />
+              {Infos[category].subtitle}
+              {Number(averageRating ?? 0) > 3.9 &&
+                Number(averageRating ?? 0) < 7 && (
+                  <div className="w-full lg:w-[90%] flex flex-col items-start justify-start gap-5 mt-10 ">
+                    <Title
+                      title={
+                        hormonal
+                          ? moderateText?.hormonal.title
+                          : moderateText.default.title
+                      }
+                      className="text-xl lg:text-2xl font-semibold"
+                    />
+                    {hormonal
+                      ? moderateText.hormonal.para.map((el) => <p>{el}</p>)
+                      : moderateText.default.para.map((el) => <p>{el}</p>)}
+                    {hormonal ? (
+                      <div>{moderateText.hormonal.richText}</div>
+                    ) : (
+                      <div>{moderateText.default.richText}</div>
+                    )}
+                    <p>
+                      While you wait for your appointment to share your
+                      introductory letter and the recommended clinical guideline
+                      with your GP, you could try some self-help strategies at
+                      home.
+                    </p>
+                    <p>
+                      Click on this link to access the online{" "}
+                      <Link
+                        href="/profile"
+                        className="text-violet-600 underline">
+                        self-management platform
+                      </Link>
+                    </p>
+                  </div>
+                )}
+            </div>
           )}
-        </div>
-      ) : (
-        <div className="w-full lg:w-[90%] flex flex-col items-start justify-start gap-5 mt-10 lg:mt-20">
-          <Title title="" className="text-xl lg:text-2xl font-semibold" />
-          <p className="text-base font-normal">
-            Cancer patients dealing with menopausal symptoms often need a
-            different approach for symptom management compared to women going
-            through natural menopause. However, with proper care, most symptoms
-            can be effectively managed. Clinical guidelines exist to help guide
-            your doctors to provide suitable care. These guidelines can also
-            help you make informed decisions about the available treatment
-            options for managing your menopausal symptoms.
-          </p>
-          <p className="text-base font-normal">
-            Based on this, we advise sharing this introductory letter and
-            clinical guideline with your primary care doctor (GP) to work
-            together on the best plan to manage your symptoms.
-          </p>
-
-          <Button
-            text="Download introductory letter"
-            className="text-white font-normal text-sm"
-          />
-        </div>
+        </>
       )}
 
-      {averageRating &&
+      {/* {!showQuestion &&} */}
+
+      {/* {averageRating &&
         Number(averageRating ?? 0) > 3.9 &&
         Number(averageRating ?? 0) < 7 && (
           <div className="w-full lg:w-[90%] flex flex-col items-start justify-start gap-5 mt-10 ">
@@ -409,7 +481,35 @@ const RecommendationsTab: React.FC = () => {
               </Link>
             </p>
           </div>
+        )} */}
+      <div className="pt-6 flex gap-6">
+        <Button
+          text="Visit online self-management platform"
+          btnBg=""
+          link="/self-management"
+          className="text-white "
+        />
+        {ProfileActions?.[getSymptomsHeading(averageRating ?? 0)]?.[
+          "moderate-gp-button"
+        ] && (
+          <Button
+            text="Download letter for GP"
+            className=" border-1 border-[#cfcfcf]"
+            btnBg="#F3F4F6"
+            onClick={handleDownload}
+          />
         )}
+        {ProfileActions?.[getSymptomsHeading(averageRating ?? 0)]?.[
+          "severe-gp-button"
+        ] && (
+          <Button
+            text="Download letter for GP"
+            className="border-1 border-[#cfcfcf]"
+            btnBg="#F3F4F6"
+            onClick={handleDownload}
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -176,6 +176,7 @@ const RegisterPageUI = () => {
                 last_assessment_date: new Date().toISOString(),
                 latest_menopause_history: requestBody?.menopause_history_id,
                 next_assessment_date: next_assessment_date.toISOString(),
+                show_dedicated_support_button: true,
               });
 
               getUserDetails(setUser);

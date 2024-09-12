@@ -113,6 +113,7 @@ const ReAssessmentUI = () => {
             last_assessment_date: new Date().toISOString(),
             next_assessment_date: next_assessment_date.toISOString(),
             latest_menopause_history: requestBody?.menopause_history_id,
+            show_dedicated_support_button: true,
           });
 
           getUserDetails(setUser);
