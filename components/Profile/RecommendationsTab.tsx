@@ -253,6 +253,7 @@ const RecommendationsTab: React.FC = () => {
 
   return (
     <div className="flex flex-col">
+      {/* profile heading  */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 auto-rows-auto gap-5 lg:gap-10">
         <div className="flex flex-col items-start justify-start gap-4">
           <p className="text-sm font-normal">Symptom severity</p>
@@ -316,17 +317,22 @@ const RecommendationsTab: React.FC = () => {
               <Title title="Results" className="text-3xl font-semibold my-5" />
               <p className="text-base my-3">{displayInfo?.message}</p>
               {showQuestion && (
-                <div className="flex gap-3">
-                  <Button
-                    text="Yes"
-                    btnBg="#14b8a6"
-                    onClick={() => handleButtonClick("yes")}
-                  />
-                  <Button
-                    text="No"
-                    btnBg="#f44336"
-                    onClick={() => handleButtonClick("no")}
-                  />
+                <div>
+                  <p className="text-base font-semibold mb-2">
+                    {displayInfo?.question}
+                  </p>
+                  <div className="flex  gap-3">
+                    <Button
+                      text="Yes"
+                      btnBg="#14b8a6"
+                      onClick={() => handleButtonClick("yes")}
+                    />
+                    <Button
+                      text="No"
+                      btnBg="#f44336"
+                      onClick={() => handleButtonClick("no")}
+                    />
+                  </div>
                 </div>
               )}
               {userResponse === "no" && (
