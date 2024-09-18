@@ -79,6 +79,7 @@ export default function Question({
                     label={question?.question}
                     options={options}
                     isRequired={true}
+                    optionObject={question?.options}
                   />
                 );
 

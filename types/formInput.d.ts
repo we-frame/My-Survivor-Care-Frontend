@@ -29,7 +29,7 @@ export interface SelectInputTypes {
   }[];
   defaultValue?: string;
   options?: any;
-  form?:any;
+  form?: any;
 }
 
 // Interface for individual Checkbox options in a Multiple Checkbox component
@@ -47,6 +47,7 @@ export interface MultipleCheckboxInputTypes {
   isRequired?: boolean;
   isDisabled?: boolean;
   containerClassName?: string;
+  optionObject?: any;
 }
 
 export interface RangeInputTypes {
