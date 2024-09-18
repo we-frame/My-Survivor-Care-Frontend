@@ -68,7 +68,7 @@ const MultipleCheckboxInput: React.FC<MultipleCheckboxInputTypes> = ({
         {QuestionObject &&
           field.state.value?.length > 0 &&
           field.state.value.map((el: any) => {
-            const question = QuestionObject?.[el.slice(2, -2)];
+            const question = QuestionObject?.[el?.slice(2, -2)];
             if (question) {
               return (
                 <Question
