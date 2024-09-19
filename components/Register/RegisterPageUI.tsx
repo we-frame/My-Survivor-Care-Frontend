@@ -33,7 +33,7 @@ const RegisterPageUI = () => {
   const [MenoData, setMenoData] = useState<any>(null);
   const [timerDays, setTimerDays] = useState<any>(1);
 
-  if (userData?.userData?.is_registration_completed) {
+  if (userData && userData?.userData?.is_registration_completed) {
     router.replace("/profile");
   }
 
