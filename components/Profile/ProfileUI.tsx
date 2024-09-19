@@ -13,7 +13,12 @@ import Link from "next/link";
 import ProfileRightCardImg from "@/public/profile_right_card_img.jpeg";
 import TimeToReassessImg from "@/public/time-to-reassessment.jpeg";
 import { getUserDetails } from "@/lib/getUserAPI";
+import Cookies from "js-cookie";
+import axios from "axios";
+import Question from "../Common/Question";
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+const localToken = Cookies.get("access-token");
 const ProfileUI = () => {
   const [editBackgroundInfo, setEditBackgroundInfo] = useState<boolean>(false);
   const [editMedicalInformation, setEditMedicalInformation] =
@@ -129,15 +134,33 @@ const ProfileUI = () => {
   // Function to handle fetching and setting form data based on a specific key and section
   const fetchData = async (key: string, section: string, formSetter: any) => {
     try {
-      const response = await makeRequest("GET", `/api/answerbyform/${key}`);
-      const data = response?.data;
+      // const response = await makeRequest("GET", `/api/answerbyform/${key}`);
+      const response = await axios.get(`${baseUrl}/items/answers`, {
+        headers: {
+          Authorization: `Bearer ${localToken}`,
+        },
+        params: {
+          fields: "*.*,question.options.option_id.*",
+          filter: JSON.stringify({
+            user_created: userData?.userData?.id,
+            question: {
+              key: {
+                _starts_with: key,
+              },
+            },
+          }),
+          sort: "question.key",
+        },
+      });
+      const data = response?.data?.data;
+
 
       if (data) {
         data.forEach((item: any) => {
           // Check the type of question and set the value in the form
-          if (item?.question?.type === "multiple_response") {
+          if (item?.question?.question_type === "multiple_checkbox") {
             const optionIds = item?.answered_options?.map(
-              (option: any) => option?.option_id?.id
+              (option: any) => option?.option_id
             );
             formSetter(item?.id, optionIds);
           } else {
@@ -146,7 +169,7 @@ const ProfileUI = () => {
               formSetter(item?.id, item?.answer);
             } else if (item?.answered_options) {
               const optionID = item?.answered_options?.map(
-                (option: any) => option?.option_id?.id
+                (option: any) => option?.option_id
               );
               formSetter(item?.id, optionID);
             }

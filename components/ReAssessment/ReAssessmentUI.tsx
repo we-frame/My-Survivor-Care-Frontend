@@ -47,7 +47,8 @@ const ReAssessmentUI = () => {
 
     // Form submission handler
     onSubmit: async ({ value }) => {
-      console.log("Re-Assessment form values ::", value);
+      // console.log("Re-Assessment form values ::", value);
+      
 
       if (formData.inputField) {
         try {
@@ -69,7 +70,7 @@ const ReAssessmentUI = () => {
         } catch (error) {
           console.log(error);
         }
-      } else {
+      } else if (Object.entries(value).length !== 0) {
         await makeRequest("PATCH", "users/me", {
           last_assessment_date: new Date().toISOString(),
           previous_rating: previousAverageRating,
@@ -124,6 +125,8 @@ const ReAssessmentUI = () => {
         } catch (error) {
           console.log(error);
         }
+      } else {
+        router.replace("/profile");
       }
     },
   });

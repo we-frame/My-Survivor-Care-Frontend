@@ -123,8 +123,9 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                           value: option?.option_id?.id,
                         }))}
                         isRequired={true}
+                        optionObject={{...question_id}}
                       />
-                    )}
+                    )} 
                   />
                 </div>
               );
