@@ -18,7 +18,7 @@ import useUserStore from "@/store/userStore";
 import { HormonalCancer } from "@/data/hormonal-cancer-question-id";
 
 const RegisterPageUI = () => {
-  const { setUser } = useUserStore();
+  const { setUser, userData } = useUserStore();
   const [formData, setFormData] = useState<any>({
     backgroundInformation: null,
     medicalInformation: null,
@@ -32,6 +32,10 @@ const RegisterPageUI = () => {
   const router = useRouter();
   const [MenoData, setMenoData] = useState<any>(null);
   const [timerDays, setTimerDays] = useState<any>(1);
+
+  if (userData?.userData?.is_registration_completed) {
+    router.replace("/profile");
+  }
 
   useEffect(() => {
     async function fetchMenoPauseQuestions() {
