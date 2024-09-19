@@ -26,16 +26,13 @@ export function middleware(request: NextRequest) {
   }
 
   // Redirect to login if trying to access a protected route without an access token
-  if (
-    !accessToken &&
-    protectedRoutes.some((route) => path.startsWith(route))
-  ) {
+  if (!accessToken && protectedRoutes.some((route) => path.startsWith(route))) {
     return NextResponse.redirect(new URL("/login", request.nextUrl.origin));
   }
 
   // Redirect to home if logged in and trying to access login or register
-  if (accessToken && path === "/login") {
-    return NextResponse.redirect(new URL("/", request.nextUrl.origin));
+  if (accessToken && (path === "/login" || path === "/register")) {
+    return NextResponse.redirect(new URL("/profile", request.nextUrl.origin));
   }
 
   return NextResponse.next({
