@@ -88,7 +88,7 @@ const RegisterPageUI = () => {
       Object.keys(value).forEach((answerKey) => {
         Object.keys(value[answerKey]).forEach((question_id) => {
           const rawAnswer = value[answerKey][question_id];
-          try {
+         try {
             let parsedAnswer: any = JSON.parse(rawAnswer);
             if (Array.isArray(parsedAnswer)) {
               Answer.push({
@@ -109,9 +109,9 @@ const RegisterPageUI = () => {
             if (Array.isArray(rawAnswer)) {
               Answer.push({
                 question: question_id,
-                question_type: "select",
+                question_type: "multiple_checkbox",
                 answered_options: rawAnswer.map((option_id) => {
-                  return { option_id: option_id };
+                  return { option_id: option_id?.slice(2, -2) };
                 }),
               });
             } else {
