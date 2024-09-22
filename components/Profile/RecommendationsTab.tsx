@@ -24,6 +24,10 @@ const RecommendationsTab: React.FC = () => {
   const [averageRating, setAverageRating] = useState(
     userData?.userData?.latest_menopause_history?.average_rating ?? null
   );
+  const [messageRating, setMessageRating] = useState(
+    userData?.userData?.symptom_reassessment_logic?.message_rating ??
+      userData?.userData?.latest_menopause_history?.average_rating
+  );
   const [btnResponse, setBtnResponse] = useState(false);
   const { hormonal } = userData?.userData?.symptom_reassessment_logic ?? false;
   const previousRating = userData?.userData?.previous_rating ?? null;
@@ -247,26 +251,40 @@ const RecommendationsTab: React.FC = () => {
 
   const handleButtonClick = (response: any) => {
     setUserResponse(response);
-    async function PatchBtnResponse() {
+
+    // console.log(typeof averageRating, previousRating, scoreChange, "ratings");
+
+    async function PatchBtnResponse(response: string) {
+      let message_rating = averageRating.toString();
+      if (
+        response === "yes" &&
+        (scoreChange === "increase" || scoreChange === "same")
+      ) {
+        setBtnResponse(true);
+        const rating = averageRating;
+        if (rating >= 0 && rating <= 3.9) {
+          message_rating = "4";
+        }
+        if (rating >= 4 && rating <= 6.9) {
+          message_rating = "7";
+        }
+        if (rating >= 7 && rating <= 10) {
+          message_rating = "8";
+        }
+      }
+      setMessageRating(message_rating);
       await makeRequest("PATCH", "/users/me", {
         show_dedicated_support_button: false,
+        symptom_reassessment_logic: {
+          ...userData?.userData?.symptom_reassessment_logic,
+          message_rating: message_rating,
+        },
       }).then(() => {
         getUserDetails(setUser);
       });
     }
-    PatchBtnResponse();
+    PatchBtnResponse(response);
     setShowQuestion(false);
-    console.log(typeof averageRating, previousRating, scoreChange, "ratings");
-    if (
-      response === "yes" &&
-      (scoreChange === "increase" || scoreChange === "same")
-    ) {
-      setBtnResponse(true);
-      const rating = averageRating;
-      if (rating >= 0 && rating <= 3.9) setAverageRating("4");
-      if (rating >= 4 && rating <= 6.9) setAverageRating("7");
-      if (rating >= 7 && rating <= 10) setAverageRating("8");
-    }
   };
 
   // const category = getRatingCategory(averageRating);
@@ -406,9 +424,12 @@ const RecommendationsTab: React.FC = () => {
                 title={Infos[category].title}
                 className="text-xl lg:text-2xl font-semibold my-5"
               />
-              {Infos[category].subtitle}
-              {Number(averageRating ?? 0) > 3.9 &&
-                Number(averageRating ?? 0) < 7 && (
+              {
+                Infos[getRatingCategory(messageRating ?? averageRating)]
+                  .subtitle
+              }
+              {Number(messageRating ?? averageRating ?? 0) > 3.9 &&
+                Number(messageRating ?? averageRating ?? 0) < 7 && (
                   <div className="w-full lg:w-[90%] flex flex-col items-start justify-start gap-5 mt-10 ">
                     <Title
                       title={
