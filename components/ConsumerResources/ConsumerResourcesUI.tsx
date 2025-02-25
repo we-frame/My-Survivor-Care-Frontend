@@ -16,8 +16,7 @@ const ConsumerResourcesUI = () => {
         <Accordion
           title="What might cause menopause in cancer survivors?"
           className="text-2xl font-semibold"
-          groupName="consumer-resources"
-        >
+          groupName="consumer-resources">
           <div className="flex flex-col items-start justify-start gap-5">
             <p className="text-base font-normal">
               Early or induced menopause in cancer survivors means that after
@@ -31,8 +30,7 @@ const ConsumerResourcesUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Surgery
               </h1>
               <p className="text-base font-normal">
@@ -42,7 +40,7 @@ const ConsumerResourcesUI = () => {
                 removing one or both ovaries as part of the treatment to either
                 cure the cancer or lower the risk of it returning or developing
                 another cancer. When ovaries are surgically removed in cancer
-                patients who haven’t reached menopause yet, it leads to early
+                patients who haven't reached menopause yet, it leads to early
                 menopause.
               </p>
             </div>
@@ -50,8 +48,7 @@ const ConsumerResourcesUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Radiation therapy
               </h1>
               <p className="text-base font-normal">
@@ -67,8 +64,7 @@ const ConsumerResourcesUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Chemotherapy
               </h1>
               <p className="text-base font-normal">
@@ -88,8 +84,7 @@ const ConsumerResourcesUI = () => {
         <Accordion
           title="What are some symptoms of menopause after cancer?"
           className="text-2xl font-semibold"
-          groupName="consumer-resources"
-        >
+          groupName="consumer-resources">
           <div className="flex flex-col items-start justify-start gap-5">
             <p className="text-base font-normal">
               Many cancer survivors deal with bothersome symptoms like vasomotor
@@ -99,8 +94,7 @@ const ConsumerResourcesUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Vasomotor symptoms
               </h1>
               <p className="text-base font-normal">
@@ -121,8 +115,7 @@ const ConsumerResourcesUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Genitourinary syndrome of menopause (GSM)
               </h1>
               <p className="text-base font-normal">
@@ -142,13 +135,12 @@ const ConsumerResourcesUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Other symptoms
               </h1>
               <p className="text-base font-normal">
                 During menopause, many cancer survivors can also experience
-                symptoms like feeling sad,  depressed, anxiety, mood swings,
+                symptoms like feeling sad, depressed, anxiety, mood swings,
                 worry, irritability, tiredness, joint pain, fast or irregular
                 heartbeat, reduced interest in intimacy, dry skin, and
                 difficulty remembering or staying focused.
@@ -160,139 +152,136 @@ const ConsumerResourcesUI = () => {
         <Accordion
           title="How can symptoms of menopause after cancer be managed?"
           className="text-2xl font-semibold"
-          groupName="consumer-resources"
-        >
-          <div className="flex flex-col items-start justify-start gap-3">
-            <p className="text-base font-normal">
-              There are different ways to help cancer survivors manage
-              menopausal symptoms and improve their quality of life. These
-              approaches include using menopause hormone therapy, non-hormonal
-              methods, and non-medical treatments.
-            </p>
-
-            <div>
-              <h1
-                style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
-                Menopausal Hormone Therapy or Hormone Replacement Therapy
-              </h1>
+          groupName="consumer-resources">
+          <>
+            <div className="flex flex-col items-start justify-start gap-3">
               <p className="text-base font-normal">
-                Menopausal Hormone Therapy or Hormone Replacement Therapy are
-                effective for dealing with hot flushes and night sweats.
-                However, it's not recommended for paDents with cancers that rely
-                on hormones to grow, like certain breast cancers, advanced stage
-                endometrial cancers, uterine sarcoma, and low-grade serous
-                endometrial and ovarian cancer. Studies have shown that using
-                menopausal hormone therapy or hormone replacement therapy in
-                these cases might increase the risk of the cancer coming back,
-                negatively affect the chances of recovery or positive outcomes,
-                and even lead to blood clot issues.
+                There are different ways to help cancer survivors manage
+                menopausal symptoms and improve their quality of life. These
+                approaches include using menopause hormone therapy, non-hormonal
+                methods, and non-medical treatments.
               </p>
-            </div>
 
-            <div>
-              <p className="text-base font-normal">
-                For more information, visit{" "}
-                <a
-                  href="https://www.askearlymenopause.org/"
-                  target="_blank"
+              <div>
+                <h1
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
-                  www.askearlymenopause.org
-                </a>
-              </p>
-            </div>
+                  className="text-xl font-semibold">
+                  Menopausal Hormone Therapy or Hormone Replacement Therapy
+                </h1>
+                <p className="text-base font-normal">
+                  Menopausal Hormone Therapy or Hormone Replacement Therapy are
+                  effective for dealing with hot flushes and night sweats.
+                  However, it's not recommended for paDents with cancers that
+                  rely on hormones to grow, like certain breast cancers,
+                  advanced stage endometrial cancers, uterine sarcoma, and
+                  low-grade serous endometrial and ovarian cancer. Studies have
+                  shown that using menopausal hormone therapy or hormone
+                  replacement therapy in these cases might increase the risk of
+                  the cancer coming back, negatively affect the chances of
+                  recovery or positive outcomes, and even lead to blood clot
+                  issues.
+                </p>
+              </div>
 
-            <div>
-              <h1
-                style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
-                Non-hormonal medications
-              </h1>
-              <p className="text-base font-normal">
-                Since menopausal hormone therapy or hormone replacement therapy
-                may not be suitable for some women, especially those with cancer
-                sensitive to hormones, there's a growing interest in
-                non-hormonal options. Examples include antidepressants (like
-                paroxetine, fluoxetine, venlafaxine, and desvenlafaxine),
-                anticonvulsants (gabapentin and pregabalin), and an
-                antihypertensive medication called clonidine. These non-hormonal
-                options have been shown to help reduce the frequency and
-                severity of troublesome symptoms like night sweats and hot
-                flushes in cancer survivors.
-              </p>
-            </div>
+              <div>
+                <p className="text-base font-normal">
+                  For more information, visit{" "}
+                  <a
+                    href="https://www.askearlymenopause.org/"
+                    target="_blank"
+                    style={{ color: "#14b8a6" }}
+                    className="underline">
+                    www.askearlymenopause.org
+                  </a>
+                </p>
+              </div>
 
-            <div>
-              <p className="text-base font-normal">
-                For more information, visit{" "}
-                <a
-                  href="https://www.askearlymenopause.org/"
-                  target="_blank"
+              <div>
+                <h1
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
-                  www.askearlymenopause.org
-                </a>
-              </p>
+                  className="text-xl font-semibold">
+                  Non-hormonal medications
+                </h1>
+                <p className="text-base font-normal">
+                  Since menopausal hormone therapy or hormone replacement
+                  therapy may not be suitable for some women, especially those
+                  with cancer sensitive to hormones, there's a growing interest
+                  in non-hormonal options. Examples include antidepressants
+                  (like paroxetine, fluoxetine, venlafaxine, and
+                  desvenlafaxine), anticonvulsants (gabapentin and pregabalin),
+                  and an antihypertensive medication called clonidine. These
+                  non-hormonal options have been shown to help reduce the
+                  frequency and severity of troublesome symptoms like night
+                  sweats and hot flushes in cancer survivors.
+                </p>
+              </div>
+
+              <div>
+                <p className="text-base font-normal">
+                  For more information, visit{" "}
+                  <a
+                    href="https://www.askearlymenopause.org/"
+                    target="_blank"
+                    style={{ color: "#14b8a6" }}
+                    className="underline">
+                    www.askearlymenopause.org
+                  </a>
+                </p>
+              </div>
             </div>
-          </div>
+          </>
         </Accordion>
 
         <Accordion
           title="Questions to ask your doctor"
           className="text-2xl font-semibold"
-          groupName="consumer-resources"
-        >
-          <div className="flex flex-col items-start justify-start gap-5">
-            <div>
-              <p className="text-base font-normal">
-                Sometimes, it can be hard to talk to your general practitioner
-                (GP) about menopause symptoms, especially those related to
-                changes in libido, vaginal dryness, and pain during and after
-                sex, as these topics are sensitive. There might be challenges in
-                getting a GP appointment, and even if you do, the Dme for
-                discussion during the appointment can be limited. To make the
-                most of your appointment with your GP, we've provided links to
-                additional resources with helpful, straightforward tips and
-                questions you can ask during your appointment.
-              </p>
-            </div>
-            <div>
-              <p className="text-base font-normal">
-                Remember that not all the information on the websites may be
-                relevant to you. We suggest modifying or noting down the tips
-                that apply to your situation and add them to the reports from
-                our website.
-              </p>
-            </div>
+          groupName="consumer-resources">
+          <>
+            <div className="flex flex-col items-start justify-start gap-5">
+              <div>
+                <p className="text-base font-normal">
+                  Sometimes, it can be hard to talk to your general practitioner
+                  (GP) about menopause symptoms, especially those related to
+                  changes in libido, vaginal dryness, and pain during and after
+                  sex, as these topics are sensitive. There might be challenges
+                  in getting a GP appointment, and even if you do, the Dme for
+                  discussion during the appointment can be limited. To make the
+                  most of your appointment with your GP, we've provided links to
+                  additional resources with helpful, straightforward tips and
+                  questions you can ask during your appointment.
+                </p>
+              </div>
+              <div>
+                <p className="text-base font-normal">
+                  Remember that not all the information on the websites may be
+                  relevant to you. We suggest modifying or noting down the tips
+                  that apply to your situation and add them to the reports from
+                  our website.
+                </p>
+              </div>
 
-            <div>
-              <p className="text-base font-normal">
-                <a
-                  href="https://www.askearlymenopause.org/"
-                  target="_blank"
-                  style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
-                  www.askearlymenopause.org
-                </a>
-              </p>
-              <p className="text-base font-normal">
-                <a
-                  href="https://henpicked.net/"
-                  target="_blank"
-                  style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
-                  https://henpicked.net
-                </a>
-              </p>
+              <div>
+                <p className="text-base font-normal">
+                  <a
+                    href="https://www.askearlymenopause.org/"
+                    target="_blank"
+                    style={{ color: "#14b8a6" }}
+                    className="underline">
+                    www.askearlymenopause.org
+                  </a>
+                </p>
+                <p className="text-base font-normal">
+                  <a
+                    href="https://henpicked.net/"
+                    target="_blank"
+                    style={{ color: "#14b8a6" }}
+                    className="underline">
+                    https://henpicked.net
+                  </a>
+                </p>
+              </div>
             </div>
-          </div>
+          </>
         </Accordion>
       </div>
     </div>
