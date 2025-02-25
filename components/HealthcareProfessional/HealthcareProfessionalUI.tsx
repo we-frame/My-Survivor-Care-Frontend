@@ -12,7 +12,7 @@ const HealthcareProfessionalUI = () => {
         className="text-4xl font-semibold"
       />
 
-      <div className="flex flex-col items-start justify-start gap-4">
+      <div className="flex flex-col items-start justify-start gap-4 w-full">
         <Accordion
           title="Find an Australasian Menopause Society Doctor"
           className="text-2xl font-semibold"

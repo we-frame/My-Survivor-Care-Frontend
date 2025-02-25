@@ -14,12 +14,11 @@ const PractitionerResourcesUI = () => {
         className="text-4xl font-semibold"
       />
 
-      <div className="flex flex-col items-start justify-start gap-4">
+      <div className="flex flex-col items-start justify-start gap-4 w-full">
         <Accordion
           title="The Practitioner’s Toolkit for the Management of Menopause"
           className="text-2xl font-semibold"
-          groupName="practitioner-resources"
-        >
+          groupName="practitioner-resources">
           <div className="flex flex-col items-start justify-start gap-3">
             <p className="text-base font-normal">
               The Practitioner's Toolkit for Managing Menopause was created by
@@ -36,8 +35,7 @@ const PractitionerResourcesUI = () => {
                   href="https://www.menopause.org.au/"
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   www.menopause.org.au
                 </a>
               </p>
@@ -54,8 +52,7 @@ const PractitionerResourcesUI = () => {
                       Management of Menopause” to read more
                     </p>
                   </div>
-                }
-              >
+                }>
                 <CircleHelp
                   color="#374151"
                   size={20}
@@ -69,8 +66,7 @@ const PractitionerResourcesUI = () => {
         <Accordion
           title="Forms of treatment"
           className="text-2xl font-semibold"
-          groupName="practitioner-resources"
-        >
+          groupName="practitioner-resources">
           <div className="flex flex-col items-start justify-start gap-5">
             <div>
               <p className="text-base font-normal">
@@ -85,8 +81,7 @@ const PractitionerResourcesUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Menopausal hormone therapies
               </h1>
               <p className="text-base font-normal">
@@ -107,8 +102,7 @@ const PractitionerResourcesUI = () => {
                   href="https://www.menopause.org.au/"
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   www.menopause.org.au
                 </a>
               </p>
@@ -117,8 +111,7 @@ const PractitionerResourcesUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Menopausal hormone therapies
               </h1>
               <p className="text-base font-normal">
@@ -141,8 +134,7 @@ const PractitionerResourcesUI = () => {
                   href=""
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   here
                 </a>
               </p>
@@ -153,8 +145,7 @@ const PractitionerResourcesUI = () => {
         <Accordion
           title="Evidence and dosages on treatments"
           className="text-2xl font-semibold"
-          groupName="practitioner-resources"
-        >
+          groupName="practitioner-resources">
           <div className="flex flex-col items-start justify-start gap-3">
             <p className="text-base font-normal">
               This fact sheet was created by the Royal Women’s Hospital in
@@ -171,8 +162,7 @@ const PractitionerResourcesUI = () => {
                   href="https://www.thewomens.org.au/"
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   www.thewomens.org.au{" "}
                 </a>
                 or download from{" "}
@@ -180,8 +170,7 @@ const PractitionerResourcesUI = () => {
                   href=""
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   here
                 </a>
               </p>
@@ -192,14 +181,12 @@ const PractitionerResourcesUI = () => {
         <Accordion
           title="Deciding about hormone therapy use"
           className="text-2xl font-semibold"
-          groupName="practitioner-resources"
-        >
+          groupName="practitioner-resources">
           <div className="flex flex-col items-start justify-start gap-5">
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Managing menopause after cancer
               </h1>
               <div>
@@ -229,8 +216,7 @@ const PractitionerResourcesUI = () => {
                     href=""
                     target="_blank"
                     style={{ color: "#14b8a6" }}
-                    className="underline"
-                  >
+                    className="underline">
                     here
                   </a>
                 </li>
@@ -240,8 +226,7 @@ const PractitionerResourcesUI = () => {
             <div>
               <h1
                 style={{ color: "#14b8a6" }}
-                className="text-xl font-semibold"
-              >
+                className="text-xl font-semibold">
                 Deciding About Hormone Therapy Use
               </h1>
               <p className="text-base font-normal">
@@ -253,8 +238,7 @@ const PractitionerResourcesUI = () => {
                   href=""
                   target="_blank"
                   style={{ color: "#14b8a6" }}
-                  className="underline"
-                >
+                  className="underline">
                   here
                 </a>
               </p>

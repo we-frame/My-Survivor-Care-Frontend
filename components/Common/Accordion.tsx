@@ -29,9 +29,12 @@ const Accordion = ({
       className="w-full ">
       <AccordionItem
         value={accordionId}
-        className="rounded-[var(--radius)] bg-base-200">
+        className="rounded-[var(--radius)] bg-base-200 w-full">
         <AccordionTrigger
-          className={cn("flex justify-between py-4 px-4 group", className)}>
+          className={cn(
+            "flex justify-between py-4 px-4 group !w-full",
+            className
+          )}>
           {title}
         </AccordionTrigger>
         <AccordionContent className="px-4 pb-4 pt-0">
