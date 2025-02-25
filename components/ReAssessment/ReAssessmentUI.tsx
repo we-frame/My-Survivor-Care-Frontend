@@ -166,8 +166,8 @@ const ReAssessmentUI = () => {
           className="text-4xl font-semibold"
         />
         <p className="text-base font-normal">
-          This tool helps you check if the methods you have been using to manage
-          your symptoms are working for you.
+          This tool helps you check if the method(s) you have been using to
+          manage your symptoms are working for you.
         </p>
         <p className="text-base font-normal">
           For the best results, use this tool after trying out the
@@ -287,7 +287,7 @@ const ReAssessmentUI = () => {
                     <div className="label">
                       <span className="label-text font-normal">
                         Please tell us why you did not follow the previous
-                        recommendation?
+                        recommendation most of the time?
                       </span>
                     </div>
 

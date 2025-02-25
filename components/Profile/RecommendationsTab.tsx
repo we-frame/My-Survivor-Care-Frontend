@@ -181,14 +181,14 @@ const RecommendationsTab: React.FC = () => {
     decrease: {
       "0-3.9": {
         message:
-          "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has decreased from moderate to mild. Now, you can choose to self-manage your symptoms and/or continue working with your GP.",
+          "Thank you for using this reassessment tool.Your answers indicate that the impact of your symptoms has decreased from a quite disruptive and uncomfortable state to mildly disruptive.  Now, you can choose to self-manage your symptoms and/or continue working with your GP.",
         question: "Do you want to self-manage your symptoms now?",
         noResponse:
           "Thanks for using this reassessment tool. We hope you continue working with your GP to manage your symptoms.",
       },
       "4-6.9": {
         message:
-          "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has decreased from severe to moderate. Your GP may be able to take over managing your symptoms. You could ask your specialist to transfer your care to your GP or, you can continue with the current management plan with your specialists.",
+          "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has decreased from highly disruptive to quite disruptive. Your GP may be able to take over managing your symptoms. You could ask your specialist to transfer your care to your GP or, you can continue with the current management plan with your specialists.",
         question: "Do you want to self-manage your symptoms now?",
         noResponse:
           "Thanks for using the reassessment tool. We hope you continue working with your specialist to reduce the impact of your symptoms.",
@@ -197,19 +197,13 @@ const RecommendationsTab: React.FC = () => {
     increase: {
       "4-6.9": {
         message:
-          "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has shifted from mild to moderate. We recommend more dedicated support.",
+          "Thank you for using this reassessment tool. Your answers indicate that the impact of your symptoms has shifted from bit of an impact to quite an uncomfortable level. We recommend more dedicated support.",
         question: "Do you want more dedicated support?",
         noResponse:
           "Thanks for using the reassessment tool. We advise that you keep practicing the self-management tips to help reduce the impact of your symptoms.",
       },
       "7-10": {
-        message: `Thank you for using this reassessment tool. Your answers suggest that the impact of your symptoms has shifted from ${
-          previousRating < 4
-            ? "mild"
-            : previousRating < 7
-            ? "moderate"
-            : "severe"
-        } to severe. We recommend seeking additional support.`,
+        message: `Thank you for using this reassessment tool. Your answers suggest that the impact of your symptoms has shifted from quite a disruptive level to a more noticeable impact. We recommend seeking additional support.`,
         question: "Do you want more dedicated support?",
         noResponse:
           "Thanks for using the reassessment tool. We advise that you keep practicing the self-management tips to help reduce the impact of your symptoms.",
@@ -218,7 +212,7 @@ const RecommendationsTab: React.FC = () => {
     same: {
       "0-3.9": {
         message:
-          "Thank you for using this reassessment tool. Your answers show that the impact of your symptoms remains mild. We suggest continuing with your current self-management. If you feel this is not working for you, you could seek more dedicated support.",
+          "Thank you for using this reassessment tool. Your answers show that your symptoms continue to have a bit of an impact on your daily life but are not too disruptive. We suggest continuing with your current self-management. If you feel this is not working for you, you could seek more dedicated support.",
         question: "Do you want more dedicated support?",
         onYesTitle: "Moderate symptoms",
       },
@@ -230,7 +224,7 @@ const RecommendationsTab: React.FC = () => {
       },
       "7-10": {
         message:
-          "Thank you for using this reassessment tool. Your answers suggest that the impact of your symptoms remains severe. We recommend continuing what you are doing with your specialist.",
+          "Thank you for using this reassessment tool. Your answers suggest that your symptoms continue to have a high impact. This means that they are causing noticeable disruptions to your daily life.  We recommend continuing what you are doing with your specialist.",
         question:
           "Have you visited a specialist menopause after cancer clinic?",
         yesResponse:
@@ -330,20 +324,20 @@ const RecommendationsTab: React.FC = () => {
         </div>
         <div>
           <Accordion
-            title="About your score"
+            title={`About your score: ${category}`}
             className="text-sm font-bold"
             // defaultChecked
           >
             <div className="w-full flex flex-col gap-3">
               <p className="text-xs font-normal">
-                This result is based on the tool you used to assess how your
-                menopause symptoms interfere with your daily life. Based on your
-                answers, your symptoms have this level of interference.
+                Thank you for using this tool to assess how your menopause
+                symptoms affect your daily life. This result is based on the
+                answers you provided for each question.
               </p>
               <p className="text-xs font-normal">
                 Each option selected has a score of 0-10. To find out how your
                 symptoms affect your life, we added the scores for each answer
-                and divided them by the number of questions.
+                and divided them by the number of questions (=10).
               </p>
             </div>
           </Accordion>
