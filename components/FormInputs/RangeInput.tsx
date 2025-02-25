@@ -24,8 +24,7 @@ const RangeInput = ({
       className={cn(
         containerClassName,
         "w-full flex flex-col lg:flex-row items-start justify-start gap-10"
-      )}
-    >
+      )}>
       {(label || subLabel) && (
         <div className="w-full lg:w-[35%]">
           {label && <Title title={label} className="text-sm font-semibold" />}
@@ -59,10 +58,16 @@ const RangeInput = ({
           />
         )}
 
-        <div className="w-full flex justify-between text-xs px-1">
-          {rangeLabels.map((label) => (
-            <span key={label}>{label}</span>
-          ))}
+        <div className=" text-xs px-1">
+          <div className="w-full flex justify-between">
+            {rangeLabels.map((label) => (
+              <span key={label}>{label}</span>
+            ))}
+          </div>
+          <div className="w-full flex justify-between font-semibold text-black/50 ">
+            <p>Do not impact</p>
+            <p>Complete impact</p>
+          </div>
         </div>
       </div>
     </div>
