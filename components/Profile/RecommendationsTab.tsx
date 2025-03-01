@@ -43,7 +43,10 @@ const RecommendationsTab: React.FC = () => {
         userData?.userData?.latest_menopause_history?.average_rating ?? null
       );
     }
-    setShowQuestion(userData?.userData?.show_dedicated_support_button ?? true);
+    setShowQuestion(
+      (userData?.userData?.show_dedicated_support_button ?? true) &&
+        !!userData?.userData?.previous_rating
+    );
   }, [userData]);
 
   useEffect(() => {
