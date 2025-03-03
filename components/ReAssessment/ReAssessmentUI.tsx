@@ -4,18 +4,32 @@ import { useForm } from "@tanstack/react-form";
 import React, { FormEvent, useEffect, useState } from "react";
 import Title from "../Common/Title";
 import { cn } from "@/lib/utils";
-import { makeRequest } from "@/lib/api";
 import MenopauseReAssessment from "./MenopauseReAssessment";
-import useUserStore from "@/store/userStore";
-import { getUserDetails } from "@/lib/getUserAPI";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/hooks/useUser";
+import { useAssessment } from "@/hooks/useAssessment";
 
 const ReAssessmentUI = () => {
-  const { setUser, userData } = useUserStore(); // Get the setUser function from the store
+  // Use React Query hooks
+  const { user, updateProfile } = useUser();
+  const {
+    getQuestions,
+    getConfig,
+    submitAnswers,
+    submitMenopauseHistory
+  } = useAssessment();
+  
+  // Get config data for timer days
+  const { data: configData } = getConfig();
+  const timerDays = configData?.assessment_duration || 1;
+  
+  // Get assessment questions
+  const { data: assessmentData, isLoading: questionsLoading } = getQuestions('MA');
+  
   const previousAverageRating: number | null =
-    userData?.userData?.latest_menopause_history?.average_rating ?? null;
-  const [timerDays, setTimerDays] = useState(1);
+    user?.latest_menopause_history?.average_rating ?? null;
+    
   const [formDataAPI, setFormDataAPI] = useState<any>({
     menopauseAssessment: null,
   });
@@ -28,18 +42,16 @@ const ReAssessmentUI = () => {
   });
 
   const router = useRouter();
-
+  
+  // Update formDataAPI when assessment data is loaded
   useEffect(() => {
-    const getTimerDays = async () => {
-      try {
-        const data = await makeRequest("GET", "/items/config");
-        setTimerDays(data?.data?.assessment_duration);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getTimerDays();
-  }, []);
+    if (assessmentData) {
+      setFormDataAPI((prev: any) => ({
+        ...prev,
+        menopauseAssessment: assessmentData,
+      }));
+    }
+  }, [assessmentData]);
 
   // Initializing form with default values and submission handler
   const form = useForm<any>({
@@ -47,19 +59,17 @@ const ReAssessmentUI = () => {
 
     // Form submission handler
     onSubmit: async ({ value }) => {
-      // console.log("Re-Assessment form values ::", value);
-      
-
       if (formData.inputField) {
         try {
-          await makeRequest("POST", "/items/answers", {
+          // Submit the answer using React Query
+          await submitAnswers.mutateAsync([{
             question: "84314be2-1bcc-4045-a42c-37e2faf35231",
             question_type: "input",
             answer: formData.inputField,
-          });
-          // return console.log(previousAverageRating, "previousAverageRating");
+          }]);
 
-          await makeRequest("PATCH", "/users/me", {
+          // Update user profile
+          await updateProfile.mutateAsync({
             last_assessment_date: new Date().toISOString(),
             previous_rating: previousAverageRating,
           });
@@ -69,61 +79,64 @@ const ReAssessmentUI = () => {
           toast.success("Re-Assessment form submitted successfully!");
         } catch (error) {
           console.log(error);
+          toast.error("Failed to submit assessment");
         }
       } else if (Object.entries(value).length !== 0) {
-        await makeRequest("PATCH", "users/me", {
-          last_assessment_date: new Date().toISOString(),
-          previous_rating: previousAverageRating,
-        });
-
-        const parameterRating: any = [];
-        var counter = 0;
-        var ratingSum = 0;
-        Object.keys(value).forEach((title) => {
-          counter++;
-          ratingSum = ratingSum + parseInt(value[title]);
-
-          parameterRating.push({
-            title: title,
-            rating: value[title],
-          });
-        });
-
-        const averageRating = ratingSum / counter;
-
-        const requestBody = {
-          menopause_history_id: {
-            average_rating: averageRating,
-            parameter_rating: parameterRating,
-          },
-        };
-
         try {
-          await makeRequest(
-            "POST",
-            "/items/junction_directus_users_menopause_history",
-            requestBody
-          );
+          // Update user profile with previous rating
+          await updateProfile.mutateAsync({
+            last_assessment_date: new Date().toISOString(),
+            previous_rating: previousAverageRating,
+          });
 
+          // Calculate parameter ratings and average
+          const parameterRating: any = [];
+          let counter = 0;
+          let ratingSum = 0;
+          
+          Object.keys(value).forEach((title) => {
+            counter++;
+            ratingSum = ratingSum + parseInt(value[title]);
+
+            parameterRating.push({
+              title: title,
+              rating: value[title],
+            });
+          });
+
+          const averageRating = ratingSum / counter;
+
+          // Create request body for menopause history
+          const requestBody = {
+            menopause_history_id: {
+              average_rating: averageRating,
+              parameter_rating: parameterRating,
+            },
+          };
+
+          // Submit menopause history
+          await submitMenopauseHistory.mutateAsync(requestBody);
+
+          // Calculate next assessment date
           let next_assessment_date = new Date();
           next_assessment_date.setDate(
             next_assessment_date.getDate() + timerDays
           );
 
-          await makeRequest("PATCH", "/users/me", {
+          // Update user profile with new data
+          await updateProfile.mutateAsync({
             last_assessment_date: new Date().toISOString(),
             next_assessment_date: next_assessment_date.toISOString(),
             latest_menopause_history: requestBody?.menopause_history_id,
             show_dedicated_support_button: true,
           });
 
-          getUserDetails(setUser);
-
           // Redirect to the home page after successful form submission
           router.replace("/profile");
           toast.success("Re-Assessment form submitted successfully!");
         } catch (error) {
           console.log(error);
+          toast.error("Failed to submit assessment");
         }
       } else {
         router.replace("/profile");
@@ -139,24 +152,10 @@ const ReAssessmentUI = () => {
     }));
   };
 
-  const fetchData = async (key: string, section: any) => {
-    try {
-      const response = await makeRequest(
-        "GET",
-        `/items/form?filter={"key": {"_eq": "${key}"}}&fields=*,form_components.*,form_components.question_id.*,form_components.question_id.options.*,form_components.question_id.options.option_id.*`
-      );
-      setFormDataAPI((prev: any) => ({
-        ...prev,
-        [section]: response?.data[0],
-      }));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData("MA", "menopauseAssessment");
-  }, []);
+  // Show loading state while data is being fetched
+  if (questionsLoading) {
+    return <div className="mt-5 lg:mt-10">Loading assessment data...</div>;
+  }
 
   return (
     <div className="mt-5 lg:mt-10">
@@ -172,7 +171,7 @@ const ReAssessmentUI = () => {
         <p className="text-base font-normal">
           For the best results, use this tool after trying out the
           recommendations from your previous assessment. Based on your score,
-          you'll be guided to either keep doing what you’re doing or think about
+          you'll be guided to either keep doing what you're doing or think about
           trying something else.
         </p>
       </div>

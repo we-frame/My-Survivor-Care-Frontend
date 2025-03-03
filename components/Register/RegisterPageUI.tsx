@@ -9,70 +9,60 @@ import { useForm } from "@tanstack/react-form";
 import { cn } from "@/lib/utils";
 import MedicalInformation from "./MedicalInformation";
 import MenopauseAssessment from "./MenopauseAssessment";
-import { makeRequest } from "@/lib/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import Cookie from "js-cookie";
-import { getUserDetails } from "@/lib/getUserAPI";
 import useUserStore from "@/store/userStore";
 import { HormonalCancer } from "@/data/hormonal-cancer-question-id";
+import { useRegistration } from "@/hooks/useRegistration";
+import { useUser } from "@/hooks/useUser";
 
 const RegisterPageUI = () => {
-  const { setUser, userData } = useUserStore();
-  const [formData, setFormData] = useState<any>({
-    backgroundInformation: null,
-    medicalInformation: null,
-    menopauseAssessment: null,
-  });
+  const { user, refetch: refetchUser } = useUser();
+  const {
+    getFormData,
+    getMenopauseQuestions,
+    getConfig,
+    submitAnswers,
+    updateUserProfile,
+    submitMenopauseHistory,
+  } = useRegistration();
 
   const params = useSearchParams();
   const uData: any = params.get("u");
   const encodedNewUserData = atob(uData);
   const [privacy, setPrivacy] = useState<any>(false);
   const router = useRouter();
-  const [MenoData, setMenoData] = useState<any>(null);
-  const [timerDays, setTimerDays] = useState<any>(1);
 
-  if (userData && userData?.userData?.is_registration_completed) {
+  // Get config data for timer days
+  const { data: configData } = getConfig();
+  const timerDays = configData?.data?.assessment_duration || 1;
+
+  // Get menopause questions
+  const { data: menoQuestions } = getMenopauseQuestions();
+  const MenoData = menoQuestions?.data?.[0]?.form_components?.reduce(
+    (acc: any, component: any) => {
+      const { id, question } = component.question_id;
+      acc[id] = question;
+      return acc;
+    },
+    {}
+  );
+
+  // Get form data for different sections
+  const { data: backgroundData } = getFormData("RBI");
+  const { data: medicalData } = getFormData("MI");
+  const { data: assessmentData } = getFormData("MA");
+
+  const formData = {
+    backgroundInformation: backgroundData?.data?.[0],
+    medicalInformation: medicalData?.data?.[0],
+    menopauseAssessment: assessmentData?.data?.[0],
+  };
+
+  if (user?.is_registration_completed) {
     router.replace("/profile");
   }
-
-  useEffect(() => {
-    async function fetchMenoPauseQuestions() {
-      try {
-        const { data } = await makeRequest(
-          "GET",
-          "/items/form?filter[title][_contains]=Menopause&fields=form_components.question_id.question,Menopause&fields=form_components.question_id.id"
-        );
-        // console.log(data?.[0]?.form_components, "meno");
-        const QuestionsArray = data?.[0]?.form_components?.reduce(
-          (acc: any, component: any) => {
-            const { id, question } = component.question_id;
-            acc[id] = question; // Setting id as the key and question as the value
-            return acc;
-          },
-          {}
-        );
-
-        setMenoData(QuestionsArray);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchMenoPauseQuestions();
-  }, []);
-
-  useEffect(() => {
-    const getTimerDays = async () => {
-      try {
-        const data = await makeRequest("GET", "/items/config");
-        setTimerDays(data?.data?.assessment_duration);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getTimerDays();
-  }, []);
 
   // Initializing form with default values and submission handler
   const form = useForm<any>({
@@ -84,143 +74,122 @@ const RegisterPageUI = () => {
 
     // Form submission handler
     onSubmit: async ({ value }) => {
-      const Answer: any = [];
-      Object.keys(value).forEach((answerKey) => {
-        Object.keys(value[answerKey]).forEach((question_id) => {
-          const rawAnswer = value[answerKey][question_id];
-         try {
-            let parsedAnswer: any = JSON.parse(rawAnswer);
-            if (Array.isArray(parsedAnswer)) {
-              Answer.push({
-                question: question_id,
-                question_type: "select",
-                answered_options: parsedAnswer.map((option_id) => {
-                  return { option_id: option_id };
-                }),
-              });
-            } else {
-              Answer.push({
-                question: question_id,
-                question_type: "range",
-                answer: parsedAnswer,
-              });
-            }
-          } catch (error) {
-            if (Array.isArray(rawAnswer)) {
-              Answer.push({
-                question: question_id,
-                question_type: "multiple_checkbox",
-                answered_options: rawAnswer.map((option_id) => {
-                  return { option_id: option_id?.slice(2, -2) };
-                }),
-              });
-            } else {
-              Answer.push({
-                question: question_id,
-                question_type: "input",
-                answer: rawAnswer,
-              });
-            }
-          }
-        });
-      });
-
-      if (encodedNewUserData) {
-        if (privacy) {
-          try {
-            await makeRequest("POST", `/items/answers`, Answer);
-            const isHormonalCancer = Answer.some((answer: any) => {
-              return (
-                answer.question_type === "select" &&
-                HormonalCancer.includes(answer.answered_options[0].option_id)
-              );
-            });
-            await makeRequest("PATCH", "/users/me", {
-              last_assessment_date: new Date().toISOString(),
-              is_registration_completed: true,
-              symptom_reassessment_logic: { hormonal: isHormonalCancer },
-            });
-
-            const parameterRating: any = [];
-            var counter = 0;
-            var ratingSum = 0;
-            Object.keys(value.MenopauseAssessment).forEach((title) => {
-              counter++;
-              ratingSum =
-                ratingSum + parseInt(value.MenopauseAssessment[title]);
-
-              parameterRating.push({
-                title: MenoData[title] ?? title,
-                rating: value.MenopauseAssessment[title],
-              });
-            });
-
-            const averageRating = ratingSum / counter;
-
-            const requestBody = {
-              menopause_history_id: {
-                average_rating: averageRating,
-                parameter_rating: parameterRating,
-              },
-            };
-
-            try {
-              await makeRequest(
-                "POST",
-                "/items/junction_directus_users_menopause_history",
-                requestBody
-              );
-
-              let next_assessment_date = new Date();
-              next_assessment_date.setDate(
-                next_assessment_date.getDate() + timerDays
-              );
-
-              await makeRequest("PATCH", "/users/me", {
-                last_assessment_date: new Date().toISOString(),
-                latest_menopause_history: requestBody?.menopause_history_id,
-                next_assessment_date: next_assessment_date.toISOString(),
-                show_dedicated_support_button: true,
-              });
-
-              getUserDetails(setUser);
-            } catch (error) {
-              console.log("menopause_history_update:", error);
-            }
-
-            Cookie.remove("google-auth-userData");
-            router.push("/profile");
-            toast.success("Registration successful!");
-          } catch (error) {
-            console.log(error);
-          }
-        } else {
-          toast.error("Please check privacy policy");
-        }
-      } else {
+      if (!encodedNewUserData) {
         toast.error("Please choose a sign-in method!");
+        return;
       }
-      console.log("Register form values ::", value);
+
+      if (!privacy) {
+        toast.error("Please check privacy policy");
+        return;
+      }
+
+      try {
+        const Answer: any = [];
+        Object.keys(value).forEach((answerKey) => {
+          Object.keys(value[answerKey]).forEach((question_id) => {
+            const rawAnswer = value[answerKey][question_id];
+            try {
+              let parsedAnswer: any = JSON.parse(rawAnswer);
+              if (Array.isArray(parsedAnswer)) {
+                Answer.push({
+                  question: question_id,
+                  question_type: "select",
+                  answered_options: parsedAnswer.map((option_id) => ({
+                    option_id: option_id,
+                  })),
+                });
+              } else {
+                Answer.push({
+                  question: question_id,
+                  question_type: "range",
+                  answer: parsedAnswer,
+                });
+              }
+            } catch (error) {
+              if (Array.isArray(rawAnswer)) {
+                Answer.push({
+                  question: question_id,
+                  question_type: "multiple_checkbox",
+                  answered_options: rawAnswer.map((option_id) => ({
+                    option_id: option_id?.slice(2, -2),
+                  })),
+                });
+              } else {
+                Answer.push({
+                  question: question_id,
+                  question_type: "input",
+                  answer: rawAnswer,
+                });
+              }
+            }
+          });
+        });
+
+        // Submit answers
+        await submitAnswers.mutateAsync(Answer);
+
+        const isHormonalCancer = Answer.some(
+          (answer: any) =>
+            answer.question_type === "select" &&
+            HormonalCancer.includes(answer.answered_options[0].option_id)
+        );
+
+        // Update user profile
+        await updateUserProfile.mutateAsync({
+          last_assessment_date: new Date().toISOString(),
+          is_registration_completed: true,
+          symptom_reassessment_logic: { hormonal: isHormonalCancer },
+        });
+
+        // Calculate ratings
+        const parameterRating: any = [];
+        let counter = 0;
+        let ratingSum = 0;
+        Object.keys(value.MenopauseAssessment).forEach((title) => {
+          counter++;
+          ratingSum += parseInt(value.MenopauseAssessment[title]);
+
+          parameterRating.push({
+            title: MenoData?.[title] ?? title,
+            rating: value.MenopauseAssessment[title],
+          });
+        });
+
+        const averageRating = ratingSum / counter;
+        const requestBody = {
+          menopause_history_id: {
+            average_rating: averageRating,
+            parameter_rating: parameterRating,
+          },
+        };
+
+        // Submit menopause history
+        await submitMenopauseHistory.mutateAsync(requestBody);
+
+        // Update user profile with assessment dates
+        let next_assessment_date = new Date();
+        next_assessment_date.setDate(next_assessment_date.getDate() + timerDays);
+
+        await updateUserProfile.mutateAsync({
+          last_assessment_date: new Date().toISOString(),
+          latest_menopause_history: requestBody?.menopause_history_id,
+          next_assessment_date: next_assessment_date.toISOString(),
+          show_dedicated_support_button: true,
+        });
+
+        // Refetch user data
+        await refetchUser();
+
+        Cookie.remove("google-auth-userData");
+        router.push("/profile");
+        toast.success("Registration successful!");
+      } catch (error) {
+        console.error("Registration error:", error);
+        toast.error("An error occurred during registration");
+      }
     },
   });
-
-  const fetchData = async (key: string, section: any) => {
-    try {
-      const response = await makeRequest(
-        "GET",
-        `/items/form?filter={"key": {"_eq": "${key}"}}&fields=*,form_components.*,form_components.question_id.*,form_components.question_id.options.*,form_components.question_id.options.option_id.*,form_components.question_id.options.option_id.questions.*.*.*`
-      );
-      setFormData((prev: any) => ({ ...prev, [section]: response?.data[0] }));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData("RBI", "backgroundInformation");
-    fetchData("MI", "medicalInformation");
-    fetchData("MA", "menopauseAssessment");
-  }, []);
 
   return (
     <div className="mt-5 lg:mt-10">
@@ -254,27 +223,16 @@ const RegisterPageUI = () => {
           form={form}
           formData={formData.menopauseAssessment}
         />
-
-        <div className="w-full flex items-center justify-center">
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit, isSubmitting]) => (
-              <button
-                style={{
-                  backgroundColor: "#14b8a6",
-                }}
-                className={cn(
-                  "border rounded-lg px-5 py-3 text-white",
-                  !canSubmit &&
-                    "bg-green-300 text-black disabled:cursor-not-allowed"
-                )}
-                type="submit"
-                disabled={!canSubmit}>
-                {isSubmitting ? "Loading..." : "Create my profile"}
-              </button>
-            )}
-          />
-        </div>
+        <button
+          type="submit"
+          className={cn(
+            "w-full bg-[#14b8a6] text-white py-2 rounded-lg mt-4",
+            "hover:bg-[#0f9488] transition-colors duration-200",
+            "disabled:bg-gray-400 disabled:cursor-not-allowed"
+          )}
+          disabled={!privacy}>
+          Submit
+        </button>
       </form>
     </div>
   );
