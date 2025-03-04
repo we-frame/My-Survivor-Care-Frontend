@@ -68,6 +68,7 @@ export default function Question({
                     placeholder={question?.question}
                     type={question?.input_datatype}
                     bottomText={question?.description}
+                    tooltip={question?.tooltip}
                   />
                 );
 
@@ -80,6 +81,7 @@ export default function Question({
                     options={options}
                     isRequired={true}
                     optionObject={question?.options}
+                    tooltip={question?.tooltip}
                   />
                 );
 
@@ -94,6 +96,7 @@ export default function Question({
                     placeholder={question?.question}
                     isRequired={question?.required}
                     bottomText={question?.bottomText}
+                    tooltip={question?.tooltip}
                   />
                 );
             }

@@ -1,6 +1,7 @@
 import React from "react";
 import TextInput from "../FormInputs/TextInput";
 import SelectInput from "../FormInputs/SelectInput";
+import { CustomTooltip } from "../Common/render-html";
 
 interface BackgroundInformationTabsTypes {
   form?: any;
@@ -38,6 +39,7 @@ const BackgroundInformationTab = ({
                       type={question?.input_datatype}
                       // bottomText={question?.description}
                       isDisabled={!editBackgroundInfo}
+                      tooltip={question?.tooltip}
                     />
                   )}
                 />
@@ -62,6 +64,7 @@ const BackgroundInformationTab = ({
                       bottomText={question?.description}
                       // defaultValue={"Hello"}
                       isDisabled={!editBackgroundInfo}
+                      tooltip={question?.tooltip}
                     />
                   )}
                 />
