@@ -9,6 +9,8 @@ import { getUserDetails } from "@/lib/getUserAPI";
 import { moderateText } from "@/data/moderate-symptom-text";
 import RichText from "../Common/RichText";
 import { ProfileActions } from "@/data/profile-button-actions";
+import { Tooltip } from "@radix-ui/react-tooltip";
+import { CustomTooltip } from "../Common/render-html";
 
 const getRatingCategory = (rating: any) => {
   if (rating >= 0 && rating <= 3.9) return "0-3.9";
@@ -152,13 +154,19 @@ const RecommendationsTab: React.FC = () => {
                     rel="noopener noreferrer"
                     className="underline text-violet-600">
                     www.kemh.health.wa.gov.au
-                  </a>
-                  .
+                  </a>{" "}
+                  <CustomTooltip>
+                    <span>
+                      From the home page, click on "Women's Health", and from
+                      the dropdown list, click on "Menopause Services" to access
+                      the contact details.
+                    </span>
+                  </CustomTooltip>
                 </p>
               </li>
               <li className="list-decimal">
                 <p>
-                  The Royal Women’s Hospital - The Menopause Symptoms After
+                  The Royal Women's Hospital - The Menopause Symptoms After
                   Cancer Clinic
                 </p>
                 <p>
@@ -169,8 +177,15 @@ const RecommendationsTab: React.FC = () => {
                     rel="noopener noreferrer"
                     className="underline text-violet-600">
                     www.thewomens.org.au
-                  </a>
-                  .
+                  </a>{" "}
+                  <CustomTooltip>
+                    <span>
+                      From the home page, click on "Patients & visitors", and
+                      select "Clinics and services". Scroll down to click on
+                      "Menopause" and select "Menopause symptoms after cancer"
+                      to access the contact details.
+                    </span>
+                  </CustomTooltip>
                 </p>
               </li>
             </ol>
