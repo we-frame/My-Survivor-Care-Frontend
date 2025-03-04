@@ -5,7 +5,7 @@ import { type ReactNode } from "react";
 import Link from "next/link";
 // Adjust the import path
 
-function CustomTooltip({ children }: { children: ReactNode }) {
+export function CustomTooltip({ children }: { children: ReactNode }) {
   return (
     <Tooltip content={children}>
       <CircleHelp color="#374151" size={20} className="cursor-pointer -mb-1" />
