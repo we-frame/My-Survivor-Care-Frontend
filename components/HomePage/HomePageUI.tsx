@@ -48,14 +48,14 @@ const HomePageUI = () => {
           </h1>
 
           <p className="text-base xl:text-xl font-normal">
-            This is a platform which assesses your menopause symptoms and give
+            This is a platform which assesses your menopause symptoms and gives
             you resources to help manage your symptoms.
           </p>
           <p className="text-base xl:text-xl font-normal">
-            Menopause symptoms – namely hot flushes and night sweats - are
-            common after cancer treatment. They can impact negatively on your
-            quality of life. There may be treatment that can reduce the impact
-            of these symptoms.
+            Menopause symptoms - namely hot flushes and night sweats - are
+            common after cancer treatment. They may impact negatively on your
+            quality of life. There may be treatment options that can reduce the
+            impact of these symptoms.
           </p>
           <p className="text-base xl:text-xl font-normal">
             Associate Professor Michelle Peate, in collaboration with consumer
@@ -121,8 +121,8 @@ const HomePageUI = () => {
                       (isNotInterested || interested) && "text-[#c8cbd0]",
                       "text-xl xl:text-3xl font-semibold text-center"
                     )}>
-                    Have you been affected by cancer in the past, or are you
-                    currently, living with it?
+                    Have you been diagnosed with cancer in the past, or are you
+                    currently living with it?
                   </p>
                 </div>
 
