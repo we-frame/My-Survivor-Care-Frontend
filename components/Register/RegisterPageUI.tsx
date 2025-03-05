@@ -178,10 +178,17 @@ const RegisterPageUI = () => {
             const parameterRating: any = [];
             var counter = 0;
             var ratingSum = 0;
+            var markedSeven = false;
             Object.keys(value.MenopauseAssessment).forEach((title) => {
               counter++;
-              ratingSum =
-                ratingSum + parseInt(value.MenopauseAssessment[title]);
+              const individualRating = parseInt(
+                value.MenopauseAssessment[title]
+              );
+
+              if (individualRating >= 7 && !markedSeven) {
+                markedSeven = true;
+              }
+              ratingSum = ratingSum + value;
 
               parameterRating.push({
                 title: MenoData[title] ?? title,
@@ -193,7 +200,9 @@ const RegisterPageUI = () => {
 
             const requestBody = {
               menopause_history_id: {
-                average_rating: averageRating,
+                average_rating: markedSeven
+                  ? Math.max(averageRating, 4)
+                  : averageRating,
                 parameter_rating: parameterRating,
               },
             };

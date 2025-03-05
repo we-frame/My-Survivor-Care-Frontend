@@ -48,7 +48,6 @@ const ReAssessmentUI = () => {
     // Form submission handler
     onSubmit: async ({ value }) => {
       // console.log("Re-Assessment form values ::", value);
-      
 
       if (formData.inputField) {
         try {
@@ -79,9 +78,12 @@ const ReAssessmentUI = () => {
         const parameterRating: any = [];
         var counter = 0;
         var ratingSum = 0;
+        var markedSeven = false;
         Object.keys(value).forEach((title) => {
           counter++;
-          ratingSum = ratingSum + parseInt(value[title]);
+          const individualRating = parseInt(value[title]);
+          if (individualRating >= 7 && !markedSeven) markedSeven = true;
+          ratingSum = ratingSum + individualRating;
 
           parameterRating.push({
             title: title,
@@ -93,7 +95,9 @@ const ReAssessmentUI = () => {
 
         const requestBody = {
           menopause_history_id: {
-            average_rating: averageRating,
+            average_rating: markedSeven
+              ? Math.max(averageRating, 4)
+              : averageRating,
             parameter_rating: parameterRating,
           },
         };

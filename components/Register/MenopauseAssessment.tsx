@@ -9,7 +9,6 @@ interface MenopauseAssessmentTypes {
 }
 
 const MenopauseAssessment = ({ form, formData }: MenopauseAssessmentTypes) => {
-  console.log(formData);
   return (
     <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
       <div className="w-full lg:w-[20%] flex flex-col gap-3">
