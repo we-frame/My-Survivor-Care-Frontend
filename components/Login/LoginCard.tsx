@@ -129,8 +129,8 @@ const LoginCard = ({
 
         Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
 
-        // router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
-        router.push("/profile");
+        router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
+        // router.push("/profile");
       } else {
         // Notify user of successful login
         toast.success("Login successful");
