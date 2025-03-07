@@ -11,7 +11,7 @@ const LoginPageUI = () => {
       <LoginCard textCenter />
 
       <div className="flex flex-col items-center justify-center gap-5 max-w-[435px]">
-        <LoginStatement/>
+        <LoginStatement />
         <div className="collapse collapse-plus bg-base-200">
           <input type="radio" name="my-accordion-3" defaultChecked />
           <div className="collapse-title text-xl font-semibold">

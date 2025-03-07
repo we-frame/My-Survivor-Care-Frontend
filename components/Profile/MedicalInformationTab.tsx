@@ -24,9 +24,8 @@ const MedicalInformationTab = ({
             case "input":
               return (
                 <div key={component?.id}>
-                  <form.Field
-                    name={component?.id}
-                    children={(field: any) => (
+                  <form.Field name={component?.id}>
+                    {(field: any) => (
                       <TextInput
                         field={field}
                         label={question?.display_title}
@@ -38,15 +37,14 @@ const MedicalInformationTab = ({
                         tooltip={question?.tooltip}
                       />
                     )}
-                  />
+                  </form.Field>
                 </div>
               );
             case "select":
               return (
                 <div key={component?.id}>
-                  <form.Field
-                    name={component?.id}
-                    children={(field: any) => (
+                  <form.Field name={component?.id}>
+                    {(field: any) => (
                       <SelectInput
                         field={field}
                         selectOptions={question?.options?.map(
@@ -54,7 +52,7 @@ const MedicalInformationTab = ({
                             label: option?.option_id?.title,
                             // value: JSON.stringify([option?.option_id?.id]),
                             value: option?.option_id?.id,
-                          })
+                          }),
                         )}
                         placeholder={question?.question}
                         label={question?.question}
@@ -63,20 +61,19 @@ const MedicalInformationTab = ({
                         isDisabled={!editMedicalInformation}
                         form={form}
                         options={question?.options.map(
-                          (el: any) => el.option_id
+                          (el: any) => el.option_id,
                         )}
                         tooltip={question?.tooltip}
                       />
                     )}
-                  />
+                  </form.Field>
                 </div>
               );
             case "multiple_checkbox":
               return (
                 <div key={component?.id}>
-                  <form.Field
-                    name={component?.id}
-                    children={(field: any) => (
+                  <form.Field name={component?.id}>
+                    {(field: any) => (
                       <MultipleCheckboxInput
                         containerClassName="grid grid-cols-2 auto-rows-auto gap-x-10 gap-y-4"
                         field={field}
@@ -91,7 +88,7 @@ const MedicalInformationTab = ({
                         tooltip={question?.tooltip}
                       />
                     )}
-                  />
+                  </form.Field>
                 </div>
               );
             default:

@@ -10,7 +10,7 @@ export const makeRequest = async (
   method: string, // HTTP method (GET, POST, etc.)
   endpoint: string, // API endpoint
   data?: any, // Data to be sent in the request body (for POST, PUT requests)
-  headers?: { [key: string]: string } // Additional headers for the request
+  headers?: { [key: string]: string }, // Additional headers for the request
 ) => {
   // Configuring Axios request options
   const axiosOptions: AxiosRequestConfig = {

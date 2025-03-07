@@ -13,7 +13,7 @@ const LoginStatement = () => {
         ensure your privacy and security by never sharing your private and
         confidential information with Apple or Google. This login method is
         designed to be secure, straightforward, and protective of your data,
-        utilizing Apple and Google's robust security measures without
+        utilizing Apple and Google&apos;s robust security measures without
         compromising the integrity of your personal information.
         <span>
           {isExpanded ? (
@@ -28,8 +28,8 @@ const LoginStatement = () => {
               <p>
                 When you use your Apple or Google account to sign in on our
                 website, you are choosing a secure and straightforward way to
-                access our website. Here's why this method is not only easy but
-                also keeps your private information safe:
+                access our website. Here&apos;s why this method is not only easy
+                but also keeps your private information safe:
               </p>
               <ul className="list-disc pl-5">
                 <li>
@@ -40,9 +40,9 @@ const LoginStatement = () => {
                 </li>
                 <li>
                   <strong>We Handle Less, You Worry Less:</strong> Since Apple
-                  and Google manage your login details, we don't have to. This
-                  means there's less risk on our end, and one less thing for you
-                  to worry about.
+                  and Google manage your login details, we don&apos;t have to.
+                  This means there&apos;s less risk on our end, and one less
+                  thing for you to worry about.
                 </li>
                 <li>
                   <strong>Your Privacy Comes First:</strong> Your email and
@@ -66,7 +66,7 @@ const LoginStatement = () => {
                   account, often faster and more secure than other methods.
                 </li>
                 <li>
-                  <strong>Use It Anywhere:</strong> Whether you're on your
+                  <strong>Use It Anywhere:</strong> Whether you&apos;re on your
                   phone, tablet, or computer, signing in with your Apple or
                   Google account works seamlessly across all devices.
                 </li>
@@ -74,24 +74,26 @@ const LoginStatement = () => {
               <p>
                 We understand the importance of safeguarding your private and
                 confidential information, which is why choosing secure login
-                options like "Sign in with Apple" and "Sign in with Google" is a
-                crucial step in our commitment. These methods streamline the
-                authentication process and ensure that we do not handle or store
-                sensitive login details, thereby reducing the risk of data
-                breaches. By integrating these trusted platforms, we protect
-                your personal information while providing a secure,
-                user-friendly experience.
+                options like &quot;Sign in with Apple&quot; and &quot;Sign in
+                with Google&quot; is a crucial step in our commitment. These
+                methods streamline the authentication process and ensure that we
+                do not handle or store sensitive login details, thereby reducing
+                the risk of data breaches. By integrating these trusted
+                platforms, we protect your personal information while providing
+                a secure, user-friendly experience.
               </p>
               <button
                 onClick={() => setIsExpanded(false)}
-                className="text-[#4338CA] hover:underline">
+                className="text-[#4338CA] hover:underline"
+              >
                 ...Show less
               </button>
             </div>
           ) : (
             <button
               onClick={() => setIsExpanded(true)}
-              className="text-[#4338CA] hover:underline ml-2 inline-block">
+              className="text-[#4338CA] hover:underline ml-2 inline-block"
+            >
               Read more...
             </button>
           )}

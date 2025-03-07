@@ -56,7 +56,7 @@ client.interceptors.response.use(
           },
           {
             headers: { "Content-Type": "application/json" },
-          }
+          },
         );
 
         const { access_token: accessToken, refresh_token: newRefreshToken } =
@@ -67,9 +67,8 @@ client.interceptors.response.use(
         Cookies.set("refresh-token", newRefreshToken);
 
         // Update Axios instance headers with new access token
-        client.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${accessToken}`;
+        client.defaults.headers.common["Authorization"] =
+          `Bearer ${accessToken}`;
 
         // Retry the original request with the new token
         return client(originalRequest);
@@ -82,7 +81,7 @@ client.interceptors.response.use(
 
     console.log("Axios Interceptor Error ::", error);
     return Promise.reject(error);
-  }
+  },
 );
 
 export default client; // Export the configured Axios instance

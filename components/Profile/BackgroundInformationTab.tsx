@@ -28,9 +28,8 @@ const BackgroundInformationTab = ({
           case "input":
             return (
               <div key={component?.id}>
-                <form.Field
-                  name={component?.id}
-                  children={(field: any) => (
+                <form.Field name={component?.id}>
+                  {(field: any) => (
                     <TextInput
                       field={field}
                       label={question?.display_title}
@@ -42,15 +41,14 @@ const BackgroundInformationTab = ({
                       tooltip={question?.tooltip}
                     />
                   )}
-                />
+                </form.Field>
               </div>
             );
           case "select":
             return (
               <div key={component?.id}>
-                <form.Field
-                  name={component?.id}
-                  children={(field: any) => (
+                <form.Field name={component?.id}>
+                  {(field: any) => (
                     <SelectInput
                       field={field}
                       selectOptions={question?.options?.map((option: any) => ({
@@ -67,7 +65,7 @@ const BackgroundInformationTab = ({
                       tooltip={question?.tooltip}
                     />
                   )}
-                />
+                </form.Field>
               </div>
             );
           default:

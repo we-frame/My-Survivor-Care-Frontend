@@ -5,35 +5,32 @@ import Title from "../Common/Title";
 import ProfileTabs from "./ProfileTabs";
 import Image from "next/image";
 import { useForm } from "@tanstack/react-form";
-import useUserStore from "@/store/userStore";
-import { makeRequest } from "@/lib/api";
 import toast from "react-hot-toast";
 import Button from "../Common/Button";
 import Link from "next/link";
 import ProfileRightCardImg from "@/public/profile_right_card_img.jpeg";
 import TimeToReassessImg from "@/public/time-to-reassessment.jpeg";
-import { getUserDetails } from "@/lib/getUserAPI";
-import Cookies from "js-cookie";
-import axios from "axios";
 import Question from "../Common/Question";
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-const localToken = Cookies.get("access-token");
+import { useUser } from "@/hooks/useUser";
 const ProfileUI = () => {
   const [editBackgroundInfo, setEditBackgroundInfo] = useState<boolean>(false);
   const [editMedicalInformation, setEditMedicalInformation] =
     useState<boolean>(false);
-  const { userData, setUser } = useUserStore();
   const [formData, setFormData] = useState<any>({
     backgroundInformation: null,
     medicalInformation: null,
   });
 
-  const averageRating =
-    userData?.userData?.latest_menopause_history?.average_rating ?? null;
-  const isoDateString =
-    userData?.userData?.latest_menopause_history?.date_created;
-  const date = new Date(isoDateString);
+  // Use React Query hooks
+  const { user, updateAnswer } = useUser();
+  const { data: biAnswers, isLoading: biLoading } =
+    useUser().getUserAnswers("BI");
+  const { data: miAnswers, isLoading: miLoading } =
+    useUser().getUserAnswers("MI");
+
+  const averageRating = user?.latest_menopause_history?.average_rating ?? null;
+  const isoDateString = user?.latest_menopause_history?.date_created;
+  const date = isoDateString ? new Date(isoDateString) : new Date();
 
   // Extracting the day, month, and year
   const day = date.getDate(); // gets the day of the month
@@ -51,33 +48,34 @@ const ProfileUI = () => {
       console.log("backgroundInformationForm values ::", value);
 
       try {
-        Object.keys(value).forEach(async (answerID: any) => {
-          const reqBody: any = {};
+        // Use Promise.all to wait for all updates to complete
+        await Promise.all(
+          Object.keys(value).map(async (answerID: any) => {
+            const reqBody: any = {};
 
-          if (Array.isArray(value[answerID])) {
-            reqBody.answered_options = value[answerID].map((option: any) => {
-              return { option_id: option };
-            });
-          } else {
-            try {
-              const optionIDS = JSON.parse(value[answerID]);
-              reqBody.answered_options = optionIDS.map((optionID: any) => {
-                return { option_id: optionID };
+            if (Array.isArray(value[answerID])) {
+              reqBody.answered_options = value[answerID].map((option: any) => {
+                return { option_id: option };
               });
-            } catch (error) {
-              reqBody.answer = value[answerID];
+            } else {
+              try {
+                const optionIDS = JSON.parse(value[answerID]);
+                reqBody.answered_options = optionIDS.map((optionID: any) => {
+                  return { option_id: optionID };
+                });
+              } catch (error) {
+                reqBody.answer = value[answerID];
+              }
             }
-          }
 
-          await makeRequest(
-            "PATCH",
-            `/items/answers/${answerID}`,
-            JSON.stringify(reqBody),
-            { "Content-Type": "application/json" }
-          );
-        });
+            // Use the updateAnswer mutation
+            return updateAnswer.mutateAsync({
+              answerId: answerID,
+              data: reqBody,
+            });
+          }),
+        );
 
-        getUserDetails(setUser);
         setEditBackgroundInfo(false);
         toast.success("Background Information Updated!");
       } catch (error) {
@@ -95,33 +93,34 @@ const ProfileUI = () => {
       console.log("medicalInformationForm values ::", value);
 
       try {
-        Object.keys(value).forEach(async (answerID: any) => {
-          const reqBody: any = {};
+        // Use Promise.all to wait for all updates to complete
+        await Promise.all(
+          Object.keys(value).map(async (answerID: any) => {
+            const reqBody: any = {};
 
-          if (Array.isArray(value[answerID])) {
-            reqBody.answered_options = value[answerID].map((option: any) => {
-              return { option_id: option };
-            });
-          } else {
-            try {
-              const optionIDS = JSON.parse(value[answerID]);
-              reqBody.answered_options = optionIDS.map((optionID: any) => {
-                return { option_id: optionID };
+            if (Array.isArray(value[answerID])) {
+              reqBody.answered_options = value[answerID].map((option: any) => {
+                return { option_id: option };
               });
-            } catch (error) {
-              reqBody.answer = value[answerID];
+            } else {
+              try {
+                const optionIDS = JSON.parse(value[answerID]);
+                reqBody.answered_options = optionIDS.map((optionID: any) => {
+                  return { option_id: optionID };
+                });
+              } catch (error) {
+                reqBody.answer = value[answerID];
+              }
             }
-          }
 
-          await makeRequest(
-            "PATCH",
-            `/items/answers/${answerID}`,
-            JSON.stringify(reqBody),
-            { "Content-Type": "application/json" }
-          );
-        });
+            // Use the updateAnswer mutation
+            return updateAnswer.mutateAsync({
+              answerId: answerID,
+              data: reqBody,
+            });
+          }),
+        );
 
-        getUserDetails(setUser);
         setEditMedicalInformation(false);
         toast.success("Medical Information Updated!");
       } catch (error) {
@@ -131,71 +130,77 @@ const ProfileUI = () => {
     },
   });
 
-  // Function to handle fetching and setting form data based on a specific key and section
-  const fetchData = async (key: string, section: string, formSetter: any) => {
-    try {
-      // const response = await makeRequest("GET", `/api/answerbyform/${key}`);
-      const response = await axios.get(`${baseUrl}/items/answers`, {
-        headers: {
-          Authorization: `Bearer ${localToken}`,
-        },
-        params: {
-          fields: "*.*,question.options.option_id.*",
-          filter: JSON.stringify({
-            user_created: userData?.userData?.id,
-            question: {
-              key: {
-                _starts_with: key,
-              },
-            },
-          }),
-          sort: "question.key",
-        },
-      });
-      const data = response?.data?.data;
-
+  // Process answers data when it's available
+  useEffect(() => {
+    if (biAnswers) {
+      const data = biAnswers;
 
       if (data) {
         data.forEach((item: any) => {
-          // Check the type of question and set the value in the form
           if (item?.question?.question_type === "multiple_checkbox") {
             const optionIds = item?.answered_options?.map(
-              (option: any) => option?.option_id
+              (option: any) => option?.option_id,
             );
-            formSetter(item?.id, optionIds);
+            backgroundInformationForm.setFieldValue(item?.id, optionIds);
           } else {
-            // Handle single response by providing a default value if `answer` is undefined
             if (item?.answer) {
-              formSetter(item?.id, item?.answer);
+              backgroundInformationForm.setFieldValue(item?.id, item?.answer);
             } else if (item?.answered_options) {
               const optionID = item?.answered_options?.map(
-                (option: any) => option?.option_id
+                (option: any) => option?.option_id,
               );
-              formSetter(item?.id, optionID);
+              backgroundInformationForm.setFieldValue(item?.id, optionID);
             }
           }
         });
       }
 
-      setFormData((prev: any) => ({ ...prev, [section]: data }));
-    } catch (error) {
-      console.error("Failed to fetch data:", error);
+      setFormData((prev: any) => ({ ...prev, backgroundInformation: data }));
     }
-  };
+  }, [biAnswers, backgroundInformationForm]);
 
+  // Process medical information answers when available
   useEffect(() => {
-    fetchData(
-      "BI",
-      "backgroundInformation",
-      backgroundInformationForm.setFieldValue
+    if (miAnswers) {
+      const data = miAnswers;
+
+      if (data) {
+        data.forEach((item: any) => {
+          if (item?.question?.question_type === "multiple_checkbox") {
+            const optionIds = item?.answered_options?.map(
+              (option: any) => option?.option_id,
+            );
+            medicalInformationForm.setFieldValue(item?.id, optionIds);
+          } else {
+            if (item?.answer) {
+              medicalInformationForm.setFieldValue(item?.id, item?.answer);
+            } else if (item?.answered_options) {
+              const optionID = item?.answered_options?.map(
+                (option: any) => option?.option_id,
+              );
+              medicalInformationForm.setFieldValue(item?.id, optionID);
+            }
+          }
+        });
+      }
+
+      setFormData((prev: any) => ({ ...prev, medicalInformation: data }));
+    }
+  }, [miAnswers, medicalInformationForm]);
+
+  // Show loading state while data is being fetched
+  if (biLoading || miLoading) {
+    return (
+      <div className="mt-5 lg:mt-10 flex flex-col gap-10">
+        Loading profile data...
+      </div>
     );
-    fetchData("MI", "medicalInformation", medicalInformationForm.setFieldValue);
-  }, []);
+  }
 
   return (
     <div className="mt-5 lg:mt-10 flex flex-col gap-10">
       <Title
-        title={`Hi ${userData ? userData?.userData?.first_name : "Emily"}!`}
+        title={`Hi ${user ? user.first_name : "Emily"}!`}
         className="text-5xl font-bold"
       />
 

@@ -16,7 +16,8 @@ export const moderateText = {
           To view the guideline, visit{" "}
           <Link
             className=" text-violet-600 underline"
-            href={"https://www.canceraustralia.gov.au"}>
+            href={"https://www.canceraustralia.gov.au"}
+          >
             www.canceraustralia.gov.au
           </Link>{" "}
           or to download it{" "}
@@ -24,7 +25,8 @@ export const moderateText = {
             className=" text-violet-600 underline"
             href={
               "https://www.canceraustralia.gov.au/sites/default/files/publications/managing-menopausal-symptoms-after-breast-cancer-guide-women/pdf/2016_bcmc_booklet_0.pdf"
-            }>
+            }
+          >
             here
           </Link>{" "}
         </p>
@@ -42,7 +44,8 @@ export const moderateText = {
                 left-hand side.
               </p>
             </div>
-          }>
+          }
+        >
           <CircleHelp color="#374151" size={20} className="cursor-pointer" />
         </Tooltip>
       </div>
@@ -66,7 +69,8 @@ Menopause Society`,
           <br />
           <Link
             className=" text-violet-600 underline"
-            href={"https://academic.oup.com/jcem/article/100/11/3975/2836060"}>
+            href={"https://academic.oup.com/jcem/article/100/11/3975/2836060"}
+          >
             https://academic.oup.com/jcem/article/100/11/3975/2836060
           </Link>{" "}
         </p>
@@ -80,7 +84,8 @@ Menopause Society`,
           Guideline. DOI:
           <Link
             className="underline text-violet-600"
-            href="http://dx.doi.org/10.1210/ic.2015-2236">
+            href="http://dx.doi.org/10.1210/ic.2015-2236"
+          >
             http://dx.doi.org/10.1210/ic.2015-2236
           </Link>
         </p>

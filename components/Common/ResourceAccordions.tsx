@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { RenderHtml } from "./render-html";
 import {
   Accordion,
@@ -7,64 +7,70 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { cn } from "@/lib/utils";
+import { useResources } from "@/hooks/useResources";
 
 type PageType = "healthcare" | "practitioner" | "consumer";
 
 function ResourceAccordions({ page }: { page: PageType }) {
-  const [accData, setAccData] = useState<{ title: string; content: string }[]>(
-    []
-  );
-  useEffect(() => {
-    // Don't proceed if page is falsy
-    if (!page) return;
+  // Use React Query to fetch accordion data
+  const {
+    data: accData,
+    isLoading,
+    error,
+  } = useResources().getAccordionData(page, !!page);
 
-    // Define fetchAccordion outside to avoid recreating the function on each render
-    const fetchAccordion = async () => {
-      try {
-        const response = await fetch(
-          `https://api.mysurviour.agpro.co.in/items/accordion/?filter[page][_eq]=${page}`
-        );
+  // Define the type for accordion data
+  interface AccordionItem {
+    title: string;
+    content: string;
+  }
 
-        if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
-        }
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-start justify-start gap-4 w-full">
+        Loading resources...
+      </div>
+    );
+  }
 
-        const { data } = await response.json();
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex flex-col items-start justify-start gap-4 w-full">
+        Error loading resources. Please try again later.
+      </div>
+    );
+  }
 
-        // Simplified mapping and added type safety
-        const processedData = Array.isArray(data)
-          ? data.map((item) => ({
-              title: item.title,
-              content: item.content,
-            }))
-          : [];
-
-        setAccData(processedData);
-      } catch (error) {
-        console.error("Error fetching accordion data:", error);
-      }
-    };
-
-    fetchAccordion();
-  }, [page]);
+  // Process the data to ensure it matches our expected format
+  const processedData: AccordionItem[] = Array.isArray(accData)
+    ? accData.map((item: any) => ({
+        title: item.title || "",
+        content: item.content || "",
+      }))
+    : [];
 
   return (
     <div className="flex flex-col items-start justify-start gap-4 w-full">
-      {accData && (
+      {processedData.length > 0 ? (
         <Accordion
           type={page ? "single" : "multiple"}
           collapsible
-          className="w-full flex flex-col items-start justify-start gap-4 ">
-          {accData.map(({ title, content }, index: any) => (
+          className="w-full flex flex-col items-start justify-start gap-4 "
+        >
+          {processedData.map(({ title, content }, index) => (
             <AccordionItem
-              value={index + 1}
+              value={String(index + 1)}
               key={index}
-              className="rounded-[var(--radius)] bg-base-200   w-full">
+              className="rounded-[var(--radius)] bg-base-200 w-full"
+            >
               <AccordionTrigger
                 className={cn(
                   "flex justify-between py-4 px-4 group !w-full",
-                  "text-xl font-semibold "
-                )}>
+                  "text-xl font-semibold ",
+                )}
+              >
                 {title}
               </AccordionTrigger>
               <AccordionContent className="p-4 text-base text-pretty font-normal">
@@ -73,6 +79,8 @@ function ResourceAccordions({ page }: { page: PageType }) {
             </AccordionItem>
           ))}
         </Accordion>
+      ) : (
+        <div>No resources available for this section.</div>
       )}
     </div>
   );

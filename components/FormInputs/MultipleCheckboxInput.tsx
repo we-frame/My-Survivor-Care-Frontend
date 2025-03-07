@@ -58,7 +58,8 @@ const MultipleCheckboxInput: React.FC<MultipleCheckboxInputTypes> = ({
             key={option?.value}
             className={`cursor-pointer label flex items-center justify-start gap-4 ${
               isDisabled ? "cursor-not-allowed" : ""
-            }`}>
+            }`}
+          >
             <input
               type="checkbox"
               className={`checkbox checkbox-sm ${option?.className}`}
@@ -88,12 +89,14 @@ const MultipleCheckboxInput: React.FC<MultipleCheckboxInputTypes> = ({
             if (question) {
               return (
                 <Question
+                  key={question[0].question_id}
                   question_id={question[0].question_id}
                   form={field.form}
                   fieldName={field.name}
                 />
               );
             }
+            return null; // Add explicit return for when question is falsy
           })}
       </div>
       {field.state.meta.touchedErrors && (

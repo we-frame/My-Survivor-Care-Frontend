@@ -71,8 +71,6 @@ input[type="number"] {
   @apply w-full mx-auto max-w-screen-xl;
 }
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -128,8 +126,6 @@ input[type="number"] {
     --chart-5: 340 75% 55%;
   }
 }
-
-
 
 @layer base {
   * {

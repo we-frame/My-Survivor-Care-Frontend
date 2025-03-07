@@ -56,7 +56,8 @@ const ProfileTabs = ({
         <button
           onClick={handlePreviousTab}
           disabled={activeTab === 1}
-          className="lg:hidden px-4 py-2">
+          className="lg:hidden px-4 py-2"
+        >
           &lt;
         </button>
 
@@ -68,12 +69,14 @@ const ProfileTabs = ({
               borderColor: "#14b8a6",
               color: "#14b8a6",
             }}
-            aria-selected={activeTab === activeTab}>
+            role="tab"
+            aria-selected={activeTab === activeTab}
+          >
             {activeTab === 1
               ? "Recommendations"
               : activeTab === 2
-              ? "Background information"
-              : "Medical information"}
+                ? "Background information"
+                : "Medical information"}
           </button>
         </div>
 
@@ -81,49 +84,65 @@ const ProfileTabs = ({
         <button
           onClick={handleNextTab}
           disabled={activeTab === 3}
-          className="lg:hidden px-4 py-2">
+          className="lg:hidden px-4 py-2"
+        >
           &gt;
         </button>
 
         {/* Tab buttons (desktop view) */}
-        <div className="hidden lg:flex lg:justify-center lg:items-center w-full">
+        <div
+          className="hidden lg:flex lg:justify-center lg:items-center w-full"
+          role="tablist"
+        >
           <button
             onClick={() => handleTabChange(1)}
             className={cn(
               "border-b-2 px-4 py-2",
-              activeTab === 1 && `tab-active`
+              activeTab === 1 && `tab-active`,
             )}
             style={{
               borderColor: activeTab === 1 ? "#14b8a6" : "",
               color: activeTab === 1 ? "#14b8a6" : "",
             }}
-            aria-selected={activeTab === 1}>
+            role="tab"
+            aria-selected={activeTab === 1}
+            aria-controls="recommendations-panel"
+            id="recommendations-tab"
+          >
             Recommendations
           </button>
           <button
             onClick={() => handleTabChange(2)}
             className={cn(
               "border-b-2 px-4 py-2",
-              activeTab === 2 && `tab-active`
+              activeTab === 2 && `tab-active`,
             )}
             style={{
               borderColor: activeTab === 2 ? "#14b8a6" : "",
               color: activeTab === 2 ? "#14b8a6" : "",
             }}
-            aria-selected={activeTab === 2}>
+            role="tab"
+            aria-selected={activeTab === 2}
+            aria-controls="background-info-panel"
+            id="background-info-tab"
+          >
             Background information
           </button>
           <button
             onClick={() => handleTabChange(3)}
             className={cn(
               "border-b-2 px-4 py-2",
-              activeTab === 3 && `tab-active`
+              activeTab === 3 && `tab-active`,
             )}
             style={{
               borderColor: activeTab === 3 ? "#14b8a6" : "",
               color: activeTab === 3 ? "#14b8a6" : "",
             }}
-            aria-selected={activeTab === 3}>
+            role="tab"
+            aria-selected={activeTab === 3}
+            aria-controls="medical-info-panel"
+            id="medical-info-tab"
+          >
             Medical information
           </button>
         </div>
@@ -132,7 +151,12 @@ const ProfileTabs = ({
       {/* Tab Content */}
       <div className="p-5 rounded-xl shadow-lg bg-white">
         {/* Recommendations Tab */}
-        <div className={cn(activeTab === 1 ? "block" : "hidden")}>
+        <div
+          className={cn(activeTab === 1 ? "block" : "hidden")}
+          role="tabpanel"
+          id="recommendations-panel"
+          aria-labelledby="recommendations-tab"
+        >
           <RecommendationsTab />
         </div>
 
@@ -143,7 +167,11 @@ const ProfileTabs = ({
             e.stopPropagation();
             backgroundInformationForm.handleSubmit();
           }}
-          className={cn(activeTab === 2 ? "block" : "hidden")}>
+          className={cn(activeTab === 2 ? "block" : "hidden")}
+          role="tabpanel"
+          id="background-info-panel"
+          aria-labelledby="background-info-tab"
+        >
           <BackgroundInformationTab
             form={backgroundInformationForm}
             editBackgroundInfo={editBackgroundInfo}
@@ -153,7 +181,8 @@ const ProfileTabs = ({
           {editBackgroundInfo ? (
             <backgroundInformationForm.Subscribe
               selector={(state: any) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]: any) => (
+            >
+              {([canSubmit, isSubmitting]: any) => (
                 <button
                   style={{
                     backgroundColor: "#14b8a6",
@@ -161,16 +190,17 @@ const ProfileTabs = ({
                   className={cn(
                     "border rounded-lg px-5 py-3 text-white",
                     !canSubmit &&
-                      "bg-green-300 text-black disabled:cursor-not-allowed"
+                      "bg-green-300 text-black disabled:cursor-not-allowed",
                   )}
                   type="submit"
-                  disabled={!canSubmit}>
+                  disabled={!canSubmit}
+                >
                   {isSubmitting
                     ? "Loading..."
                     : "Update background information"}
                 </button>
               )}
-            />
+            </backgroundInformationForm.Subscribe>
           ) : (
             <Button
               text="Edit background information"
@@ -187,7 +217,11 @@ const ProfileTabs = ({
             e.stopPropagation();
             medicalInformationForm.handleSubmit();
           }}
-          className={cn(activeTab === 3 ? "block" : "hidden")}>
+          className={cn(activeTab === 3 ? "block" : "hidden")}
+          role="tabpanel"
+          id="medical-info-panel"
+          aria-labelledby="medical-info-tab"
+        >
           <MedicalInformationTab
             form={medicalInformationForm}
             editMedicalInformation={editMedicalInformation}
@@ -197,7 +231,8 @@ const ProfileTabs = ({
           {editMedicalInformation ? (
             <medicalInformationForm.Subscribe
               selector={(state: any) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]: any) => (
+            >
+              {([canSubmit, isSubmitting]: any) => (
                 <button
                   style={{
                     backgroundColor: "#14b8a6",
@@ -205,14 +240,15 @@ const ProfileTabs = ({
                   className={cn(
                     "border rounded-lg px-5 py-3 text-white",
                     !canSubmit &&
-                      "bg-green-300 text-black disabled:cursor-not-allowed"
+                      "bg-green-300 text-black disabled:cursor-not-allowed",
                   )}
                   type="submit"
-                  disabled={!canSubmit}>
+                  disabled={!canSubmit}
+                >
                   {isSubmitting ? "Loading..." : "Update medical information"}
                 </button>
               )}
-            />
+            </medicalInformationForm.Subscribe>
           ) : (
             <Button
               text="Edit Medical information"

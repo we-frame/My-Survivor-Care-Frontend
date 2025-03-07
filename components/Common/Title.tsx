@@ -4,10 +4,7 @@ import React from "react";
 
 const Title = ({ title, className = "" }: TitleTypes) => {
   return (
-    <h1
-      className={cn(className, "w-full")}
-      aria-label={title}
-    >
+    <h1 className={cn(className, "w-full")} aria-label={title}>
       {title}
     </h1>
   );

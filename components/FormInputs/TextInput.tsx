@@ -44,7 +44,7 @@ const TextInput: React.FC<TextInputTypes> = ({
           className={cn(
             className,
             type === "number" && "appearance-none",
-            "input input-bordered w-full max-w-xs"
+            "input input-bordered w-full max-w-xs",
           )}
           placeholder={placeholder}
           type={type}

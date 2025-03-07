@@ -31,7 +31,7 @@ function processTooltips(content: string) {
 
       // Return the CustomTooltip component with the extracted text
       return `<CustomTooltip>${sanitizedTooltipText}</CustomTooltip>`;
-    }
+    },
   );
 
   return processedContent;
@@ -50,7 +50,8 @@ export function RenderHtml({ html }: { html: string }) {
           <Link
             href={domNode?.attribs?.href}
             target={domNode.attribs?.target}
-            className="underline inline-block text-[#14b8a6]">
+            className="underline inline-block text-[#14b8a6]"
+          >
             {domToReact(domNode.children as DOMNode[])}
           </Link>
         );

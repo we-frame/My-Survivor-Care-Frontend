@@ -1,4 +1,3 @@
-
 export default function RichText({
   content,
   className,

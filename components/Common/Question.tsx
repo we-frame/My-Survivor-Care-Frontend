@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import SelectInput from "../FormInputs/SelectInput";
-import { makeRequest } from "@/lib/api";
 import { Field } from "@tanstack/react-form";
 import toast from "react-hot-toast";
 import TextInput from "../FormInputs/TextInput";
 import MultipleCheckboxInput from "../FormInputs/MultipleCheckboxInput";
+import { useAssessment } from "@/hooks/useAssessment";
 interface QuestionProps {
   question_id: string;
   fieldName?: string;
@@ -18,35 +18,45 @@ export default function Question({
   fieldName = "",
   form,
 }: QuestionProps) {
-  const [question, setQuestion] = useState<any>(null);
   const [options, setOptions] = useState<any>([]);
   const [answers, setAnswers] = useState<any>([]);
 
+  // Use React Query to fetch question details
+  const {
+    data: question,
+    isLoading,
+    error,
+  } = useAssessment().getQuestionDetails(question_id);
+
+  // Process question data when it's available
   useEffect(() => {
-    async function FetchQuestion(id: string) {
+    if (question) {
       try {
-        const { data } = await makeRequest(
-          "GET",
-          `/items/question/${id}?fields=*,options.option_id.*,options.option_id.questions.*`
-        );
-        // console.log(data, "response");
-        const optionData = data.options.map((option: any) => {
+        const optionData = question.options.map((option: any) => {
           return {
             value: JSON.stringify([option?.option_id?.id]),
             label: option?.option_id?.title,
           };
         });
-        // console.log(optionData, "options");
-        setAnswers(data?.options?.map((option: any) => option?.option_id));
+
+        setAnswers(question?.options?.map((option: any) => option?.option_id));
         setOptions([...optionData]);
-        setQuestion(data);
-        return data;
       } catch (error) {
-        toast.error("Error in fetching questions");
+        console.error("Error processing question data:", error);
+        toast.error("Error processing question data");
       }
     }
-    FetchQuestion(question_id);
-  }, []);
+  }, [question]);
+
+  // Show loading state
+  if (isLoading) {
+    return <div>Loading question...</div>;
+  }
+
+  // Show error state
+  if (error) {
+    return <div>Error loading question. Please try again.</div>;
+  }
 
   const name = fieldName.substring(0, fieldName.indexOf("."));
 
@@ -54,10 +64,8 @@ export default function Question({
     question && (
       <div className="mt-4">
         {/* <p>{question?.question_type}</p> */}
-        <Field
-          form={form}
-          name={`${name}.${question?.id}`}
-          children={(field: any) => {
+        <Field form={form} name={`${name}.${question?.id}`}>
+          {(field: any) => {
             switch (question?.question_type) {
               case "input":
                 return (
@@ -101,7 +109,7 @@ export default function Question({
                 );
             }
           }}
-        />
+        </Field>
       </div>
     )
   );
