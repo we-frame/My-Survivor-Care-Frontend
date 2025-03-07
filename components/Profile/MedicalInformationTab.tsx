@@ -34,6 +34,7 @@ const MedicalInformationTab = ({
                         type={question?.input_datatype}
                         // bottomText={question?.description}
                         isDisabled={!editMedicalInformation}
+                        tooltip={question?.tooltip}
                       />
                     )}
                   </form.Field>
@@ -62,6 +63,7 @@ const MedicalInformationTab = ({
                         options={question?.options.map(
                           (el: any) => el.option_id,
                         )}
+                        tooltip={question?.tooltip}
                       />
                     )}
                   </form.Field>
@@ -83,6 +85,7 @@ const MedicalInformationTab = ({
                         isRequired={true}
                         isDisabled={!editMedicalInformation}
                         optionObject={question?.options}
+                        tooltip={question?.tooltip}
                       />
                     )}
                   </form.Field>

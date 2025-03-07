@@ -24,7 +24,7 @@ const HomePageUI = () => {
   const { userData } = useUserStore();
 
   const [isNotInterested, setIsNotInterested] = useState<boolean>(
-    notInterestedMsg !== null && notInterestedMsg !== "",
+    notInterestedMsg !== null && notInterestedMsg !== ""
   );
 
   const router = useRouter();
@@ -40,23 +40,22 @@ const HomePageUI = () => {
       <div
         className={cn(
           "w-full flex flex-col items-start justify-start gap-20",
-          !Cookie.get("access-token") && "lg:w-[60%]",
-        )}
-      >
+          !Cookie.get("access-token") && "lg:w-[60%]"
+        )}>
         <div className="w-full flex flex-col items-start justify-start gap-5">
           <h1 className="text-2xl xl:text-4xl font-semibold">
             Welcome to the MySurvivorCare Platform.
           </h1>
 
           <p className="text-base xl:text-xl font-normal">
-            This is a platform which assesses your menopause symptoms and give
+            This is a platform which assesses your menopause symptoms and gives
             you resources to help manage your symptoms.
           </p>
           <p className="text-base xl:text-xl font-normal">
-            Menopause symptoms – namely hot flushes and night sweats - are
-            common after cancer treatment. They can impact negatively on your
-            quality of life. There may be treatment that can reduce the impact
-            of these symptoms.
+            Menopause symptoms - namely hot flushes and night sweats - are
+            common after cancer treatment. They may impact negatively on your
+            quality of life. There may be treatment options that can reduce the
+            impact of these symptoms.
           </p>
           <p className="text-base xl:text-xl font-normal">
             Associate Professor Michelle Peate, in collaboration with consumer
@@ -84,9 +83,8 @@ const HomePageUI = () => {
               <p
                 className={cn(
                   (isNotInterested || step !== 1) && "text-[#c8cbd0]",
-                  "text-xl xl:text-3xl font-semibold text-center",
-                )}
-              >
+                  "text-xl xl:text-3xl font-semibold text-center"
+                )}>
                 Are you interested in taking part in this early testing of the
                 platform?
               </p>
@@ -109,7 +107,7 @@ const HomePageUI = () => {
                   setInterested(false);
                   setEligible(true);
                   setNotInterestedMsg(
-                    "For now, access to this platform is only available to those participating in the early testing. Thank you for your time.",
+                    "For now, access to this platform is only available to those participating in the early testing. Thank you for your time."
                   );
                 }}
               />
@@ -121,11 +119,10 @@ const HomePageUI = () => {
                   <p
                     className={cn(
                       (isNotInterested || interested) && "text-[#c8cbd0]",
-                      "text-xl xl:text-3xl font-semibold text-center",
-                    )}
-                  >
-                    Have you been affected by cancer in the past, or are you
-                    currently, living with it?
+                      "text-xl xl:text-3xl font-semibold text-center"
+                    )}>
+                    Have you been diagnosed with cancer in the past, or are you
+                    currently living with it?
                   </p>
                 </div>
 
@@ -149,7 +146,7 @@ const HomePageUI = () => {
                       setInterested(false);
                       setEligible(true);
                       setNotInterestedMsg(
-                        "We are sorry, but as this platform is for women living with or beyond cancer you are not eligible to create an account. Thank you for being so understanding.",
+                        "We are sorry, but as this platform is for women living with or beyond cancer you are not eligible to create an account. Thank you for being so understanding."
                       );
                     }}
                   />

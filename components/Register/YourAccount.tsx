@@ -9,9 +9,14 @@ import LoginCard from "../Login/LoginCard";
 interface YourAccountTypes {
   privacy?: boolean;
   setPrivacy?: any;
+  setIsAccountValid?: (isValid: boolean) => void;
 }
 
-const YourAccount = ({ privacy, setPrivacy }: YourAccountTypes) => {
+const YourAccount = ({
+  privacy,
+  setPrivacy,
+  setIsAccountValid,
+}: YourAccountTypes) => {
   const [googleData, setGoogleData] = useState<any>();
   const params = useSearchParams();
   const uData: string | null = params.get("u");
@@ -27,6 +32,20 @@ const YourAccount = ({ privacy, setPrivacy }: YourAccountTypes) => {
       }
     }
   }, [uData]);
+
+  // Validate account information and update parent component
+  useEffect(() => {
+    // Account is valid if:
+    // 1. User has agreed to privacy policy
+    // 2. User data exists (user is authenticated)
+    const isValid = privacy === true && !!uData;
+
+    // Update parent component if the setIsAccountValid function is provided
+    if (setIsAccountValid) {
+      setIsAccountValid(isValid);
+    }
+  }, [privacy, uData, setIsAccountValid]);
+
   return (
     <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
       <div className="w-full lg:w-[20%] flex flex-col gap-3">
@@ -64,6 +83,22 @@ const YourAccount = ({ privacy, setPrivacy }: YourAccountTypes) => {
               </p>
             </label>
           </div>
+
+          {!uData && (
+            <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md text-amber-700">
+              <p className="text-sm">
+                Please sign in using one of the methods above to continue.
+              </p>
+            </div>
+          )}
+
+          {!privacy && uData && (
+            <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md text-amber-700">
+              <p className="text-sm">
+                Please accept the privacy statement to proceed.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

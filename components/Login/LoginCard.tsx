@@ -3,6 +3,7 @@ import Button from "../Common/Button";
 import GoogleIcon from "../Icon/GoogleIcon";
 import AppleIcon from "../Icon/AppleIcon";
 import Title from "../Common/Title";
+import { makeRequest } from "@/lib/api";
 import { usePathname, useRouter } from "next/navigation";
 import Cookie from "js-cookie";
 import {
@@ -13,11 +14,12 @@ import {
 } from "firebase/auth";
 import { auth } from "@/lib/firebaseConfig";
 import toast from "react-hot-toast";
+import useUserStore from "@/store/userStore";
+import useLoadingStore from "@/store/loadingStore";
+import { getUserDetails } from "@/lib/getUserAPI";
+import useRegistrationStore from "@/store/userRegistrationStore";
 import { cn } from "@/lib/utils";
 import { TriangleAlert } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
-import { useUser } from "@/hooks/useUser";
-import useRegistrationStore from "@/store/userRegistrationStore";
 
 interface LoginCardTypes {
   textCenter?: boolean;
@@ -32,15 +34,9 @@ const LoginCard = ({
 }: LoginCardTypes) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
+  const { setUser } = useUserStore(); // Get the setUser function from the store
   const router = useRouter();
-  const path = usePathname();
-
-  // Use React Query hooks
-  const { user, refetch: refetchUser } = useUser();
-  const { login, register, checkUserExists, googleLogin, googleRegister } =
-    useAuth();
-
-  // Keep using registration store for eligibility checks
+  const { refresh, setRefresh } = useLoadingStore();
   const {
     step,
     interested,
@@ -50,52 +46,188 @@ const LoginCard = ({
     setEligible,
     setNotInterestedMsg,
   } = useRegistrationStore();
+  const path = usePathname();
 
-  // Handle Google registration using React Query
   const handleGoogleRegister = async (firebaseUser: any) => {
     try {
-      // Use the googleRegister mutation from useAuth hook
-      await googleRegister.mutateAsync(firebaseUser);
+      // Make an API request to create a new user
+      await makeRequest("POST", "/users", {
+        // Extracting the first name from the Firebase user's display name
+        first_name: firebaseUser?.displayName?.substring(
+          0,
+          firebaseUser?.displayName?.indexOf(" ")
+        ),
+        // Extracting the last name from the Firebase user's display name
+        last_name: firebaseUser?.displayName?.substring(
+          firebaseUser?.displayName?.indexOf(" ") + 1
+        ),
+        // Using the email from the Firebase user
+        email: firebaseUser?.email,
+        // Using the Firebase user's UID as the password (can be adjusted based on security requirements)
+        password: firebaseUser?.uid,
+        // Setting the authentication type to Google
+        auth_type: "google",
+        // Assigning a default role to the user
+        role: "40607d3a-0760-4ae0-b60a-60dfd0fae8ba",
+      });
 
-      // Store firebase user data in cookie for registration completion
+      // login API
+      const userResponse = await makeRequest("POST", "/auth/login", {
+        // Using the email from the Firebase user
+        email: firebaseUser?.email,
+        // Using the Firebase user's UID as the password (can be adjusted based on security requirements)
+        password: firebaseUser?.uid,
+      });
+
+      // Displaying a success message upon successful registration
+      toast.success("Sign-Up Successfully!");
+
+      // Set cookies for tokens
+      Cookie.set("access-token", userResponse?.data?.access_token);
+      Cookie.set("refresh-token", userResponse?.data?.refresh_token);
+
       Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
 
-      // Navigate to registration page
       router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
 
-      // Refetch user data
-      refetchUser();
+      // Fetching user details after successful registration and updating the user store
+      getUserDetails(setUser);
+
+      setRefresh(!refresh);
     } catch (error: any) {
+      // Logging the error for debugging purposes
       console.log(error);
 
-      // Error handling is done in the mutation's onError callback
+      // Displaying error messages based on the type of error encountered
+      if (error?.response?.status === 400) {
+        toast.error("User already exists, Please use another mail!");
+      } else {
+        toast.error("Something Went Wrong!");
+      }
     }
   };
-
-  // Handle Google login using React Query
   const handleGoogleLogin = async (firebaseUser: any) => {
     try {
-      // Use the googleLogin mutation from useAuth hook
-      await googleLogin.mutateAsync(firebaseUser);
+      // login API
+      const response = await makeRequest("POST", "/auth/login", {
+        email: firebaseUser?.email,
+        password: firebaseUser?.uid,
+      });
 
-      // Store firebase user data in cookie
-      Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
+      // Set cookies for tokens
+      Cookie.set("access-token", response.data.access_token);
+      Cookie.set("refresh-token", response.data.refresh_token);
 
-      // Refetch user data
-      refetchUser();
+      // Save user data in Zustand store
+      const getUserData = await makeRequest(
+        "GET",
+        "/users/me?fields=*,latest_menopause_history.*,menopause_history.*"
+      );
+      setUser(getUserData?.data);
+      if (!getUserData?.data?.is_registration_completed) {
+        toast.error("Please complete your registration!.");
 
-      // Navigation is handled in the mutation's onSuccess callback
+        Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
+
+        router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
+        // router.push("/profile");
+      } else {
+        // Notify user of successful login
+        toast.success("Login successful");
+
+        router.push("/profile");
+      }
+      setRefresh(!refresh);
     } catch (error: any) {
+      // Handle login errors
       console.log(error);
 
-      // Error handling is done in the mutation's onError callback
+      // Show error message
+      toast.error("Invalid Credentials, Please check your email and password", {
+        duration: 5000,
+      });
     }
   };
 
   // Function to handle Google sign-in
   const handleGoogle = async () => {
-    // Commented out eligibility checks for brevity
+    // if (!eligible) {
+    // if (step === 1) {
+    //   toast.custom((t: any) => (
+    //     <div
+    //       className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
+    //         t.visible ? "toast-animate-enter" : "toast-animate-leave"
+    //       }`}>
+    //       <TriangleAlert className="text-yellow-700" size={40} /> Please
+    //       answer whether you are interested in participating in the early
+    //       testing.
+    //     </div>
+    //   ));
+    // } else if (step === 2) {
+    //   toast.custom((t: any) => (
+    //     <div
+    //       className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
+    //         t.visible ? "toast-animate-enter" : "toast-animate-leave"
+    //       }`}>
+    //       <TriangleAlert className="text-yellow-700" size={40} /> Please
+    //       answer Have you been affected by cancer in the past, or are you
+    //       currently, living with it?
+    //     </div>
+    //   ));
+    // }
 
+    //   if (path === "/") {
+    //     return;
+    //   } else {
+    //     router.push("/");
+    //     return;
+    //   }
+    // } else if (!interested) {
+    //   // toast.error(
+    //   //   "You are not eligible for this program. Please review your answers to the eligibility questions."
+    //   // );
+    //   toast.custom(
+    //     (t: any) => (
+    //       <div
+    //         className={cn(
+    //           "w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5",
+    //           t.visible ? "toast-animate-enter" : "toast-animate-leave"
+    //         )}>
+    //         <div>
+    //           <TriangleAlert className="text-yellow-700" size={20} />
+    //         </div>
+    //         <div>
+    //           <p>
+    //             You are not eligible for this program. Please review your
+    //             answers to the eligibility questions.
+    //           </p>
+
+    //           <div className="w-full flex items-center justify-between mt-3">
+    //             <button
+    //               onClick={() => {
+    //                 setStep(1);
+    //                 setInterested(false);
+    //                 setEligible(false);
+    //                 setNotInterestedMsg(null);
+    //                 router.push("/");
+    //                 toast.dismiss();
+    //               }}
+    //               className="px-2 py-1 rounded-md border border-yellow-700 shadow-md">
+    //               Re-take
+    //             </button>
+    //             <button
+    //               onClick={() => toast.dismiss()}
+    //               className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md">
+    //               Dismiss
+    //             </button>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     ),
+    //     { duration: 5000 }
+    //   );
+    //   return;
+    // } else {
     setLoadingButton(true); // Enable loading state
     const provider = new GoogleAuthProvider(); // Google Auth provider
     try {
@@ -103,10 +235,14 @@ const LoginCard = ({
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result?.user;
 
-      // Check if user exists using React Query
-      const userExists = await checkUserExists.mutateAsync(
-        firebaseUser.email || "",
+      // Check if user exists in your system
+      const checkUser = await makeRequest(
+        "GET",
+        // `/users?filter[email][_eq]=${firebaseUser?.email}&fields=auth_type`
+        `/users?filter={"email": {"_eq": "${firebaseUser?.email}"}}&fields=*`
       );
+
+      const userExists = checkUser?.data[0];
       const authType = userExists?.auth_type; // Checking userAuth type
 
       // Determine whether to log in or register the user
@@ -123,20 +259,19 @@ const LoginCard = ({
     } finally {
       setLoadingButton(false); // Disable loading state
     }
+    // }
   };
 
   // This function is responsible for registering a new user using information from Firebase
 
   const handleApple = async () => {
-    // Eligibility checks are kept for this function
     if (!eligible) {
       if (step === 1) {
         toast.custom((t: any) => (
           <div
             className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
               t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            }`}
-          >
+            }`}>
             <TriangleAlert className="text-yellow-700" size={40} /> Please
             answer whether you are interested in participating in the early
             testing.
@@ -147,8 +282,7 @@ const LoginCard = ({
           <div
             className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
               t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            }`}
-          >
+            }`}>
             <TriangleAlert className="text-yellow-700" size={40} /> Please
             answer Have you been affected by cancer in the past, or are you
             currently, living with it?
@@ -171,9 +305,8 @@ const LoginCard = ({
           <div
             className={cn(
               "w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5",
-              t.visible ? "toast-animate-enter" : "toast-animate-leave",
-            )}
-          >
+              t.visible ? "toast-animate-enter" : "toast-animate-leave"
+            )}>
             <div>
               <TriangleAlert className="text-yellow-700" size={20} />
             </div>
@@ -193,21 +326,19 @@ const LoginCard = ({
                     router.push("/");
                     toast.dismiss();
                   }}
-                  className="px-2 py-1 rounded-md border border-yellow-700 shadow-md"
-                >
+                  className="px-2 py-1 rounded-md border border-yellow-700 shadow-md">
                   Re-take
                 </button>
                 <button
                   onClick={() => toast.dismiss()}
-                  className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md"
-                >
+                  className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md">
                   Dismiss
                 </button>
               </div>
             </div>
           </div>
         ),
-        { duration: 5000 },
+        { duration: 5000 }
       );
       return;
     } else {
@@ -229,10 +360,13 @@ const LoginCard = ({
         const additionalUserInfo = getAdditionalUserInfo(result);
         console.log("Additional User Info ::", additionalUserInfo);
 
-        // Check if user exists using React Query
-        const userExists = await checkUserExists.mutateAsync(
-          appleUser?.email || "",
+        // Check if user exists in your system
+        const checkUser = await makeRequest(
+          "GET",
+          `/users?filter={"email": {"_eq": "${appleUser?.email}"}}&fields=*`
         );
+
+        const userExists = checkUser?.data[0];
         const authType = userExists?.auth_type; // Checking userAuth type
 
         // Determine whether to log in or register the user
@@ -252,70 +386,74 @@ const LoginCard = ({
     }
   };
 
-  // Handle Apple login using React Query
   const handleAppleLogin = async (appleUser: any) => {
     try {
-      // Use the login mutation from useAuth hook
-      await login.mutateAsync({
-        email: appleUser?.email || "",
-        password: appleUser?.uid || "",
+      const response = await makeRequest("POST", "/auth/login", {
+        email: appleUser?.email,
+        password: appleUser?.uid,
       });
 
-      // Store apple user data in cookie
-      Cookie.set("apple-auth-userData", btoa(JSON.stringify(appleUser)));
+      Cookie.set("access-token", response.data.access_token);
+      Cookie.set("refresh-token", response.data.refresh_token);
 
-      // Refetch user data
-      refetchUser();
-
-      // Navigation is handled in the mutation's onSuccess callback
+      const getUserData = await makeRequest(
+        "GET",
+        "/users/me?fields=*,latest_menopause_history.*,menopause_history.*"
+      );
+      setUser(getUserData?.data);
+      if (!getUserData?.data?.is_registration_completed) {
+        toast.error("Please complete your registration!.");
+        Cookie.set("apple-auth-userData", btoa(JSON.stringify(appleUser)));
+        // router.push(`/register?u=${btoa(JSON.stringify(appleUser))}`);
+        router.push("/profile");
+      } else {
+        toast.success("Login successful");
+        router.push("/");
+      }
+      setRefresh(!refresh);
     } catch (error: any) {
       console.log(error);
-
-      // Error handling is done in the mutation's onError callback
+      toast.error("Invalid Credentials, Please check your email and password", {
+        duration: 5000,
+      });
     }
   };
 
-  // Handle Apple registration using React Query
   const handleAppleRegister = async (appleUser: any) => {
     try {
-      // Create user data object
-      const userData = {
-        first_name:
-          appleUser?.displayName?.substring(
-            0,
-            appleUser?.displayName?.indexOf(" ") || 0,
-          ) || "Apple",
-        last_name:
-          appleUser?.displayName?.substring(
-            (appleUser?.displayName?.indexOf(" ") || 0) + 1,
-          ) || "User",
-        email: appleUser?.email || "",
-        password: appleUser?.uid || "",
+      await makeRequest("POST", "/users", {
+        first_name: appleUser?.displayName?.substring(
+          0,
+          appleUser?.displayName?.indexOf(" ")
+        ),
+        last_name: appleUser?.displayName?.substring(
+          appleUser?.displayName?.indexOf(" ") + 1
+        ),
+        email: appleUser?.email,
+        password: appleUser?.uid,
         auth_type: "apple",
         role: "40607d3a-0760-4ae0-b60a-60dfd0fae8ba",
-      };
-
-      // Use the register mutation from useAuth hook
-      await register.mutateAsync(userData);
-
-      // After registration, login the user
-      await login.mutateAsync({
-        email: appleUser?.email || "",
-        password: appleUser?.uid || "",
       });
 
-      // Store apple user data in cookie
+      const userResponse = await makeRequest("POST", "/auth/login", {
+        email: appleUser?.email,
+        password: appleUser?.uid,
+      });
+
+      toast.success("Sign-Up Successfully!");
+      Cookie.set("access-token", userResponse?.data?.access_token);
+      Cookie.set("refresh-token", userResponse?.data?.refresh_token);
       Cookie.set("apple-auth-userData", btoa(JSON.stringify(appleUser)));
-
-      // Navigate to registration page
       router.push(`/register?u=${btoa(JSON.stringify(appleUser))}`);
-
-      // Refetch user data
-      refetchUser();
+      getUserDetails(setUser);
+      setRefresh(!refresh);
     } catch (error: any) {
       console.log(error);
-
-      // Error handling is done in the mutation's onError callback
+      if (error?.response?.status === 400) {
+        toast.error("User already exists, Please use another mail!");
+      } else {
+        toast.error("Something Went Wrong!");
+      }
     }
   };
 
@@ -335,9 +473,8 @@ const LoginCard = ({
       <div
         className={cn(
           "flex flex-col items-center justify-center gap-3 disabled:cursor-not-allowed",
-          !noBgStyle && "bg-[#FFFFFF] shadow-xl px-5 py-7 rounded-xl",
-        )}
-      >
+          !noBgStyle && "bg-[#FFFFFF] shadow-xl px-5 py-7 rounded-xl"
+        )}>
         <Button
           text={`Continue with Google`}
           className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base xl:text-xl font-semibold btn-outline hover:text-black disabled:cursor-not-allowed"

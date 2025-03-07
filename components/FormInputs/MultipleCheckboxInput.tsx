@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { MultipleCheckboxInputTypes } from "@/types/formInput";
 import React from "react";
 import Question from "../Common/Question";
+import { CustomTooltip } from "../Common/render-html";
 
 const MultipleCheckboxInput: React.FC<MultipleCheckboxInputTypes> = ({
   field,
@@ -11,6 +12,7 @@ const MultipleCheckboxInput: React.FC<MultipleCheckboxInputTypes> = ({
   isDisabled = false,
   containerClassName = "",
   optionObject,
+  tooltip = null,
 }) => {
   let selectedOptions =
     (field.state.value?.length > 0 &&
@@ -27,6 +29,11 @@ const MultipleCheckboxInput: React.FC<MultipleCheckboxInputTypes> = ({
     });
   }
 
+  const handleTooltipClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   // console.log("config::::", selectedOptions, QuestionObject, optionObject);
   return (
     <div className="form-control w-full">
@@ -34,6 +41,15 @@ const MultipleCheckboxInput: React.FC<MultipleCheckboxInputTypes> = ({
         <label className="label">
           <span className="label-text font-normal">{label}</span>
           {/* {isRequired && <span className="text-red-500 ml-1">*</span>} */}
+          {tooltip && (
+            <span
+              onClick={handleTooltipClick}
+              onMouseDown={(e) => e.preventDefault()}>
+              <CustomTooltip>
+                <p>{tooltip}</p>
+              </CustomTooltip>
+            </span>
+          )}
         </label>
       )}
       <div className={cn(containerClassName)}>

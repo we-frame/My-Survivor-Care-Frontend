@@ -30,8 +30,9 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
             case "input":
               return (
                 <div key={question_id?.id}>
-                  <form.Field name={`MedicalInformation.${question_id?.id}`}>
-                    {(field: any) => (
+                  <form.Field
+                    name={`MedicalInformation.${question_id?.id}`}
+                    children={(field: any) => (
                       <TextInput
                         field={field}
                         label={question_id?.question}
@@ -39,20 +40,22 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                         placeholder={question_id?.question}
                         type={question_id?.input_datatype}
                         bottomText={question_id?.description}
+                        tooltip={question_id?.tooltip}
                       />
                     )}
-                  </form.Field>
+                  />
                 </div>
               );
             case "select":
               return (
                 <div key={question_id?.id}>
-                  <form.Field name={`MedicalInformation.${question_id?.id}`}>
-                    {(field: any) => {
+                  <form.Field
+                    name={`MedicalInformation.${question_id?.id}`}
+                    children={(field: any) => {
                       const selected = field.getValue();
                       const descrptionBox = question_id?.options.filter(
                         (el: any) =>
-                          el.option_id.id === (selected ?? "").slice(2, -2),
+                          el.option_id.id === (selected ?? "").slice(2, -2)
                       );
 
                       // console.log(
@@ -68,16 +71,17 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                               (option: any) => ({
                                 label: option?.option_id?.title,
                                 value: JSON.stringify([option?.option_id?.id]),
-                              }),
+                              })
                             )}
                             options={question_id?.options.map(
-                              (el: any) => el.option_id,
+                              (el: any) => el.option_id
                             )}
                             placeholder={question_id?.question}
                             label={question_id?.question}
                             isRequired={question_id?.required}
                             bottomText={question_id?.description}
                             form={form}
+                            tooltip={question_id?.tooltip}
                           />
                           {/* {descrptionBox.length > 0 &&
                             [
@@ -103,14 +107,15 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                         </>
                       );
                     }}
-                  </form.Field>
+                  />
                 </div>
               );
             case "multiple_checkbox":
               return (
                 <div key={question_id?.id}>
-                  <form.Field name={`MedicalInformation.${question_id?.id}`}>
-                    {(field: any) => (
+                  <form.Field
+                    name={`MedicalInformation.${question_id?.id}`}
+                    children={(field: any) => (
                       <MultipleCheckboxInput
                         containerClassName="grid grid-cols-2 auto-rows-auto gap-x-10 gap-y-4"
                         field={field}
@@ -121,9 +126,10 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                         }))}
                         isRequired={true}
                         optionObject={{ ...question_id }}
+                        tooltip={question_id?.tooltip}
                       />
                     )}
-                  </form.Field>
+                  />
                 </div>
               );
             default:

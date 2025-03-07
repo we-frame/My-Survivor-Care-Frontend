@@ -1,6 +1,7 @@
 import React from "react";
 import { TextInputTypes } from "@/types/formInput";
 import { cn } from "@/lib/utils";
+import { CustomTooltip } from "../Common/render-html";
 
 const TextInput: React.FC<TextInputTypes> = ({
   field,
@@ -11,7 +12,13 @@ const TextInput: React.FC<TextInputTypes> = ({
   bottomText = "",
   className = "",
   isDisabled = false,
+  tooltip = null,
 }) => {
+  const handleTooltipClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  
   return (
     <div>
       <label className="form-control w-full max-w-xs">
@@ -20,6 +27,15 @@ const TextInput: React.FC<TextInputTypes> = ({
             <span className="label-text font-normal">
               {label}
               {/* {isRequired && <span className="text-red-500">*</span>} */}
+              {tooltip && (
+                <span
+                  onClick={handleTooltipClick}
+                  onMouseDown={(e) => e.preventDefault()}>
+                  <CustomTooltip>
+                    <p>{tooltip}</p>
+                  </CustomTooltip>
+                </span>
+              )}
             </span>
           </div>
         )}

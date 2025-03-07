@@ -11,6 +11,7 @@ export interface TextInputTypes {
   className?: string;
   isDisabled?: boolean;
   apiData?: any;
+  tooltip?: string;
 }
 
 // Interface for Select Input component props
@@ -30,6 +31,7 @@ export interface SelectInputTypes {
   defaultValue?: string;
   options?: any;
   form?: any;
+  tooltip?: string;
 }
 
 // Interface for individual Checkbox options in a Multiple Checkbox component
@@ -48,6 +50,7 @@ export interface MultipleCheckboxInputTypes {
   isDisabled?: boolean;
   containerClassName?: string;
   optionObject?: any;
+  tooltip?: string;
 }
 
 export interface RangeInputTypes {
@@ -63,4 +66,5 @@ export interface RangeInputTypes {
   isRequired?: boolean;
   isDisabled?: boolean;
   defaultValue?: string;
+  tooltip?: string;
 }

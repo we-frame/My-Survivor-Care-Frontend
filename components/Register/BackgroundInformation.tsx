@@ -45,6 +45,7 @@ const BackgroundInformation = ({
                         placeholder={question_id?.question}
                         type={question_id?.input_datatype}
                         bottomText={question_id?.description}
+                        tooltip={question_id?.tooltip}
                       />
                     )}
                   </form.Field>
@@ -79,6 +80,7 @@ const BackgroundInformation = ({
                             isRequired={question_id?.required}
                             bottomText={question_id?.description}
                             form={form}
+                            tooltip={question_id?.tooltip}
                           />
                           {/* {descrptionBox.length > 0 &&
                             [
