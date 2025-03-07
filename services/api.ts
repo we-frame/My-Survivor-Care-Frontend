@@ -1,7 +1,7 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import Cookies from 'js-cookie';
-import client from '@/lib/axiosInterceptor';
-import toast from 'react-hot-toast';
+import axios, { AxiosRequestConfig } from "axios";
+import Cookies from "js-cookie";
+import client from "@/lib/axiosInterceptor";
+import toast from "react-hot-toast";
 
 // Base URL from environment variables
 const apiLink = process.env.NEXT_PUBLIC_BASE_URL;
@@ -11,17 +11,17 @@ export const makeRequest = async (
   method: string,
   endpoint: string,
   data?: any,
-  headers?: { [key: string]: string }
+  headers?: { [key: string]: string },
 ) => {
   const axiosOptions: AxiosRequestConfig = {
-    baseURL: `${apiLink ?? ''}`,
+    baseURL: `${apiLink ?? ""}`,
     method,
     url: endpoint,
     data,
     timeout: 10000,
   };
 
-  const localToken = Cookies.get('access-token');
+  const localToken = Cookies.get("access-token");
   if (localToken) {
     axiosOptions.headers = {
       Authorization: `Bearer ${localToken}`,
@@ -42,12 +42,12 @@ export const userService = {
   getProfile: async () => {
     try {
       const response = await makeRequest(
-        'GET',
-        '/users/me?fields=*,latest_menopause_history.*,menopause_history.*'
+        "GET",
+        "/users/me?fields=*,latest_menopause_history.*,menopause_history.*",
       );
       return response.data;
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      console.error("Error fetching user profile:", error);
       throw error;
     }
   },
@@ -55,10 +55,10 @@ export const userService = {
   // Update user profile
   updateProfile: async (userData: any) => {
     try {
-      const response = await makeRequest('PATCH', '/users/me', userData);
+      const response = await makeRequest("PATCH", "/users/me", userData);
       return response.data;
     } catch (error) {
-      console.error('Error updating user profile:', error);
+      console.error("Error updating user profile:", error);
       throw error;
     }
   },
@@ -68,7 +68,7 @@ export const userService = {
     try {
       const response = await client.get(`${apiLink}/items/answers`, {
         params: {
-          fields: '*.*,question.options.option_id.*',
+          fields: "*.*,question.options.option_id.*",
           filter: JSON.stringify({
             user_created: userId,
             question: {
@@ -77,15 +77,15 @@ export const userService = {
               },
             },
           }),
-          sort: 'question.key',
+          sort: "question.key",
         },
         headers: {
-          Authorization: `Bearer ${Cookies.get('access-token')}`,
+          Authorization: `Bearer ${Cookies.get("access-token")}`,
         },
       });
       return response.data.data;
     } catch (error) {
-      console.error('Error fetching user answers:', error);
+      console.error("Error fetching user answers:", error);
       throw error;
     }
   },
@@ -94,14 +94,14 @@ export const userService = {
   updateAnswer: async (answerId: string, data: any) => {
     try {
       const response = await makeRequest(
-        'PATCH',
+        "PATCH",
         `/items/answers/${answerId}`,
         JSON.stringify(data),
-        { 'Content-Type': 'application/json' }
+        { "Content-Type": "application/json" },
       );
       return response.data;
     } catch (error) {
-      console.error('Error updating answer:', error);
+      console.error("Error updating answer:", error);
       throw error;
     }
   },
@@ -113,12 +113,12 @@ export const assessmentService = {
   getQuestions: async (key: string) => {
     try {
       const response = await makeRequest(
-        'GET',
-        `/items/form?filter={"key": {"_eq": "${key}"}}&fields=*,form_components.*,form_components.question_id.*,form_components.question_id.options.*,form_components.question_id.options.option_id.*,form_components.question_id.options.option_id.questions.*.*.*`
+        "GET",
+        `/items/form?filter={"key": {"_eq": "${key}"}}&fields=*,form_components.*,form_components.question_id.*,form_components.question_id.options.*,form_components.question_id.options.option_id.*,form_components.question_id.options.option_id.questions.*.*.*`,
       );
       return response.data[0];
     } catch (error) {
-      console.error('Error fetching assessment questions:', error);
+      console.error("Error fetching assessment questions:", error);
       throw error;
     }
   },
@@ -127,12 +127,12 @@ export const assessmentService = {
   getMenopauseQuestions: async () => {
     try {
       const response = await makeRequest(
-        'GET',
-        '/items/form?filter[title][_contains]=Menopause&fields=form_components.question_id.question,Menopause&fields=form_components.question_id.id'
+        "GET",
+        "/items/form?filter[title][_contains]=Menopause&fields=form_components.question_id.question,Menopause&fields=form_components.question_id.id",
       );
       return response.data[0];
     } catch (error) {
-      console.error('Error fetching menopause questions:', error);
+      console.error("Error fetching menopause questions:", error);
       throw error;
     }
   },
@@ -141,12 +141,12 @@ export const assessmentService = {
   getQuestionDetails: async (questionId: string) => {
     try {
       const response = await makeRequest(
-        'GET',
-        `/items/question/${questionId}?fields=*,options.option_id.*,options.option_id.questions.*`
+        "GET",
+        `/items/question/${questionId}?fields=*,options.option_id.*,options.option_id.questions.*`,
       );
       return response.data;
     } catch (error) {
-      console.error('Error fetching question details:', error);
+      console.error("Error fetching question details:", error);
       throw error;
     }
   },
@@ -154,10 +154,10 @@ export const assessmentService = {
   // Submit answers
   submitAnswers: async (answers: any[]) => {
     try {
-      const response = await makeRequest('POST', `/items/answers`, answers);
+      const response = await makeRequest("POST", `/items/answers`, answers);
       return response;
     } catch (error) {
-      console.error('Error submitting answers:', error);
+      console.error("Error submitting answers:", error);
       throw error;
     }
   },
@@ -166,13 +166,13 @@ export const assessmentService = {
   submitMenopauseHistory: async (data: any) => {
     try {
       const response = await makeRequest(
-        'POST',
-        '/items/junction_directus_users_menopause_history',
-        data
+        "POST",
+        "/items/junction_directus_users_menopause_history",
+        data,
       );
       return response;
     } catch (error) {
-      console.error('Error submitting menopause history:', error);
+      console.error("Error submitting menopause history:", error);
       throw error;
     }
   },
@@ -180,10 +180,10 @@ export const assessmentService = {
   // Get config
   getConfig: async () => {
     try {
-      const response = await makeRequest('GET', '/items/config');
+      const response = await makeRequest("GET", "/items/config");
       return response.data;
     } catch (error) {
-      console.error('Error fetching config:', error);
+      console.error("Error fetching config:", error);
       throw error;
     }
   },
@@ -195,17 +195,17 @@ export const resourceService = {
   getAccordionData: async (page: string) => {
     try {
       const response = await fetch(
-        `${apiLink}/items/accordion/?filter[page][_eq]=${page}`
+        `${apiLink}/items/accordion/?filter[page][_eq]=${page}`,
       );
-      
+
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
-      
+
       const { data } = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching accordion data:', error);
+      console.error("Error fetching accordion data:", error);
       throw error;
     }
   },
@@ -216,13 +216,13 @@ export const authService = {
   // Login
   login: async (email: string, password: string) => {
     try {
-      const response = await makeRequest('POST', '/auth/login', {
+      const response = await makeRequest("POST", "/auth/login", {
         email,
         password,
       });
       return response.data;
     } catch (error) {
-      console.error('Error logging in:', error);
+      console.error("Error logging in:", error);
       throw error;
     }
   },
@@ -230,10 +230,10 @@ export const authService = {
   // Register
   register: async (userData: any) => {
     try {
-      const response = await makeRequest('POST', '/users', userData);
+      const response = await makeRequest("POST", "/users", userData);
       return response;
     } catch (error) {
-      console.error('Error registering user:', error);
+      console.error("Error registering user:", error);
       throw error;
     }
   },
@@ -242,12 +242,12 @@ export const authService = {
   checkUserExists: async (email: string) => {
     try {
       const response = await makeRequest(
-        'GET',
-        `/users?filter={"email": {"_eq": "${email}"}}&fields=*`
+        "GET",
+        `/users?filter={"email": {"_eq": "${email}"}}&fields=*`,
       );
       return response.data[0];
     } catch (error) {
-      console.error('Error checking if user exists:', error);
+      console.error("Error checking if user exists:", error);
       throw error;
     }
   },
@@ -259,24 +259,24 @@ export const authService = {
         `${apiLink}/auth/refresh`,
         {
           refresh_token: refreshToken,
-          mode: 'json',
+          mode: "json",
         },
         {
-          headers: { 'Content-Type': 'application/json' },
-        }
+          headers: { "Content-Type": "application/json" },
+        },
       );
       return response.data.data;
     } catch (error) {
-      console.error('Error refreshing token:', error);
+      console.error("Error refreshing token:", error);
       throw error;
     }
   },
 
   // Logout
   logout: () => {
-    Cookies.remove('access-token');
-    Cookies.remove('refresh-token');
-    window.localStorage.removeItem('user-store');
-    toast.success('Logged out successfully');
+    Cookies.remove("access-token");
+    Cookies.remove("refresh-token");
+    window.localStorage.removeItem("user-store");
+    toast.success("Logged out successfully");
   },
 };

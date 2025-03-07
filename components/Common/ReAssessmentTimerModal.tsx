@@ -20,7 +20,7 @@ const ReAssessmentTimerModal = () => {
   const nextAssessmentDay = userData?.userData?.next_assessment_date;
   const date = isoDateString ? new Date(isoDateString) : new Date(); // Convert the ISO date string to a Date object or default to today if null
   const [reAssessmentDate, setReAssessmentDate] = useState<Date | null>(
-    nextAssessmentDay ? new Date(nextAssessmentDay) : null
+    nextAssessmentDay ? new Date(nextAssessmentDay) : null,
   );
   const { setUser } = useUserStore();
 
@@ -60,7 +60,7 @@ const ReAssessmentTimerModal = () => {
           toast.error("Re-assessment date postponed successfully", {
             icon: null,
             duration: 5000,
-          })
+          }),
         )
         .then(() => {
           getUserDetails(setUser);
@@ -69,12 +69,10 @@ const ReAssessmentTimerModal = () => {
       console.log(err);
       toast.error(
         "Something went wrong while postponing reassessment, please try again",
-        { duration: 5000 }
+        { duration: 5000 },
       );
     }
   };
-
-  const today = new Date(); // Current date
 
   // Function to fetch timer days from the server
   const getTimerDays = async () => {
@@ -94,15 +92,16 @@ const ReAssessmentTimerModal = () => {
 
   // Effect to check the current date against the reassessment date
   useEffect(() => {
+    const today = new Date(); // Moved inside useEffect
     if (reAssessmentDate && today >= reAssessmentDate) {
       setShowModal(true);
       if (dialogRef.current) {
-        dialogRef.current.showModal(); // Use the dialog ref to show the modal
+        dialogRef.current.showModal();
       }
     } else {
       setShowModal(false);
     }
-  }, [reAssessmentDate, today]);
+  }, [reAssessmentDate]);
 
   const PostponeAssessment = () => {
     if (timerDays) {
@@ -119,15 +118,16 @@ const ReAssessmentTimerModal = () => {
         <dialog
           ref={dialogRef}
           id="reAssessmentTimer"
-          className="w-11/12 max-w-md border-none rounded-lg shadow-xl p-0 overflow-hidden">
+          className="w-11/12 max-w-md border-none rounded-lg shadow-xl p-0 overflow-hidden"
+        >
           <div className="p-5 flex flex-col items-center justify-center gap-6 bg-white">
             <Title
               title="Reassessment Reminder"
               className="text-2xl font-semibold text-center text-red-600"
             />
             <p className="text-base font-normal text-center text-gray-700">
-              It's time to reassess your symptoms and track your progress. Click
-              the button below to take your reassessment.
+              It&apos;s time to reassess your symptoms and track your progress.
+              Click the button below to take your reassessment.
             </p>
             <div className="flex flex-row items-center justify-center gap-4">
               <Link href="/re-assessment">

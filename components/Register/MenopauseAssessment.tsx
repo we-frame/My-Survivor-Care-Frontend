@@ -40,9 +40,8 @@ const MenopauseAssessment = ({ form, formData }: MenopauseAssessmentTypes) => {
             case "range":
               return (
                 <div key={question_id?.id}>
-                  <form.Field
-                    name={`MenopauseAssessment.${question_id?.id}`}
-                    children={(field: any) => (
+                  <form.Field name={`MenopauseAssessment.${question_id?.id}`}>
+                    {(field: any) => (
                       <RangeInput
                         field={field}
                         label={question_id?.question}
@@ -50,7 +49,7 @@ const MenopauseAssessment = ({ form, formData }: MenopauseAssessmentTypes) => {
                         isRequired={question_id?.required}
                       />
                     )}
-                  />
+                  </form.Field>
                 </div>
               );
             default:

@@ -17,7 +17,7 @@ const SelectInput: React.FC<SelectInputTypes> = ({
   form,
 }) => {
   let subQuestion = options.find(
-    (option: any) => option?.id === field.state?.value?.slice(2, -2)
+    (option: any) => option?.id === field.state?.value?.slice(2, -2),
   )?.questions;
   // console.log(field.state.value, "subQuestion", subQuestion, options[0]?.id);
   return (
@@ -40,7 +40,8 @@ const SelectInput: React.FC<SelectInputTypes> = ({
           onBlur={field.handleBlur}
           onChange={(e) => field.handleChange(e.target.value)}
           defaultValue={field.state.value}
-          disabled={isDisabled}>
+          disabled={isDisabled}
+        >
           {placeholder && (
             <option value="" disabled selected>
               {placeholder}
@@ -52,7 +53,7 @@ const SelectInput: React.FC<SelectInputTypes> = ({
                 <option key={value} value={value} className="text-black">
                   {label}
                 </option>
-              )
+              ),
             )}
         </select>
 

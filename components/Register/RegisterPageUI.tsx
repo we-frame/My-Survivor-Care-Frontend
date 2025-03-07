@@ -46,7 +46,7 @@ const RegisterPageUI = () => {
       acc[id] = question;
       return acc;
     },
-    {}
+    {},
   );
 
   // Get form data for different sections
@@ -132,7 +132,7 @@ const RegisterPageUI = () => {
         const isHormonalCancer = Answer.some(
           (answer: any) =>
             answer.question_type === "select" &&
-            HormonalCancer.includes(answer.answered_options[0].option_id)
+            HormonalCancer.includes(answer.answered_options[0].option_id),
         );
 
         // Update user profile
@@ -169,7 +169,9 @@ const RegisterPageUI = () => {
 
         // Update user profile with assessment dates
         let next_assessment_date = new Date();
-        next_assessment_date.setDate(next_assessment_date.getDate() + timerDays);
+        next_assessment_date.setDate(
+          next_assessment_date.getDate() + timerDays,
+        );
 
         await updateUserProfile.mutateAsync({
           last_assessment_date: new Date().toISOString(),
@@ -209,7 +211,8 @@ const RegisterPageUI = () => {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="bg-[#ffffff] mt-10 p-4 lg:p-6 rounded-lg shadow-lg flex flex-col gap-10">
+        className="bg-[#ffffff] mt-10 p-4 lg:p-6 rounded-lg shadow-lg flex flex-col gap-10"
+      >
         <YourAccount setPrivacy={setPrivacy} privacy={privacy} />
         <BackgroundInformation
           form={form}
@@ -228,9 +231,10 @@ const RegisterPageUI = () => {
           className={cn(
             "w-full bg-[#14b8a6] text-white py-2 rounded-lg mt-4",
             "hover:bg-[#0f9488] transition-colors duration-200",
-            "disabled:bg-gray-400 disabled:cursor-not-allowed"
+            "disabled:bg-gray-400 disabled:cursor-not-allowed",
           )}
-          disabled={!privacy}>
+          disabled={!privacy}
+        >
           Submit
         </button>
       </form>

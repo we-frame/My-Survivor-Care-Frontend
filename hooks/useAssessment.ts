@@ -1,15 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { assessmentService } from '@/services/api';
-import toast from 'react-hot-toast';
-import { userKeys } from './useUser';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { assessmentService } from "@/services/api";
+import toast from "react-hot-toast";
+import { userKeys } from "./useUser";
 
 // Query keys
 export const assessmentKeys = {
-  all: ['assessments'] as const,
-  questions: (key: string) => [...assessmentKeys.all, 'questions', key] as const,
-  menopauseQuestions: () => [...assessmentKeys.all, 'menopauseQuestions'] as const,
-  questionDetails: (id: string) => [...assessmentKeys.all, 'questionDetails', id] as const,
-  config: () => [...assessmentKeys.all, 'config'] as const,
+  all: ["assessments"] as const,
+  questions: (key: string) =>
+    [...assessmentKeys.all, "questions", key] as const,
+  menopauseQuestions: () =>
+    [...assessmentKeys.all, "menopauseQuestions"] as const,
+  questionDetails: (id: string) =>
+    [...assessmentKeys.all, "questionDetails", id] as const,
+  config: () => [...assessmentKeys.all, "config"] as const,
 };
 
 export const useAssessment = () => {
@@ -54,7 +57,7 @@ export const useAssessment = () => {
     onSuccess: () => {
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: userKeys.all });
-      toast.success('Answers submitted successfully');
+      toast.success("Answers submitted successfully");
     },
   });
 
@@ -64,7 +67,7 @@ export const useAssessment = () => {
     onSuccess: () => {
       // Invalidate user profile to update latest_menopause_history
       queryClient.invalidateQueries({ queryKey: userKeys.profile() });
-      toast.success('Menopause history submitted successfully');
+      toast.success("Menopause history submitted successfully");
     },
   });
 

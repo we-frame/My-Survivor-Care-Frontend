@@ -23,8 +23,9 @@ const RangeInput = ({
     <div
       className={cn(
         containerClassName,
-        "w-full flex flex-col lg:flex-row items-start justify-start gap-10"
-      )}>
+        "w-full flex flex-col lg:flex-row items-start justify-start gap-10",
+      )}
+    >
       {(label || subLabel) && (
         <div className="w-full lg:w-[35%]">
           {label && <Title title={label} className="text-sm font-semibold" />}

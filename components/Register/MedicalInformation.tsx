@@ -30,9 +30,8 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
             case "input":
               return (
                 <div key={question_id?.id}>
-                  <form.Field
-                    name={`MedicalInformation.${question_id?.id}`}
-                    children={(field: any) => (
+                  <form.Field name={`MedicalInformation.${question_id?.id}`}>
+                    {(field: any) => (
                       <TextInput
                         field={field}
                         label={question_id?.question}
@@ -42,19 +41,18 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                         bottomText={question_id?.description}
                       />
                     )}
-                  />
+                  </form.Field>
                 </div>
               );
             case "select":
               return (
                 <div key={question_id?.id}>
-                  <form.Field
-                    name={`MedicalInformation.${question_id?.id}`}
-                    children={(field: any) => {
+                  <form.Field name={`MedicalInformation.${question_id?.id}`}>
+                    {(field: any) => {
                       const selected = field.getValue();
                       const descrptionBox = question_id?.options.filter(
                         (el: any) =>
-                          el.option_id.id === (selected ?? "").slice(2, -2)
+                          el.option_id.id === (selected ?? "").slice(2, -2),
                       );
 
                       // console.log(
@@ -70,10 +68,10 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                               (option: any) => ({
                                 label: option?.option_id?.title,
                                 value: JSON.stringify([option?.option_id?.id]),
-                              })
+                              }),
                             )}
                             options={question_id?.options.map(
-                              (el: any) => el.option_id
+                              (el: any) => el.option_id,
                             )}
                             placeholder={question_id?.question}
                             label={question_id?.question}
@@ -105,15 +103,14 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                         </>
                       );
                     }}
-                  />
+                  </form.Field>
                 </div>
               );
             case "multiple_checkbox":
               return (
                 <div key={question_id?.id}>
-                  <form.Field
-                    name={`MedicalInformation.${question_id?.id}`}
-                    children={(field: any) => (
+                  <form.Field name={`MedicalInformation.${question_id?.id}`}>
+                    {(field: any) => (
                       <MultipleCheckboxInput
                         containerClassName="grid grid-cols-2 auto-rows-auto gap-x-10 gap-y-4"
                         field={field}
@@ -123,10 +120,10 @@ const MedicalInformation = ({ form, formData }: MedicalInformationTypes) => {
                           value: option?.option_id?.id,
                         }))}
                         isRequired={true}
-                        optionObject={{...question_id}}
+                        optionObject={{ ...question_id }}
                       />
-                    )} 
-                  />
+                    )}
+                  </form.Field>
                 </div>
               );
             default:

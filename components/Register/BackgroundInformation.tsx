@@ -36,9 +36,8 @@ const BackgroundInformation = ({
             case "input":
               return (
                 <div key={question_id?.id}>
-                  <form.Field
-                    name={`BackgroundInformation.${question_id?.id}`}
-                    children={(field: any) => (
+                  <form.Field name={`BackgroundInformation.${question_id?.id}`}>
+                    {(field: any) => (
                       <TextInput
                         field={field}
                         label={question_id?.question}
@@ -48,19 +47,18 @@ const BackgroundInformation = ({
                         bottomText={question_id?.description}
                       />
                     )}
-                  />
+                  </form.Field>
                 </div>
               );
             case "select":
               return (
                 <div key={question_id?.id}>
-                  <form.Field
-                    name={`BackgroundInformation.${question_id?.id}`}
-                    children={(field: any) => {
+                  <form.Field name={`BackgroundInformation.${question_id?.id}`}>
+                    {(field: any) => {
                       const selected = field.getValue();
                       const descrptionBox = question_id?.options.filter(
                         (el: any) =>
-                          el.option_id.id === (selected ?? "").slice(2, -2)
+                          el.option_id.id === (selected ?? "").slice(2, -2),
                       );
 
                       return (
@@ -71,10 +69,10 @@ const BackgroundInformation = ({
                               (option: any) => ({
                                 label: option?.option_id?.title,
                                 value: JSON.stringify([option?.option_id?.id]),
-                              })
+                              }),
                             )}
                             options={question_id?.options.map(
-                              (el: any) => el.option_id
+                              (el: any) => el.option_id,
                             )}
                             placeholder={question_id?.question}
                             label={question_id?.question}
@@ -99,7 +97,7 @@ const BackgroundInformation = ({
                         </>
                       );
                     }}
-                  />
+                  </form.Field>
                 </div>
               );
             default:

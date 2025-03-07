@@ -61,7 +61,7 @@ const DownloadResultUI: React.FC = () => {
                     isDisabled={true}
                   />
                 </div>
-              )
+              ),
             )}
           </div>
         </div>

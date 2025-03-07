@@ -1,9 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { authService } from '@/services/api';
-import toast from 'react-hot-toast';
-import Cookies from 'js-cookie';
-import { userKeys } from './useUser';
-import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { authService } from "@/services/api";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
+import { userKeys } from "./useUser";
+import { useRouter } from "next/navigation";
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
@@ -15,14 +15,14 @@ export const useAuth = () => {
       authService.login(email, password),
     onSuccess: (data) => {
       // Set cookies
-      Cookies.set('access-token', data.access_token);
-      Cookies.set('refresh-token', data.refresh_token);
-      
+      Cookies.set("access-token", data.access_token);
+      Cookies.set("refresh-token", data.refresh_token);
+
       // Invalidate user profile query to fetch the latest data
       queryClient.invalidateQueries({ queryKey: userKeys.profile() });
-      
-      toast.success('Login successful');
-      router.push('/profile');
+
+      toast.success("Login successful");
+      router.push("/profile");
     },
   });
 
@@ -30,7 +30,7 @@ export const useAuth = () => {
   const register = useMutation({
     mutationFn: authService.register,
     onSuccess: () => {
-      toast.success('Registration successful');
+      toast.success("Registration successful");
     },
   });
 
@@ -41,18 +41,18 @@ export const useAuth = () => {
 
   // Google login
   const googleLogin = useMutation({
-    mutationFn: (firebaseUser: any) => 
+    mutationFn: (firebaseUser: any) =>
       authService.login(firebaseUser.email, firebaseUser.uid),
     onSuccess: (data) => {
       // Set cookies
-      Cookies.set('access-token', data.access_token);
-      Cookies.set('refresh-token', data.refresh_token);
-      
+      Cookies.set("access-token", data.access_token);
+      Cookies.set("refresh-token", data.refresh_token);
+
       // Invalidate user profile query to fetch the latest data
       queryClient.invalidateQueries({ queryKey: userKeys.profile() });
-      
-      toast.success('Login successful');
-      router.push('/profile');
+
+      toast.success("Login successful");
+      router.push("/profile");
     },
   });
 
@@ -62,25 +62,25 @@ export const useAuth = () => {
       const userData = {
         first_name: firebaseUser?.displayName?.substring(
           0,
-          firebaseUser?.displayName?.indexOf(' ')
+          firebaseUser?.displayName?.indexOf(" "),
         ),
         last_name: firebaseUser?.displayName?.substring(
-          firebaseUser?.displayName?.indexOf(' ') + 1
+          firebaseUser?.displayName?.indexOf(" ") + 1,
         ),
         email: firebaseUser?.email,
         password: firebaseUser?.uid,
-        auth_type: 'google',
-        role: '40607d3a-0760-4ae0-b60a-60dfd0fae8ba',
+        auth_type: "google",
+        role: "40607d3a-0760-4ae0-b60a-60dfd0fae8ba",
       };
       return authService.register(userData);
     },
     onSuccess: (_, firebaseUser) => {
       // After registration, login the user
       googleLogin.mutate(firebaseUser);
-      
+
       // Store firebase user data in cookie for registration completion
-      Cookies.set('google-auth-userData', btoa(JSON.stringify(firebaseUser)));
-      
+      Cookies.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
+
       router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
     },
   });
@@ -90,7 +90,7 @@ export const useAuth = () => {
     authService.logout();
     // Clear all queries from cache
     queryClient.clear();
-    router.push('/login');
+    router.push("/login");
   };
 
   return {

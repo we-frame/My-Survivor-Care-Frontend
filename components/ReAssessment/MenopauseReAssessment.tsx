@@ -7,7 +7,10 @@ interface MenopauseAssessmentTypes {
   formData?: any;
 }
 
-const MenopauseReAssessment = ({ form, formData }: MenopauseAssessmentTypes) => {
+const MenopauseReAssessment = ({
+  form,
+  formData,
+}: MenopauseAssessmentTypes) => {
   console.log(formData);
   return (
     <div className="w-full flex flex-col lg:flex-row items-start justify-start gap-7 lg:gap-32">
@@ -32,9 +35,8 @@ const MenopauseReAssessment = ({ form, formData }: MenopauseAssessmentTypes) => 
             case "range":
               return (
                 <div key={question_id?.id}>
-                  <form.Field
-                    name={`${question_id?.question}`}
-                    children={(field: any) => (
+                  <form.Field name={`${question_id?.question}`}>
+                    {(field: any) => (
                       <RangeInput
                         field={field}
                         label={question_id?.question}
@@ -42,7 +44,7 @@ const MenopauseReAssessment = ({ form, formData }: MenopauseAssessmentTypes) => 
                         isRequired={question_id?.required}
                       />
                     )}
-                  />
+                  </form.Field>
                 </div>
               );
             default:

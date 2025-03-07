@@ -23,8 +23,8 @@ const useUserStore = create<UserState>(
         set({ userData: null });
       },
     }),
-    { name: "user-store" } // Name of the localStorage key to persist state
-  )
+    { name: "user-store" }, // Name of the localStorage key to persist state
+  ),
 );
 
 export default useUserStore;

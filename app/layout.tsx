@@ -22,9 +22,10 @@ export default function RootLayout({
       <body
         className={
           "min-w-full min-h-screen px-5 md:px-6 lg:px-8 pb-5 md:pb-6 lg:pb-8 "
-        }>
+        }
+      >
         <QueryProvider>
-          <MainLayout children={children} />
+          <MainLayout>{children}</MainLayout>
         </QueryProvider>
       </body>
     </html>

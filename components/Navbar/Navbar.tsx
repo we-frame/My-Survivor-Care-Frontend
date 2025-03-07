@@ -8,6 +8,7 @@ import { makeRequest } from "@/lib/api";
 import Cookie from "js-cookie";
 import toast from "react-hot-toast";
 import useLoadingStore from "@/store/loadingStore";
+import { useUser } from "@/hooks/useUser";
 
 interface NavItem {
   href: string;
@@ -23,6 +24,8 @@ const navItems: NavItem[] = [
 
 const Navbar: React.FC = () => {
   const { refresh, setRefresh } = useLoadingStore();
+  const { clearUser } = useUser();
+
   // Function to close the drawer menu
   const closeDrawer = () => {
     (document.getElementById("my-drawer-3") as HTMLInputElement).checked =
@@ -41,16 +44,17 @@ const Navbar: React.FC = () => {
       Cookie.remove("refresh-token");
       Cookie.remove("google-auth-userData");
 
-      setRefresh(!refresh);
+      // Clear user data using the mutation
+      await clearUser.mutateAsync();
 
       toast.success("Logged out!");
 
-      if (typeof window.localStorage !== "undefined") {
-        window.localStorage.removeItem("user-store");
+      if (typeof window !== "undefined") {
         window.location.reload();
       }
     } catch (error) {
       console.log(error);
+      toast.error("Failed to logout");
     }
   };
 
@@ -71,7 +75,8 @@ const Navbar: React.FC = () => {
               <label
                 htmlFor="my-drawer-3"
                 aria-label="open sidebar"
-                className="btn btn-square btn-ghost">
+                className="btn btn-square btn-ghost"
+              >
                 <Menu />
               </label>
             </div>
@@ -118,7 +123,8 @@ const Navbar: React.FC = () => {
           <label
             htmlFor="my-drawer-3"
             aria-label="close sidebar"
-            className="drawer-overlay"></label>
+            className="drawer-overlay"
+          ></label>
           <div className="menu p-4 w-80 min-h-full bg-base-200">
             {/* Sidebar logo linking to the homepage */}
             <Link href={"/"} onClick={closeDrawer}>
@@ -136,10 +142,12 @@ const Navbar: React.FC = () => {
                   <Link
                     onClick={closeDrawer}
                     key={item?.href}
-                    href={item?.href}>
+                    href={item?.href}
+                  >
                     <button
                       onClick={closeDrawer}
-                      className="text-base font-normal">
+                      className="text-base font-normal"
+                    >
                       {item?.label}
                     </button>
                   </Link>

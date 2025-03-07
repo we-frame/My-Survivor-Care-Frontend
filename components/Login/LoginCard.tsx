@@ -34,17 +34,12 @@ const LoginCard = ({
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
   const router = useRouter();
   const path = usePathname();
-  
+
   // Use React Query hooks
   const { user, refetch: refetchUser } = useUser();
-  const {
-    login,
-    register,
-    checkUserExists,
-    googleLogin,
-    googleRegister
-  } = useAuth();
-  
+  const { login, register, checkUserExists, googleLogin, googleRegister } =
+    useAuth();
+
   // Keep using registration store for eligibility checks
   const {
     step,
@@ -61,38 +56,38 @@ const LoginCard = ({
     try {
       // Use the googleRegister mutation from useAuth hook
       await googleRegister.mutateAsync(firebaseUser);
-      
+
       // Store firebase user data in cookie for registration completion
       Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
-      
+
       // Navigate to registration page
       router.push(`/register?u=${btoa(JSON.stringify(firebaseUser))}`);
-      
+
       // Refetch user data
       refetchUser();
     } catch (error: any) {
       console.log(error);
-      
+
       // Error handling is done in the mutation's onError callback
     }
   };
-  
+
   // Handle Google login using React Query
   const handleGoogleLogin = async (firebaseUser: any) => {
     try {
       // Use the googleLogin mutation from useAuth hook
       await googleLogin.mutateAsync(firebaseUser);
-      
+
       // Store firebase user data in cookie
       Cookie.set("google-auth-userData", btoa(JSON.stringify(firebaseUser)));
-      
+
       // Refetch user data
       refetchUser();
-      
+
       // Navigation is handled in the mutation's onSuccess callback
     } catch (error: any) {
       console.log(error);
-      
+
       // Error handling is done in the mutation's onError callback
     }
   };
@@ -100,7 +95,7 @@ const LoginCard = ({
   // Function to handle Google sign-in
   const handleGoogle = async () => {
     // Commented out eligibility checks for brevity
-    
+
     setLoadingButton(true); // Enable loading state
     const provider = new GoogleAuthProvider(); // Google Auth provider
     try {
@@ -109,7 +104,9 @@ const LoginCard = ({
       const firebaseUser = result?.user;
 
       // Check if user exists using React Query
-      const userExists = await checkUserExists.mutateAsync(firebaseUser.email || '');
+      const userExists = await checkUserExists.mutateAsync(
+        firebaseUser.email || "",
+      );
       const authType = userExists?.auth_type; // Checking userAuth type
 
       // Determine whether to log in or register the user
@@ -138,7 +135,8 @@ const LoginCard = ({
           <div
             className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
               t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            }`}>
+            }`}
+          >
             <TriangleAlert className="text-yellow-700" size={40} /> Please
             answer whether you are interested in participating in the early
             testing.
@@ -149,7 +147,8 @@ const LoginCard = ({
           <div
             className={`w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5 ${
               t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            }`}>
+            }`}
+          >
             <TriangleAlert className="text-yellow-700" size={40} /> Please
             answer Have you been affected by cancer in the past, or are you
             currently, living with it?
@@ -172,8 +171,9 @@ const LoginCard = ({
           <div
             className={cn(
               "w-[350px] bg-yellow-100 p-3 rounded-lg shadow-lg text-yellow-700 flex items-center justify-center gap-5",
-              t.visible ? "toast-animate-enter" : "toast-animate-leave"
-            )}>
+              t.visible ? "toast-animate-enter" : "toast-animate-leave",
+            )}
+          >
             <div>
               <TriangleAlert className="text-yellow-700" size={20} />
             </div>
@@ -193,19 +193,21 @@ const LoginCard = ({
                     router.push("/");
                     toast.dismiss();
                   }}
-                  className="px-2 py-1 rounded-md border border-yellow-700 shadow-md">
+                  className="px-2 py-1 rounded-md border border-yellow-700 shadow-md"
+                >
                   Re-take
                 </button>
                 <button
                   onClick={() => toast.dismiss()}
-                  className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md">
+                  className="px-2 py-1 rounded-md bg-red-200 text-red-700 border border-red-700 shadow-md"
+                >
                   Dismiss
                 </button>
               </div>
             </div>
           </div>
         ),
-        { duration: 5000 }
+        { duration: 5000 },
       );
       return;
     } else {
@@ -228,7 +230,9 @@ const LoginCard = ({
         console.log("Additional User Info ::", additionalUserInfo);
 
         // Check if user exists using React Query
-        const userExists = await checkUserExists.mutateAsync(appleUser?.email || '');
+        const userExists = await checkUserExists.mutateAsync(
+          appleUser?.email || "",
+        );
         const authType = userExists?.auth_type; // Checking userAuth type
 
         // Determine whether to log in or register the user
@@ -253,20 +257,20 @@ const LoginCard = ({
     try {
       // Use the login mutation from useAuth hook
       await login.mutateAsync({
-        email: appleUser?.email || '',
-        password: appleUser?.uid || '',
+        email: appleUser?.email || "",
+        password: appleUser?.uid || "",
       });
-      
+
       // Store apple user data in cookie
       Cookie.set("apple-auth-userData", btoa(JSON.stringify(appleUser)));
-      
+
       // Refetch user data
       refetchUser();
-      
+
       // Navigation is handled in the mutation's onSuccess callback
     } catch (error: any) {
       console.log(error);
-      
+
       // Error handling is done in the mutation's onError callback
     }
   };
@@ -276,39 +280,41 @@ const LoginCard = ({
     try {
       // Create user data object
       const userData = {
-        first_name: appleUser?.displayName?.substring(
-          0,
-          appleUser?.displayName?.indexOf(" ") || 0
-        ) || 'Apple',
-        last_name: appleUser?.displayName?.substring(
-          (appleUser?.displayName?.indexOf(" ") || 0) + 1
-        ) || 'User',
-        email: appleUser?.email || '',
-        password: appleUser?.uid || '',
+        first_name:
+          appleUser?.displayName?.substring(
+            0,
+            appleUser?.displayName?.indexOf(" ") || 0,
+          ) || "Apple",
+        last_name:
+          appleUser?.displayName?.substring(
+            (appleUser?.displayName?.indexOf(" ") || 0) + 1,
+          ) || "User",
+        email: appleUser?.email || "",
+        password: appleUser?.uid || "",
         auth_type: "apple",
         role: "40607d3a-0760-4ae0-b60a-60dfd0fae8ba",
       };
-      
+
       // Use the register mutation from useAuth hook
       await register.mutateAsync(userData);
-      
+
       // After registration, login the user
       await login.mutateAsync({
-        email: appleUser?.email || '',
-        password: appleUser?.uid || '',
+        email: appleUser?.email || "",
+        password: appleUser?.uid || "",
       });
-      
+
       // Store apple user data in cookie
       Cookie.set("apple-auth-userData", btoa(JSON.stringify(appleUser)));
-      
+
       // Navigate to registration page
       router.push(`/register?u=${btoa(JSON.stringify(appleUser))}`);
-      
+
       // Refetch user data
       refetchUser();
     } catch (error: any) {
       console.log(error);
-      
+
       // Error handling is done in the mutation's onError callback
     }
   };
@@ -329,8 +335,9 @@ const LoginCard = ({
       <div
         className={cn(
           "flex flex-col items-center justify-center gap-3 disabled:cursor-not-allowed",
-          !noBgStyle && "bg-[#FFFFFF] shadow-xl px-5 py-7 rounded-xl"
-        )}>
+          !noBgStyle && "bg-[#FFFFFF] shadow-xl px-5 py-7 rounded-xl",
+        )}
+      >
         <Button
           text={`Continue with Google`}
           className="w-full px-10 rounded-3xl border border-[#c1c9d2] text-base xl:text-xl font-semibold btn-outline hover:text-black disabled:cursor-not-allowed"

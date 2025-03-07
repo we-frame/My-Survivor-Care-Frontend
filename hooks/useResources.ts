@@ -1,10 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
-import { resourceService } from '@/services/api';
+import { useQuery } from "@tanstack/react-query";
+import { resourceService } from "@/services/api";
 
 // Query keys
 export const resourceKeys = {
-  all: ['resources'] as const,
-  accordions: (page: string) => [...resourceKeys.all, 'accordions', page] as const,
+  all: ["resources"] as const,
+  accordions: (page: string) =>
+    [...resourceKeys.all, "accordions", page] as const,
 };
 
 export const useResources = () => {

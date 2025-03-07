@@ -20,10 +20,14 @@ export default function Question({
 }: QuestionProps) {
   const [options, setOptions] = useState<any>([]);
   const [answers, setAnswers] = useState<any>([]);
-  
+
   // Use React Query to fetch question details
-  const { data: question, isLoading, error } = useAssessment().getQuestionDetails(question_id);
-  
+  const {
+    data: question,
+    isLoading,
+    error,
+  } = useAssessment().getQuestionDetails(question_id);
+
   // Process question data when it's available
   useEffect(() => {
     if (question) {
@@ -34,7 +38,7 @@ export default function Question({
             label: option?.option_id?.title,
           };
         });
-        
+
         setAnswers(question?.options?.map((option: any) => option?.option_id));
         setOptions([...optionData]);
       } catch (error) {
@@ -43,12 +47,12 @@ export default function Question({
       }
     }
   }, [question]);
-  
+
   // Show loading state
   if (isLoading) {
     return <div>Loading question...</div>;
   }
-  
+
   // Show error state
   if (error) {
     return <div>Error loading question. Please try again.</div>;
@@ -60,10 +64,8 @@ export default function Question({
     question && (
       <div className="mt-4">
         {/* <p>{question?.question_type}</p> */}
-        <Field
-          form={form}
-          name={`${name}.${question?.id}`}
-          children={(field: any) => {
+        <Field form={form} name={`${name}.${question?.id}`}>
+          {(field: any) => {
             switch (question?.question_type) {
               case "input":
                 return (
@@ -104,7 +106,7 @@ export default function Question({
                 );
             }
           }}
-        />
+        </Field>
       </div>
     )
   );

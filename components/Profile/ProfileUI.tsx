@@ -23,13 +23,13 @@ const ProfileUI = () => {
 
   // Use React Query hooks
   const { user, updateAnswer } = useUser();
-  const { data: biAnswers, isLoading: biLoading } = useUser().getUserAnswers('BI');
-  const { data: miAnswers, isLoading: miLoading } = useUser().getUserAnswers('MI');
+  const { data: biAnswers, isLoading: biLoading } =
+    useUser().getUserAnswers("BI");
+  const { data: miAnswers, isLoading: miLoading } =
+    useUser().getUserAnswers("MI");
 
-  const averageRating =
-    user?.latest_menopause_history?.average_rating ?? null;
-  const isoDateString =
-    user?.latest_menopause_history?.date_created;
+  const averageRating = user?.latest_menopause_history?.average_rating ?? null;
+  const isoDateString = user?.latest_menopause_history?.date_created;
   const date = isoDateString ? new Date(isoDateString) : new Date();
 
   // Extracting the day, month, and year
@@ -71,9 +71,9 @@ const ProfileUI = () => {
             // Use the updateAnswer mutation
             return updateAnswer.mutateAsync({
               answerId: answerID,
-              data: reqBody
+              data: reqBody,
             });
-          })
+          }),
         );
 
         setEditBackgroundInfo(false);
@@ -116,9 +116,9 @@ const ProfileUI = () => {
             // Use the updateAnswer mutation
             return updateAnswer.mutateAsync({
               answerId: answerID,
-              data: reqBody
+              data: reqBody,
             });
-          })
+          }),
         );
 
         setEditMedicalInformation(false);
@@ -134,22 +134,20 @@ const ProfileUI = () => {
   useEffect(() => {
     if (biAnswers) {
       const data = biAnswers;
-      
+
       if (data) {
         data.forEach((item: any) => {
-          // Check the type of question and set the value in the form
           if (item?.question?.question_type === "multiple_checkbox") {
             const optionIds = item?.answered_options?.map(
-              (option: any) => option?.option_id
+              (option: any) => option?.option_id,
             );
             backgroundInformationForm.setFieldValue(item?.id, optionIds);
           } else {
-            // Handle single response by providing a default value if `answer` is undefined
             if (item?.answer) {
               backgroundInformationForm.setFieldValue(item?.id, item?.answer);
             } else if (item?.answered_options) {
               const optionID = item?.answered_options?.map(
-                (option: any) => option?.option_id
+                (option: any) => option?.option_id,
               );
               backgroundInformationForm.setFieldValue(item?.id, optionID);
             }
@@ -159,28 +157,26 @@ const ProfileUI = () => {
 
       setFormData((prev: any) => ({ ...prev, backgroundInformation: data }));
     }
-  }, [biAnswers]);
+  }, [biAnswers, backgroundInformationForm]);
 
   // Process medical information answers when available
   useEffect(() => {
     if (miAnswers) {
       const data = miAnswers;
-      
+
       if (data) {
         data.forEach((item: any) => {
-          // Check the type of question and set the value in the form
           if (item?.question?.question_type === "multiple_checkbox") {
             const optionIds = item?.answered_options?.map(
-              (option: any) => option?.option_id
+              (option: any) => option?.option_id,
             );
             medicalInformationForm.setFieldValue(item?.id, optionIds);
           } else {
-            // Handle single response by providing a default value if `answer` is undefined
             if (item?.answer) {
               medicalInformationForm.setFieldValue(item?.id, item?.answer);
             } else if (item?.answered_options) {
               const optionID = item?.answered_options?.map(
-                (option: any) => option?.option_id
+                (option: any) => option?.option_id,
               );
               medicalInformationForm.setFieldValue(item?.id, optionID);
             }
@@ -190,11 +186,15 @@ const ProfileUI = () => {
 
       setFormData((prev: any) => ({ ...prev, medicalInformation: data }));
     }
-  }, [miAnswers]);
+  }, [miAnswers, medicalInformationForm]);
 
   // Show loading state while data is being fetched
   if (biLoading || miLoading) {
-    return <div className="mt-5 lg:mt-10 flex flex-col gap-10">Loading profile data...</div>;
+    return (
+      <div className="mt-5 lg:mt-10 flex flex-col gap-10">
+        Loading profile data...
+      </div>
+    );
   }
 
   return (
